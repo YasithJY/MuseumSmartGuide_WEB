@@ -1,0 +1,21 @@
+{
+  "short_name": "Museum150",
+  "name": "Museum 150 Smart Guide",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/2682/2682065.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/2682/2682065.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#F7F2E9",
+  "theme_color": "#4E342E",
+  "display": "standalone",
+  "orientation": "portrait"
+}
