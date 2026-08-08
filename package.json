@@ -1,0 +1,13 @@
+{
+  "name": "museum150-smart-guide",
+  "version": "1.0.0",
+  "description": "Root wrapper to run Museum 150 Smart Guide client and server concurrently",
+  "type": "module",
+  "scripts": {
+    "install:all": "npm install --prefix backend && npm install --prefix frontend --legacy-peer-deps",
+    "dev": "concurrently \"npm run dev --prefix backend\" \"npm run dev --prefix frontend\""
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
