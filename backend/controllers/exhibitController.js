@@ -6,8 +6,40 @@ import QRCode from 'qrcode';
 import fs from 'fs';
 import path from 'path';
 
+/**
+ * Apply multilingual translations to an exhibit document.
+ * If lang is 'si' or 'ta', overlay translated fields on top of English defaults.
+ * Falls back to English for any missing translated field.
+ */
+const applyExhibitTranslation = (exhibit, lang) => {
+  if (!lang || lang === 'en') return exhibit;
+
+  const doc = exhibit.toObject ? exhibit.toObject() : { ...exhibit };
+  const t = doc.translations?.[lang];
+  if (!t) return doc;
+
+  if (t.title) doc.title = t.title;
+  if (t.description) doc.description = t.description;
+  if (t.historicalInfo) doc.historicalInfo = t.historicalInfo;
+
+  // Translate timeline events (merge by index)
+  if (t.timeline && t.timeline.length > 0 && doc.timeline) {
+    doc.timeline = doc.timeline.map((event, idx) => {
+      const translatedEvent = t.timeline[idx];
+      if (!translatedEvent) return event;
+      return {
+        ...event,
+        title: translatedEvent.title || event.title,
+        description: translatedEvent.description || event.description
+      };
+    });
+  }
+
+  return doc;
+};
+
 export const getExhibits = async (req, res) => {
-  const { categoryId, galleryId, museumId, search, period } = req.query;
+  const { categoryId, galleryId, museumId, search, period, lang } = req.query;
   try {
     let query = {};
     if (categoryId) query.categoryId = categoryId;
@@ -34,13 +66,17 @@ export const getExhibits = async (req, res) => {
       .populate('galleryId', 'name')
       .populate('museumId', 'name');
 
-    res.json({ success: true, count: exhibits.length, data: exhibits });
+    // Apply multilingual translations if requested
+    const data = lang ? exhibits.map(e => applyExhibitTranslation(e, lang)) : exhibits;
+
+    res.json({ success: true, count: data.length, data });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
 };
 
 export const getExhibitById = async (req, res) => {
+  const { lang } = req.query;
   try {
     const exhibit = await Exhibit.findById(req.params.id)
       .populate('categoryId', 'name')
@@ -56,7 +92,9 @@ export const getExhibitById = async (req, res) => {
           exhibitId: exhibit._id
         });
       }
-      res.json({ success: true, data: exhibit });
+      // Apply multilingual translations if requested
+      const data = lang ? applyExhibitTranslation(exhibit, lang) : exhibit;
+      res.json({ success: true, data });
     } else {
       res.status(404).json({ success: false, message: 'Exhibit not found' });
     }
@@ -67,7 +105,7 @@ export const getExhibitById = async (req, res) => {
 
 export const createExhibit = async (req, res) => {
   try {
-    const { title, description, historicalInfo, timeline, images, audioUrl, videoUrl, categoryId, galleryId, museumId, relatedArtifacts } = req.body;
+    const { title, description, historicalInfo, timeline, images, audioUrl, videoUrl, categoryId, galleryId, museumId, relatedArtifacts, translations } = req.body;
     
     // Create preliminary document first to obtain ID
     const exhibit = new Exhibit({
@@ -81,7 +119,8 @@ export const createExhibit = async (req, res) => {
       categoryId,
       galleryId,
       museumId,
-      relatedArtifacts
+      relatedArtifacts,
+      translations
     });
 
     const savedExhibit = await exhibit.save();
@@ -136,6 +175,55 @@ export const deleteExhibit = async (req, res) => {
       res.json({ success: true, message: 'Exhibit deleted successfully' });
     } else {
       res.status(404).json({ success: false, message: 'Exhibit not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// QR Code scanning - resolve a QR code value to an exhibit
+export const getExhibitByQR = async (req, res) => {
+  const { qrValue } = req.query;
+  const lang = req.query.lang;
+  try {
+    if (!qrValue) {
+      return res.status(400).json({ success: false, message: 'qrValue query parameter is required' });
+    }
+
+    // The QR code encodes a URL like http://localhost:5173/exhibit/<exhibitId>
+    // Extract the exhibit ID from the URL, or accept a raw ObjectId directly
+    let exhibitId = qrValue;
+
+    // Try to extract ID from a URL pattern: .../exhibit/<id>
+    const urlMatch = qrValue.match(/\/exhibit\/([a-fA-F0-9]{24})/);
+    if (urlMatch) {
+      exhibitId = urlMatch[1];
+    }
+
+    // Also support matching by qrCodeUrl field directly
+    let exhibit = null;
+    if (exhibitId.match(/^[a-fA-F0-9]{24}$/)) {
+      exhibit = await Exhibit.findById(exhibitId)
+        .populate('categoryId', 'name')
+        .populate('galleryId', 'name')
+        .populate('museumId', 'name')
+        .populate('relatedArtifacts', 'title coverImage images');
+    }
+
+    // Fallback: try matching by qrCodeUrl
+    if (!exhibit) {
+      exhibit = await Exhibit.findOne({ qrCodeUrl: { $regex: qrValue, $options: 'i' } })
+        .populate('categoryId', 'name')
+        .populate('galleryId', 'name')
+        .populate('museumId', 'name')
+        .populate('relatedArtifacts', 'title coverImage images');
+    }
+
+    if (exhibit) {
+      const data = lang ? applyExhibitTranslation(exhibit, lang) : exhibit;
+      res.json({ success: true, data });
+    } else {
+      res.status(404).json({ success: false, message: 'No exhibit found for this QR code' });
     }
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });

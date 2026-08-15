@@ -6,7 +6,23 @@ const timelineEventSchema = new mongoose.Schema({
   description: { type: String, required: true }
 });
 
+// Translated timeline events (year is shared, title/description are translated)
+const translatedTimelineEventSchema = new mongoose.Schema({
+  year: { type: String },
+  title: { type: String },
+  description: { type: String }
+});
+
+// Language-specific content for an exhibit
+const exhibitTranslationSchema = new mongoose.Schema({
+  title: { type: String, default: '' },
+  description: { type: String, default: '' },
+  historicalInfo: { type: String, default: '' },
+  timeline: [translatedTimelineEventSchema]
+}, { _id: false });
+
 const exhibitSchema = new mongoose.Schema({
+  // Default language: English
   title: { type: String, required: true },
   description: { type: String, required: true },
   historicalInfo: { type: String, required: true },
@@ -18,7 +34,12 @@ const exhibitSchema = new mongoose.Schema({
   categoryId: { type: mongoose.Schema.Types.ObjectId, ref: 'Category', required: true },
   galleryId: { type: mongoose.Schema.Types.ObjectId, ref: 'Gallery', required: true },
   museumId: { type: mongoose.Schema.Types.ObjectId, ref: 'Museum', required: true },
-  relatedArtifacts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Exhibit' }]
+  relatedArtifacts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Exhibit' }],
+  // Multilingual translations: Sinhala (si) and Tamil (ta)
+  translations: {
+    si: { type: exhibitTranslationSchema, default: () => ({}) },
+    ta: { type: exhibitTranslationSchema, default: () => ({}) }
+  }
 }, { timestamps: true });
 
 const Exhibit = mongoose.model('Exhibit', exhibitSchema);

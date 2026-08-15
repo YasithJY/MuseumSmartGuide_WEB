@@ -6,7 +6,8 @@ import {
   updateExhibit, 
   deleteExhibit, 
   toggleFavourite, 
-  getFavourites 
+  getFavourites,
+  getExhibitByQR
 } from '../controllers/exhibitController.js';
 import { protect, optionalProtect, adminOnly } from '../middleware/authMiddleware.js';
 
@@ -16,6 +17,9 @@ const router = express.Router();
 router.route('/favourites')
   .get(protect, getFavourites)
   .post(protect, toggleFavourite);
+
+// QR Code scanning - resolve a QR value to an exhibit
+router.get('/scan', getExhibitByQR);
 
 router.route('/')
   .get(getExhibits)
@@ -27,3 +31,4 @@ router.route('/:id')
   .delete(protect, adminOnly, deleteExhibit);
 
 export default router;
+
