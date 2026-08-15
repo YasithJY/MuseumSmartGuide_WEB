@@ -12,6 +12,11 @@ const gallerySchema = new mongoose.Schema({
   coverImage: { type: String, default: '' },
   museumId: { type: mongoose.Schema.Types.ObjectId, ref: 'Museum', required: true },
   exhibitsCount: { type: Number, default: 0 },
+  location: {
+    address: { type: String, default: '' },
+    floor: { type: String, default: '' },
+    roomNumber: { type: String, default: '' }
+  },
   // Multilingual translations: Sinhala (si) and Tamil (ta)
   translations: {
     si: { type: galleryTranslationSchema, default: () => ({}) },

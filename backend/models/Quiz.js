@@ -5,6 +5,7 @@ const quizSchema = new mongoose.Schema({
   description: { type: String, required: true },
   difficulty: { type: String, enum: ['easy', 'medium', 'hard'], default: 'easy' },
   pointsReward: { type: Number, default: 50 },
+  coverImage: { type: String, default: '' },
   museumId: { type: mongoose.Schema.Types.ObjectId, ref: 'Museum' },
   galleryId: { type: mongoose.Schema.Types.ObjectId, ref: 'Gallery' },
   questions: [{ type: mongoose.Schema.Types.ObjectId, ref: 'QuizQuestion' }]

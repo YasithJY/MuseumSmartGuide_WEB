@@ -2,9 +2,10 @@ import mongoose from 'mongoose';
 
 const quizQuestionSchema = new mongoose.Schema({
   text: { type: String, required: true },
-  type: { type: String, enum: ['multiple-choice', 'true-false'], required: true },
-  options: [{ type: String }], // Optional for true/false
-  correctAnswer: { type: String, required: true }, // The string matching correct option or 'True'/'False'
+  type: { type: String, enum: ['multiple-choice', 'true-false', 'image-based'], required: true },
+  imageUrl: { type: String, default: '' }, // for image-based questions
+  options: [{ type: String }],
+  correctAnswer: { type: String, required: true },
   points: { type: Number, default: 10 }
 }, { timestamps: true });
 

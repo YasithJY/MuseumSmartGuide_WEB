@@ -14,6 +14,7 @@ import exhibitRoutes from './routes/exhibitRoutes.js';
 import quizRoutes from './routes/quizRoutes.js';
 import analyticsRoutes from './routes/analyticsRoutes.js';
 import mediaRoutes from './routes/mediaRoutes.js';
+import categoryRoutes from './routes/categoryRoutes.js';
 
 dotenv.config();
 
@@ -42,6 +43,7 @@ app.use('/api/exhibits', exhibitRoutes);
 app.use('/api/quizzes', quizRoutes);
 app.use('/api/analytics', analyticsRoutes);
 app.use('/api/media', mediaRoutes);
+app.use('/api/categories', categoryRoutes);
 
 // Simple health check route
 app.get('/', (req, res) => {

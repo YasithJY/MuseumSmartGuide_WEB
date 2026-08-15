@@ -20,7 +20,13 @@ const Login = () => {
     setLoading(false);
 
     if (result?.success) {
-      navigate('/profile');
+      // Redirect based on role
+      const storedUser = result.user;
+      if (storedUser?.role === 'admin') {
+        navigate('/dashboard');
+      } else {
+        navigate('/profile');
+      }
     } else {
       setError(result?.message || 'Invalid credentials');
     }

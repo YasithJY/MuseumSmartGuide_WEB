@@ -26,10 +26,12 @@ export const getQuizById = async (req, res) => {
 
 export const createQuiz = async (req, res) => {
   try {
-    const { title, description, difficulty, pointsReward, museumId, galleryId, questionsData } = req.body;
-    
-    // Create the questions first
-    const createdQuestions = await QuizQuestion.insertMany(questionsData);
+    const { title, description, difficulty, pointsReward, coverImage, museumId, galleryId, questionsData } = req.body;
+
+    // Create questions first
+    const createdQuestions = questionsData?.length
+      ? await QuizQuestion.insertMany(questionsData)
+      : [];
     const questionIds = createdQuestions.map(q => q._id);
 
     const quiz = await Quiz.create({
@@ -37,26 +39,73 @@ export const createQuiz = async (req, res) => {
       description,
       difficulty,
       pointsReward,
-      museumId,
-      galleryId,
+      coverImage: coverImage || '',
+      museumId: museumId || null,
+      galleryId: galleryId || null,
       questions: questionIds
     });
 
-    res.status(201).json({ success: true, data: quiz });
+    const populated = await Quiz.findById(quiz._id).populate('questions');
+    res.status(201).json({ success: true, data: populated });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+export const updateQuiz = async (req, res) => {
+  try {
+    const { title, description, difficulty, pointsReward, coverImage, museumId, galleryId, questionsData } = req.body;
+
+    const quiz = await Quiz.findById(req.params.id);
+    if (!quiz) return res.status(404).json({ success: false, message: 'Quiz not found' });
+
+    // Replace questions: delete old, insert new
+    if (Array.isArray(questionsData)) {
+      await QuizQuestion.deleteMany({ _id: { $in: quiz.questions } });
+      const createdQuestions = questionsData.length
+        ? await QuizQuestion.insertMany(questionsData)
+        : [];
+      quiz.questions = createdQuestions.map(q => q._id);
+    }
+
+    quiz.title = title ?? quiz.title;
+    quiz.description = description ?? quiz.description;
+    quiz.difficulty = difficulty ?? quiz.difficulty;
+    quiz.pointsReward = pointsReward ?? quiz.pointsReward;
+    quiz.coverImage = coverImage ?? quiz.coverImage;
+    quiz.museumId = museumId || null;
+    quiz.galleryId = galleryId || null;
+
+    await quiz.save();
+    const populated = await Quiz.findById(quiz._id).populate('questions');
+    res.json({ success: true, data: populated });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+export const deleteQuiz = async (req, res) => {
+  try {
+    const quiz = await Quiz.findById(req.params.id);
+    if (quiz) {
+      await QuizQuestion.deleteMany({ _id: { $in: quiz.questions } });
+      await Quiz.findByIdAndDelete(req.params.id);
+      res.json({ success: true, message: 'Quiz and questions deleted successfully' });
+    } else {
+      res.status(404).json({ success: false, message: 'Quiz not found' });
+    }
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
 };
 
 export const submitQuiz = async (req, res) => {
-  const { answers } = req.body; // Array of { questionId, selectedAnswer }
+  const { answers } = req.body;
   const userId = req.user._id;
 
   try {
     const quiz = await Quiz.findById(req.params.id).populate('questions');
-    if (!quiz) {
-      return res.status(404).json({ success: false, message: 'Quiz not found' });
-    }
+    if (!quiz) return res.status(404).json({ success: false, message: 'Quiz not found' });
 
     let correctCount = 0;
     const totalQuestions = quiz.questions.length;
@@ -65,11 +114,7 @@ export const submitQuiz = async (req, res) => {
     quiz.questions.forEach(question => {
       const userAnswer = answers.find(a => a.questionId === question._id.toString());
       const isCorrect = userAnswer && userAnswer.selectedAnswer.trim().toLowerCase() === question.correctAnswer.trim().toLowerCase();
-      
-      if (isCorrect) {
-        correctCount++;
-      }
-
+      if (isCorrect) correctCount++;
       results.push({
         questionId: question._id,
         text: question.text,
@@ -82,67 +127,26 @@ export const submitQuiz = async (req, res) => {
     const percent = Math.round((correctCount / totalQuestions) * 100);
     const scorePoints = Math.round((correctCount / totalQuestions) * quiz.pointsReward);
 
-    // Update user points & check badges
     const user = await User.findById(userId);
     let badgesEarned = [];
 
     if (user) {
       user.points += scorePoints;
-
-      // Badge checks
       const earnBadge = (badgeId, title, icon) => {
-        const alreadyEarned = user.earnedBadges.some(b => b.badgeId === badgeId);
-        if (!alreadyEarned) {
+        if (!user.earnedBadges.some(b => b.badgeId === badgeId)) {
           const badgeObj = { badgeId, title, icon, earnedAt: new Date() };
           user.earnedBadges.push(badgeObj);
           badgesEarned.push(badgeObj);
         }
       };
-
-      // 1. First quiz badge
       earnBadge('first_quiz', 'Quiz Explorer', '🏆');
-
-      // 2. Perfect score badge
-      if (correctCount === totalQuestions) {
-        earnBadge('perfect_score', 'Colombo scholar', '🎓');
-      }
-
-      // 3. Score-based badges
-      if (user.points >= 100) {
-        earnBadge('points_100', 'Bronze Historian', '🎖️');
-      }
-      if (user.points >= 500) {
-        earnBadge('points_500', 'Golden Antiquarian', '👑');
-      }
-
+      if (correctCount === totalQuestions) earnBadge('perfect_score', 'Colombo Scholar', '🎓');
+      if (user.points >= 100) earnBadge('points_100', 'Bronze Historian', '🎖️');
+      if (user.points >= 500) earnBadge('points_500', 'Golden Antiquarian', '👑');
       await user.save();
     }
 
-    res.json({
-      success: true,
-      score: scorePoints,
-      correctCount,
-      totalQuestions,
-      percent,
-      results,
-      badgesEarned,
-      totalPoints: user ? user.points : 0
-    });
-  } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
-  }
-};
-export const deleteQuiz = async (req, res) => {
-  try {
-    const quiz = await Quiz.findById(req.params.id);
-    if (quiz) {
-      // Optional: Delete related questions
-      await QuizQuestion.deleteMany({ _id: { $in: quiz.questions } });
-      await Quiz.findByIdAndDelete(req.params.id);
-      res.json({ success: true, message: 'Quiz and questions deleted successfully' });
-    } else {
-      res.status(404).json({ success: false, message: 'Quiz not found' });
-    }
+    res.json({ success: true, score: scorePoints, correctCount, totalQuestions, percent, results, badgesEarned, totalPoints: user ? user.points : 0 });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }

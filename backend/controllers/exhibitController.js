@@ -108,6 +108,7 @@ export const createExhibit = async (req, res) => {
     const { title, description, historicalInfo, timeline, images, audioUrl, videoUrl, categoryId, galleryId, museumId, relatedArtifacts, translations } = req.body;
     
     // Create preliminary document first to obtain ID
+    // Strip empty string values for optional ObjectId fields to avoid cast errors
     const exhibit = new Exhibit({
       title,
       description,
@@ -116,7 +117,7 @@ export const createExhibit = async (req, res) => {
       images,
       audioUrl,
       videoUrl,
-      categoryId,
+      categoryId: categoryId || null,
       galleryId,
       museumId,
       relatedArtifacts,
@@ -151,7 +152,24 @@ export const createExhibit = async (req, res) => {
 
 export const updateExhibit = async (req, res) => {
   try {
-    const exhibit = await Exhibit.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    // Sanitise: convert empty-string ObjectId fields to null so MongoDB
+    // doesn't attempt to cast "" → ObjectId (BSONError)
+    const sanitised = { ...req.body };
+    ['categoryId', 'galleryId', 'museumId'].forEach(field => {
+      if (sanitised[field] === '' || sanitised[field] === undefined) {
+        sanitised[field] = null;
+      }
+    });
+
+    // galleryId and museumId are still required — reject if missing
+    if (!sanitised.galleryId) {
+      return res.status(400).json({ success: false, message: 'Gallery is required.' });
+    }
+    if (!sanitised.museumId) {
+      return res.status(400).json({ success: false, message: 'Museum is required.' });
+    }
+
+    const exhibit = await Exhibit.findByIdAndUpdate(req.params.id, sanitised, { new: true, runValidators: true });
     if (exhibit) {
       res.json({ success: true, data: exhibit });
     } else {
@@ -161,6 +179,7 @@ export const updateExhibit = async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 };
+
 
 export const deleteExhibit = async (req, res) => {
   try {
