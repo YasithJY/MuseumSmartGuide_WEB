@@ -8,9 +8,9 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: "#4E342E", // Luxury Dark Brown
+        primary: "#2C1A14", // Luxury Dark Brown (Darker Espresso)
         gold: "#C9A227",    // Heritage Gold
-        parchment: "#F7F2E9", // Ancient Paper Background
+        parchment: "#FFFFF0", // Tusker Ivory
         accent: "#8D6E63",  // Muted Terracotta/Warm Brown
         dark: "#2D2D2D",    // Charcoal
       },

@@ -18,7 +18,7 @@
 }
 
 .museum-shadow {
-  box-shadow: 0 10px 30px -10px rgba(78, 52, 46, 0.15);
+  box-shadow: 0 10px 30px -10px rgba(44, 26, 20, 0.15);
 }
 
 .premium-card {
@@ -32,7 +32,7 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: #F7F2E9;
+  background: #FFFFF0;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -41,7 +41,7 @@
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #4E342E;
+  background: #2C1A14;
 }
 
 /* Leaflet Map responsiveness */
