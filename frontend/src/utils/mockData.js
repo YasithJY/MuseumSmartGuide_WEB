@@ -2,7 +2,7 @@
 
 export const mockCategories = [
   { 
-    _id: 'cat1', 
+    _id: '65d7593c66f50b2984950001', 
     name: 'Metallurgy & Manufacturing', 
     description: 'Ancient Sri Lankan metalwork, furnace technology, and tool craftsmanship',
     translations: {
@@ -11,7 +11,7 @@ export const mockCategories = [
     }
   },
   { 
-    _id: 'cat2', 
+    _id: '65d7593c66f50b2984950002', 
     name: 'Hydraulics & Urban Planning', 
     description: 'Ancient irrigation networks, reservoir construction, and city planning systems',
     translations: {
@@ -20,7 +20,7 @@ export const mockCategories = [
     }
   },
   { 
-    _id: 'cat3', 
+    _id: '65d7593c66f50b2984950003', 
     name: 'Monumental Architecture', 
     description: 'Engineering and construction methodology behind massive brick stupas and rock fortresses',
     translations: {
@@ -29,7 +29,7 @@ export const mockCategories = [
     }
   },
   { 
-    _id: 'cat4', 
+    _id: '65d7593c66f50b2984950004', 
     name: 'Modern Engineering Pioneers', 
     description: 'Leading Sri Lankan engineers who revolutionized modern infrastructure, railways, and power grids',
     translations: {
@@ -60,7 +60,7 @@ export const mockMuseums = [
 
 export const mockGalleries = [
   {
-    _id: 'gal1',
+    _id: '65d75a1d66f50b2984950011',
     name: 'Ancient Engineering & Technology',
     description: 'Explore the advanced metallurgical, hydraulic, and structural engineering wonders of ancient Sri Lanka.',
     coverImage: 'https://images.unsplash.com/photo-1605721911519-3dfeb3be25e7?auto=format&fit=crop&q=80&w=600',
@@ -78,7 +78,7 @@ export const mockGalleries = [
     }
   },
   {
-    _id: 'gal2',
+    _id: '65d75a1d66f50b2984950012',
     name: 'Modern Engineering Pioneers',
     description: 'Celebrate the lives and legacy of the engineers who laid the foundations of modern Sri Lanka\'s infrastructure.',
     coverImage: 'https://images.unsplash.com/photo-1542647389-5e34e24ae7d7?auto=format&fit=crop&q=80&w=600',
@@ -99,7 +99,7 @@ export const mockGalleries = [
 
 export const mockExhibits = [
   {
-    _id: 'ex1',
+    _id: '65d75b0a66f50b2984950021',
     title: 'Wind-Powered Steel Smelting',
     description: 'A revolutionary ancient iron smelting system powered by natural monsoon winds.',
     historicalInfo: 'Surveys (in 1988) for the Samanalawewa Hydro Power Project revealed 139 sites relating to iron-working, spanning 2000 years. Of these, a remarkable 77 iron smelting sites were identified located on the exposed western ridges and hill tops that experience strong desiccating winds during the southwest monsoon. The furnace design utilized monsoon winds to create a unique wind pressure system, allowing the consistent production of high carbon steel. It has no other known parallels in ferrous technology.',
@@ -114,16 +114,16 @@ export const mockExhibits = [
     ],
     audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
     videoUrl: '',
-    categoryId: { _id: 'cat1', name: 'Metallurgy & Manufacturing' },
-    galleryId: { _id: 'gal1', name: 'Ancient Engineering & Technology' },
+    categoryId: { _id: '65d7593c66f50b2984950001', name: 'Metallurgy & Manufacturing' },
+    galleryId: { _id: '65d75a1d66f50b2984950011', name: 'Ancient Engineering & Technology' },
     museumId: { _id: 'mus1', name: 'National Museum of Colombo' },
-    qrCodeUrl: 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://localhost:5173/exhibit/ex1',
-    relatedArtifacts: ['ex2'],
+    qrCodeUrl: 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://localhost:5173/exhibit/65d75b0a66f50b2984950021',
+    relatedArtifacts: ['65d75b0a66f50b2984950022'],
     translations: {
       si: {
         title: 'ශ්‍රී ලංකාවේ පුරාණ සුළං බලයෙන් ක්‍රියාත්මක යකඩ උදුන්',
         description: 'ස්වාභාවික මෝසම් සුළං බලයෙන් ක්‍රියාත්මක වූ ලෝකයේ අද්විතීය පුරාණ යකඩ නිෂ්පාදන පද්ධතියක්.',
-        historicalInfo: 'සමනල වැව ජල විදුලි යෝජනා ක්‍රමය සඳහා මූලික මිණුම් කටයුතු (1988 දී) කිරීමේදී වසර 2000ක් පැරණි යකඩ සම්බන්ධ නිර්මාණ තිබෙන ස්ථාන 139ක් පිළිබඳව තොරතුරු අනාවරණය විය. මෙයින් සිද්ධි 77ක් නිරිදිග මෝසම් සුළඟ දැඩිව හමන බටහිර කඳු මුදුන් වල පිහිටා තිබුණි. මෙම සුවිශේෂී උදුන් මඟින් වායුපීඩන පද්ධතියක් ගොඩනැගුන අතර ඒ මඟින් අඛණ්ඩව කාබන් ප්‍රමාණාත්මක වානේ නිෂ්පාදනය විය.',
+        historicalInfo: 'සමනල වැව ජල විදුලි යෝජනා ක්‍රමය සඳහා මූලික මිණුම් කටයුතු (1988 දී) කිරීමේදී වසර 2000ක් පැරණි යකඩ සම්බන්ධ නිර්මාණ තිබෙන ස්ථාන 139ක් පිළිබඳව තොරතුරු අනාවරණය විය. මෙයින් සිද්ධි 77ක් නිරිදිග මෝසම් සුළඟ දැඩිව හමන බටහිර කඳු මුදුන් වල පිහිටා තිබුණි. මෙම සුවිශේෂී උදුන් මඟින් වායුපීඩන පද්ධතියක් ගොඩනැගුන අතර ඒ මඟින් අඛණ්ඩව වානේ නිෂ්පාදනය විය.',
         timeline: [
           { year: '300 BC', title: 'මුල් සමනලවැව උදුන්', description: 'සුළඟේ දිශාවට ගැලපෙන සේ සැකසූ මුල්ම සුළං බලැති යකඩ උදුන් පිළිබඳ සාධක.' },
           { year: '100 BC', title: 'සීගිරි උදුන්', description: 'උදුන්වල හරස්කඩ ප්‍රශස්ත කිරීම සහ ඉදිරිපස බිත්ති මීටර් 2 ඉක්මවා දික් කිරීම.' },
@@ -136,7 +136,7 @@ export const mockExhibits = [
         description: 'தென்மேற்கு பருவக்காற்றின் மூலம் இயக்கப்பட்ட பண்டைய இலங்கையின் தனித்துவமான இரும்பு உருக்கு முறை.',
         historicalInfo: '1988 ஆம் ஆண்டில் சமணலவெவ நீர்மின் திட்டத்தின் போது மேற்கொள்ளப்பட்ட ஆய்வுகளில் 2000 ஆண்டுகள் பழமையான 139 இரும்பு உருக்கு இடங்கள் கண்டறியப்பட்டன. இவற்றில் 77 உலைகள் தென்மேற்கு பருவக்காற்று பலமாக வீசும் மேற்கு மலை உச்சிகளில் அமைந்திருந்தன. இந்த உலைகளின் வடிவமைப்பு பருவக்காற்றை பயன்படுத்தி ஒரு தனித்துவமான காற்று அழுத்த அமைப்பை உருவாக்கி, உயர்தர எஃகு உற்பத்தி செய்ய உதவியது.',
         timeline: [
-          { year: '300 BC', title: 'ஆரம்பகால சமணலவெவ உலைகள்', description: 'காற்றின் திசைக்கு ஏற்ப teaspoons உலைகளின் சான்றுகள்.' },
+          { year: '300 BC', title: 'ஆரம்பகால சமணலவெவ உலைகள்', description: 'காற்றின் திசைக்கு ஏற்ப வடிவமைக்கப்பட்ட ஆரம்பகால காற்றாலை உலைகளின் சான்றுகள்.' },
           { year: '100 BC', title: 'சிகிரியா உலைகள்', description: 'உலையின் குறுக்கு வெட்டு மேம்படுத்தப்பட்டு, முன் சுவர் 2 மீட்டருக்கும் அதிகமாக நீட்டிக்கப்பட்டது.' },
           { year: '850 AD', title: 'உற்பத்தியின் உச்சம்', description: 'கி.பி 9 முதல் 11 ஆம் நூற்றாண்டு வரை எஃகு உற்பத்தியின் பொற்காலம்.' },
           { year: '1988 AD', title: 'சமணலவெவ ஆய்வு', description: 'சமணலவெவ திட்டத்தின் போது 139 இரும்பு உருக்கு இடங்கள் கண்டுபிடிக்கப்பட்டு ஆய்வு செய்யப்பட்டன.' }
@@ -145,7 +145,7 @@ export const mockExhibits = [
     }
   },
   {
-    _id: 'ex2',
+    _id: '65d75b0a66f50b2984950022',
     title: 'Elephant Lamp (Ath Pahana)',
     description: 'An ingenious ancient oil lamp showcasing masterfully resolved hydrostatic engineering.',
     historicalInfo: 'Shown here is the Elephant Lamp discovered at the Kotavehera in Dedigama, crafted during the reign of King Parakramabahu I (1153 – 1186 AD). For an oil lamp that operates via a wick, the height difference between the burning tip of the wick and the oil level in the reservoir must not be significant. If this height difference becomes too large, oil will stop being drawn up through the wick, causing the wick to burn out. Designing a lamp that can hold a large volume of oil without letting the burning surface level drop significantly is a difficult task. The Elephant Lamp clearly demonstrates how masterfully and artistically this engineering challenge was resolved by utilizing a smart hydrostatic vacuum principle within the elephant\'s hollow body.',
@@ -158,11 +158,11 @@ export const mockExhibits = [
     ],
     audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3',
     videoUrl: '',
-    categoryId: { _id: 'cat1', name: 'Metallurgy & Manufacturing' },
-    galleryId: { _id: 'gal1', name: 'Ancient Engineering & Technology' },
+    categoryId: { _id: '65d7593c66f50b2984950001', name: 'Metallurgy & Manufacturing' },
+    galleryId: { _id: '65d75a1d66f50b2984950011', name: 'Ancient Engineering & Technology' },
     museumId: { _id: 'mus1', name: 'National Museum of Colombo' },
-    qrCodeUrl: 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://localhost:5173/exhibit/ex2',
-    relatedArtifacts: ['ex1'],
+    qrCodeUrl: 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://localhost:5173/exhibit/65d75b0a66f50b2984950022',
+    relatedArtifacts: ['65d75b0a66f50b2984950021'],
     translations: {
       si: {
         title: 'ඇත් පහණ',
@@ -185,7 +185,7 @@ export const mockExhibits = [
     }
   },
   {
-    _id: 'ex3',
+    _id: '65d75b0a66f50b2984950023',
     title: 'Jetavana Stupa (Jethawanarama)',
     description: 'One of the largest colossal monuments of the ancient world, showcasing massive structural brick engineering.',
     historicalInfo: 'The construction of the colossal Stupa of Jetavana is attributed to King Mahasen [275-301 AD]. It is said to be the biggest Stupa ever built, perhaps anywhere in the Buddhist world, and the third largest building of its time. Its height is given in the Chulavamsa as 160 vadu riyan, which is equivalent to 400 feet (122.0m) to the tip of its spire, and 370 feet (113.0m) across its base. During the archaeological investigations, it has been found that the interior of the Jetavana Stupa is constituted of different materials arranged in different orders, beginning from the bedrock 7.0m-8.8m below the terrace, constructed in two levels using fully burnt bricks and a very thin clay mortar.',
@@ -199,11 +199,11 @@ export const mockExhibits = [
     ],
     audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3',
     videoUrl: '',
-    categoryId: { _id: 'cat3', name: 'Monumental Architecture' },
-    galleryId: { _id: 'gal1', name: 'Ancient Engineering & Technology' },
+    categoryId: { _id: '65d7593c66f50b2984950003', name: 'Monumental Architecture' },
+    galleryId: { _id: '65d75a1d66f50b2984950011', name: 'Ancient Engineering & Technology' },
     museumId: { _id: 'mus1', name: 'National Museum of Colombo' },
-    qrCodeUrl: 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://localhost:5173/exhibit/ex3',
-    relatedArtifacts: ['ex4', 'ex5'],
+    qrCodeUrl: 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://localhost:5173/exhibit/65d75b0a66f50b2984950023',
+    relatedArtifacts: ['65d75b0a66f50b2984950024', '65d75b0a66f50b2984950025'],
     translations: {
       si: {
         title: 'ජේතවන මහා ස්තූපය',
@@ -228,7 +228,7 @@ export const mockExhibits = [
     }
   },
   {
-    _id: 'ex4',
+    _id: '65d75b0a66f50b2984950024',
     title: 'Bisokotuwa (Reservoir Sluice Gate)',
     description: 'The grandfather of modern sluice gates, used to regulate water release in ancient reservoirs.',
     historicalInfo: 'Developed around 2000 years ago by the engineers of ancient Sri Lanka, the Bisokotuwa was used to control and issue water from reservoirs, that generally had high heads. It was a rectangular pit lined with long, thin granite slabs built parallel to the reservoir bund, housing the inlet and outlet conduits. It enabled to reduce the potentially destructive kinetic energy of the incoming water which could have eroded the structure, preventing the collapse of the embankment. The system shows early mastership of hydraulics.',
@@ -241,11 +241,11 @@ export const mockExhibits = [
     ],
     audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3',
     videoUrl: '',
-    categoryId: { _id: 'cat2', name: 'Hydraulics & Urban Planning' },
-    galleryId: { _id: 'gal1', name: 'Ancient Engineering & Technology' },
+    categoryId: { _id: '65d7593c66f50b2984950002', name: 'Hydraulics & Urban Planning' },
+    galleryId: { _id: '65d75a1d66f50b2984950011', name: 'Ancient Engineering & Technology' },
     museumId: { _id: 'mus1', name: 'National Museum of Colombo' },
-    qrCodeUrl: 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://localhost:5173/exhibit/ex4',
-    relatedArtifacts: ['ex3', 'ex5'],
+    qrCodeUrl: 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://localhost:5173/exhibit/65d75b0a66f50b2984950024',
+    relatedArtifacts: ['65d75b0a66f50b2984950023', '65d75b0a66f50b2984950025'],
     translations: {
       si: {
         title: 'බිසෝ කොටුව',
@@ -268,7 +268,7 @@ export const mockExhibits = [
     }
   },
   {
-    _id: 'ex5',
+    _id: '65d75b0a66f50b2984950025',
     title: 'Sigiriya Water Management Technology',
     description: 'An outstanding example of ancient urban planning, micro-hydraulics, and symmetrical landscape gardens.',
     historicalInfo: 'Sigiriya is well known for its water management systems. The main problem encountered during the design of a water garden system would have been sourcing of the required amount of water throughout the year. Accordingly, Sigiriya Engineers constructed collection ponds in strategic locations, to retain the rain water. The water retained in these facilities had been meticulously arranged to feed the palace complex, gardens, and moats. The system uses a network of underground clay pipes and gravity pressure to feed fountains that still operate during the rainy season.',
@@ -281,16 +281,16 @@ export const mockExhibits = [
     ],
     audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
     videoUrl: '',
-    categoryId: { _id: 'cat2', name: 'Hydraulics & Urban Planning' },
-    galleryId: { _id: 'gal1', name: 'Ancient Engineering & Technology' },
+    categoryId: { _id: '65d7593c66f50b2984950002', name: 'Hydraulics & Urban Planning' },
+    galleryId: { _id: '65d75a1d66f50b2984950011', name: 'Ancient Engineering & Technology' },
     museumId: { _id: 'mus1', name: 'National Museum of Colombo' },
-    qrCodeUrl: 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://localhost:5173/exhibit/ex5',
-    relatedArtifacts: ['ex3', 'ex4'],
+    qrCodeUrl: 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://localhost:5173/exhibit/65d75b0a66f50b2984950025',
+    relatedArtifacts: ['65d75b0a66f50b2984950023', '65d75b0a66f50b2984950024'],
     translations: {
       si: {
         title: 'සීගිරි ජල කළමනාකරණ තාක්ෂණය',
-        description: 'ක්ෂුද්‍ර ජල විද්‍යාව සහ සමමිතික උද්‍යාන කලාව භාවිත කරමින් කළ අසමසම නාගරික සැලසුම්කරණය.',
-        historicalInfo: 'සීගිරි ජල කළමනාකරණය පිළිබඳ ලොව පුරා ප්‍රසිද්ධය. සීගිරි ඉංජිනේරුවන් විසින් වැසි ජලය රැස් කර තබා ගැනීම සඳහා මුදුනේ සහ පාමුල පොකුණු, ජල උද්‍යාන සහ දිය අගල් පද්ධති ඉදිකරන ලදී. භූගත මැටි නල සහ ගුරුත්වාකර්ෂණ පීඩනය උපයෝගී කරගෙන ක්‍රියාත්මක වන ජල මල් අදටත් ක්‍රියාකාරී මට්ටමේ පවතී.',
+        description: 'මයික්‍රෝ-හයිඩ්‍රොලික් සහ සමමිතික භූ දර්ශන උද්‍යාන භාවිතයෙන් නිර්මාණය කළ විශිෂ්ට පැරණි නාගරික සැලසුම්කරණයක්.',
+        historicalInfo: 'සීගිරි ජල කළමනාකරණය පිළිබඳ ලොව පුරා ප්‍රසිද්ධය. සීගිරි ඉංජිනේරුවන් විසින් වැසි ජලය රැස් කිරීම සඳහා උපායමාර්ගික ස්ථාන වල පොකුණු ඉදිකළහ. භූගත මැටි නල සහ ගුරුත්වාකර්ෂණ බලයෙන් ක්‍රියාත්මක වන දියමල් මඟින් දිය අගල් සහ උද්‍යාන සඳහා අඛණ්ඩව ජලය සැපයීය.',
         timeline: [
           { year: '477 AD', title: 'සීගිරිය ඉදිකිරීම ඇරඹීම', description: 'කාශ්‍යප රජු විසින් සීගිරි පර්වතය තෝරාගෙන උද්‍යානවල සැලසුම් ඇරඹීම.' },
           { year: '495 AD', title: 'දියමල් ක්‍රියාත්මක කිරීම', description: 'ගුරුත්වාකර්ෂණ බලයෙන් ක්‍රියාත්මක වන ජල පද්ධතිය සහ දියමල්වල වැඩ අවසන් වීම.' }
@@ -308,7 +308,7 @@ export const mockExhibits = [
     }
   },
   {
-    _id: 'ex6',
+    _id: '65d75b0a66f50b2984950026',
     title: 'Eng. D. J. Wimalasurendra',
     description: 'The visionary pioneer known as the \'Father of Hydro-Electricity\' in Sri Lanka.',
     historicalInfo: 'Eng. D J Wimalasurendra considered the \'Father of Hydro-Electricity in Sri Lanka\' holds an unparalleled record in the annals of the history of civil and electrical engineering fields in the country. He was the eldest son of the master craftsman, Muhandiram Don Juan Devapura Wimalasurendra, born on the 17th September 1874 in the village of Galwadugoda, Galle. He surveyed the Kelani Valley in 1901 and recognized the hydro-power potential of Laxapana and Aberdeen Falls. His subsequent submission of a technical case study on \'Economics of power utilization in Ceylon\' in 1918 led to the Laxapana Power Project. He also designed the unique "loop-loop" railway track at Demodara.',
@@ -316,18 +316,18 @@ export const mockExhibits = [
       { year: '1874 AD', title: 'Birth of Wimalasurendra', description: 'Born in Galle to a traditional master craftsman family.' },
       { year: '1901 AD', title: 'Laxapana Discovery', description: 'Surveyed the Kelani Valley and identified the hydro-power potential.' },
       { year: '1918 AD', title: 'Hydro-Power Proposal', description: 'Submitted his landmark paper on Sri Lankan hydro-electricity economics.' },
-      { year: '1950' , title: 'Laxapana Commissioning', description: 'First stage of the Laxapana Hydro-Power Project successfully commissioned.' }
+      { year: '1950 AD', title: 'Laxapana Commissioning', description: 'First stage of the Laxapana Hydro-Power Project successfully commissioned.' }
     ],
     images: [
       'https://images.unsplash.com/photo-1473877947094-13107d85acf9?auto=format&fit=crop&q=80&w=600'
     ],
     audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3',
     videoUrl: '',
-    categoryId: { _id: 'cat4', name: 'Modern Engineering Pioneers' },
-    galleryId: { _id: 'gal2', name: 'Modern Engineering Pioneers' },
+    categoryId: { _id: '65d7593c66f50b2984950004', name: 'Modern Engineering Pioneers' },
+    galleryId: { _id: '65d75a1d66f50b2984950012', name: 'Modern Engineering Pioneers' },
     museumId: { _id: 'mus1', name: 'National Museum of Colombo' },
-    qrCodeUrl: 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://localhost:5173/exhibit/ex6',
-    relatedArtifacts: ['ex7', 'ex8'],
+    qrCodeUrl: 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://localhost:5173/exhibit/65d75b0a66f50b2984950026',
+    relatedArtifacts: ['65d75b0a66f50b2984950027', '65d75b0a66f50b2984950028'],
     translations: {
       si: {
         title: 'ඉංජිනේරු ඩී. ජේ. විමලසුරේන්ද්‍ර',
@@ -345,7 +345,7 @@ export const mockExhibits = [
         description: 'இலங்கையின் நீர்மின்சார உற்பத்தியின் தந்தை மற்றும் முன்னோடி.',
         historicalInfo: 'இலங்கையின் நீர்மின்சாரத்தின் தந்தையாகக் கருதப்படும் பொறியியலாளர் டி. ஜே. விமலசுரேந்திரா 1874 செப்டம்பர் 17 அன்று காலியில் பிறந்தார். அவர் 1901 ஆம் ஆண்டில் களனி பள்ளத்தாக்கை ஆய்வு செய்து, லக்ஷபான நீர்வீழ்ச்சியின் நீர்மின் திறனை கண்டறிந்தார். 1918 இல் அவர் சமர்ப்பித்த அறிக்கை லக்ஷபான நீர்மின் திட்டத்திற்கு வழிவகுத்தது. தெமோதர ரயில் வளைவையும் (loop-loop) அவரே வடிவமைத்தார்.',
         timeline: [
-          { year: '1874 AD', title: 'விமலசுரேந்திராவின் பிறப்பு', description: 'காலியில் ஒரு பாரம்பரிய கைவினைஞர் குடும்பத்தில் பிறந்தார்.' },
+          { year: '1874 AD', title: 'விமலசுரேந்திராவின் பிறப்பு', description: 'விமலசுரேந்திரா காலியில் ஒரு பாரம்பரிய கைவினைஞர் குடும்பத்தில் பிறந்தார்.' },
           { year: '1901 AD', title: 'லக்ஷபான கண்டுபிடிப்பு', description: 'களனி பள்ளத்தாக்கை ஆய்வு செய்து நீர்மின் திறனைக் கண்டறிந்தார்.' },
           { year: '1918 AD', title: 'நீர்மின்சாரத் திட்டம்', description: 'இலங்கையின் நீர்மின்சாரப் பயன்பாடு குறித்த தனது மைல்கல் திட்டத்தைச் சமர்ப்பித்தார்.' },
           { year: '1950 AD', title: 'லக்ஷபான தொடக்கம்', description: 'லக்ஷபான நீர்மின் திட்டத்தின் முதல் கட்டம் வெற்றிகரமாகத் தொடங்கப்பட்டது.' }
@@ -354,7 +354,7 @@ export const mockExhibits = [
     }
   },
   {
-    _id: 'ex7',
+    _id: '65d75b0a66f50b2984950027',
     title: 'Eng. B. D. Rampala',
     description: 'The legendary chief mechanical engineer who revolutionized Sri Lankan railways during its \'Golden Era\'.',
     historicalInfo: 'Eng. Bamunusinghearachchige Don Rampala, educated at Ananda and Nalanda Colleges, Colombo, joined the Ceylon Government Railway (CGR) as a Special Apprentice in 1931. He became the first Sri Lankan Chief Mechanical Engineer in 1949 and General Manager in 1955. His 15-year tenure is regarded as the Golden Era of the CGR. He dieselized the railway, introduced observation cars, 55 ft long coaches, and the famous long-distance express trains: Yal Devi, Udarata Menike, and Ruhunu Kumari.',
@@ -362,18 +362,18 @@ export const mockExhibits = [
       { year: '1931 AD', title: 'Railway Service Entry', description: 'Joined the Ceylon Government Railway as a Special Apprentice.' },
       { year: '1949 AD', title: 'Chief Mechanical Engineer', description: 'Appointed as the first Sri Lankan Chief Mechanical Engineer.' },
       { year: '1955 AD', title: 'General Manager of Railways', description: 'Assumed duties as General Manager, initiating massive modernization.' },
-      { year: '1956' , title: 'Dieselization Launch', description: 'Successfully transitioned Sri Lankan railways from steam to diesel locomotives.' }
+      { year: '1956 AD', title: 'Dieselization Launch', description: 'Successfully transitioned Sri Lankan railways from steam to diesel locomotives.' }
     ],
     images: [
       'https://images.unsplash.com/photo-1542647389-5e34e24ae7d7?auto=format&fit=crop&q=80&w=600'
     ],
     audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3',
     videoUrl: '',
-    categoryId: { _id: 'cat4', name: 'Modern Engineering Pioneers' },
-    galleryId: { _id: 'gal2', name: 'Modern Engineering Pioneers' },
+    categoryId: { _id: '65d7593c66f50b2984950004', name: 'Modern Engineering Pioneers' },
+    galleryId: { _id: '65d75a1d66f50b2984950012', name: 'Modern Engineering Pioneers' },
     museumId: { _id: 'mus1', name: 'National Museum of Colombo' },
-    qrCodeUrl: 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://localhost:5173/exhibit/ex7',
-    relatedArtifacts: ['ex6', 'ex8'],
+    qrCodeUrl: 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://localhost:5173/exhibit/65d75b0a66f50b2984950027',
+    relatedArtifacts: ['65d75b0a66f50b2984950026', '65d75b0a66f50b2984950028'],
     translations: {
       si: {
         title: 'ඉංජිනේරු බී. ඩී. රම්පාල',
@@ -400,7 +400,7 @@ export const mockExhibits = [
     }
   },
   {
-    _id: 'ex8',
+    _id: '65d75b0a66f50b2984950028',
     title: 'Eng. A. N. S. Kulasinghe',
     description: 'The pioneer of pre-stressed concrete and maritime structural engineering in Sri Lanka.',
     historicalInfo: 'Arumadura Nandasena de Silva Kulasinghe obtained a BSc (London) in 1933 and qualified for membership in civil and mechanical engineering institutions. He pioneered the use of pre-stressed concrete in Sri Lanka, developing the CPC Kulasinghe System of Pre-stressing. He was responsible for the design and construction of the Colombo Planetarium, Colombo Port, the Kalutara Chaitya (hollow dome), the Sambuddha Jayanthi Chaitya, and the Kothmale Maha Seya, obtaining 24 patents.',
@@ -415,11 +415,11 @@ export const mockExhibits = [
     ],
     audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3',
     videoUrl: '',
-    categoryId: { _id: 'cat4', name: 'Modern Engineering Pioneers' },
-    galleryId: { _id: 'gal2', name: 'Modern Engineering Pioneers' },
+    categoryId: { _id: '65d7593c66f50b2984950004', name: 'Modern Engineering Pioneers' },
+    galleryId: { _id: '65d75a1d66f50b2984950012', name: 'Modern Engineering Pioneers' },
     museumId: { _id: 'mus1', name: 'National Museum of Colombo' },
-    qrCodeUrl: 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://localhost:5173/exhibit/ex8',
-    relatedArtifacts: ['ex6', 'ex7'],
+    qrCodeUrl: 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://localhost:5173/exhibit/65d75b0a66f50b2984950028',
+    relatedArtifacts: ['65d75b0a66f50b2984950026', '65d75b0a66f50b2984950027'],
     translations: {
       si: {
         title: 'ඉංජිනේරු ඒ. එන්. එස්. කුලසිංහ',

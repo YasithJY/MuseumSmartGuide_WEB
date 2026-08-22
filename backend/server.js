@@ -52,10 +52,18 @@ app.get('/', (req, res) => {
 
 // Error handling middleware
 app.use((err, req, res, next) => {
-  const statusCode = res.statusCode === 200 ? 500 : res.statusCode;
+  let statusCode = res.statusCode === 200 ? 500 : res.statusCode;
+  let message = err.message;
+
+  // Handle Mongoose CastError (e.g. invalid ObjectId format)
+  if (err.name === 'CastError' && err.kind === 'ObjectId') {
+    statusCode = 400;
+    message = `Invalid ID format: "${err.value}"`;
+  }
+
   res.status(statusCode).json({
     success: false,
-    message: err.message,
+    message: message,
     stack: process.env.NODE_ENV === 'production' ? null : err.stack
   });
 });

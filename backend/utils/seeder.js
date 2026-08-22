@@ -56,9 +56,10 @@ const seedData = async () => {
 
     console.log('Users seeded.');
 
-    // 2. Seed Categories (with Sinhala & Tamil translations)
+    // 2. Seed Categories (with explicit ObjectIds and translations)
     const categories = await Category.create([
       {
+        _id: new mongoose.Types.ObjectId('65d7593c66f50b2984950001'),
         name: 'Metallurgy & Manufacturing',
         description: 'Ancient Sri Lankan metalwork, furnace technology, and tool craftsmanship',
         translations: {
@@ -67,6 +68,7 @@ const seedData = async () => {
         }
       },
       {
+        _id: new mongoose.Types.ObjectId('65d7593c66f50b2984950002'),
         name: 'Hydraulics & Urban Planning',
         description: 'Ancient irrigation networks, reservoir construction, and city planning systems',
         translations: {
@@ -75,6 +77,7 @@ const seedData = async () => {
         }
       },
       {
+        _id: new mongoose.Types.ObjectId('65d7593c66f50b2984950003'),
         name: 'Monumental Architecture',
         description: 'Engineering and construction methodology behind massive brick stupas and rock fortresses',
         translations: {
@@ -83,6 +86,7 @@ const seedData = async () => {
         }
       },
       {
+        _id: new mongoose.Types.ObjectId('65d7593c66f50b2984950004'),
         name: 'Modern Engineering Pioneers',
         description: 'Leading Sri Lankan engineers who revolutionized modern infrastructure, railways, and power grids',
         translations: {
@@ -94,7 +98,7 @@ const seedData = async () => {
 
     console.log('Categories seeded.');
 
-    // 3. Seed Museum (with Sinhala & Tamil translations)
+    // 3. Seed Museum
     const colomboMuseum = await Museum.create({
       name: 'National Museum of Colombo',
       description: 'Established in 1877, the National Museum of Colombo stands as the guardian of Sri Lanka\'s rich historical legacy. Housing thousands of antiquities, it exhibits the cultural, artistic, and social evolution of the island from prehistoric eras up to the Kandyan kingdom.',
@@ -123,9 +127,10 @@ const seedData = async () => {
 
     console.log('Colombo Museum seeded.');
 
-    // 4. Seed Galleries (with Sinhala & Tamil translations)
+    // 4. Seed Galleries (with explicit ObjectIds)
     const galleries = await Gallery.create([
       {
+        _id: new mongoose.Types.ObjectId('65d75a1d66f50b2984950011'),
         name: 'Ancient Engineering & Technology',
         description: 'Explore the advanced metallurgical, hydraulic, and structural engineering wonders of ancient Sri Lanka.',
         coverImage: 'https://images.unsplash.com/photo-1605721911519-3dfeb3be25e7?auto=format&fit=crop&q=80&w=600',
@@ -143,6 +148,7 @@ const seedData = async () => {
         }
       },
       {
+        _id: new mongoose.Types.ObjectId('65d75a1d66f50b2984950012'),
         name: 'Modern Engineering Pioneers',
         description: 'Celebrate the lives and legacy of the engineers who laid the foundations of modern Sri Lanka\'s infrastructure.',
         coverImage: 'https://images.unsplash.com/photo-1542647389-5e34e24ae7d7?auto=format&fit=crop&q=80&w=600',
@@ -163,9 +169,10 @@ const seedData = async () => {
 
     console.log('Galleries seeded.');
 
-    // 5. Seed Exhibits (with Sinhala & Tamil translations)
+    // 5. Seed Exhibits (with explicit ObjectIds)
     const exhibits = await Exhibit.create([
       {
+        _id: new mongoose.Types.ObjectId('65d75b0a66f50b2984950021'),
         title: 'Wind-Powered Steel Smelting',
         description: 'A revolutionary ancient iron smelting system powered by natural monsoon winds.',
         historicalInfo: 'Surveys (in 1988) for the Samanalawewa Hydro Power Project revealed 139 sites relating to iron-working, spanning 2000 years. Of these, a remarkable 77 iron smelting sites were identified located on the exposed western ridges and hill tops that experience strong desiccating winds during the southwest monsoon. The furnace design utilized monsoon winds to create a unique wind pressure system, allowing the consistent production of high carbon steel. It has no other known parallels in ferrous technology.',
@@ -211,6 +218,7 @@ const seedData = async () => {
         }
       },
       {
+        _id: new mongoose.Types.ObjectId('65d75b0a66f50b2984950022'),
         title: 'Elephant Lamp (Ath Pahana)',
         description: 'An ingenious ancient oil lamp showcasing masterfully resolved hydrostatic engineering.',
         historicalInfo: 'Shown here is the Elephant Lamp discovered at the Kotavehera in Dedigama, crafted during the reign of King Parakramabahu I (1153 – 1186 AD). For an oil lamp that operates via a wick, the height difference between the burning tip of the wick and the oil level in the reservoir must not be significant. If this height difference becomes too large, oil will stop being drawn up through the wick, causing the wick to burn out. Designing a lamp that can hold a large volume of oil without letting the burning surface level drop significantly is a difficult task. The Elephant Lamp clearly demonstrates how masterfully and artistically this engineering challenge was resolved by utilizing a smart hydrostatic vacuum principle within the elephant\'s hollow body.',
@@ -240,7 +248,7 @@ const seedData = async () => {
           },
           ta: {
             title: 'யானை விளக்கு (ඇත් පහණ)',
-            description: 'நீர்ம அழுத்த சமநிலையை பயன்படுத்தி skyscrapers வடிவமைக்கப்பட்ட ஒரு விசித்திரமான விளக்கு.',
+            description: 'நீர்ம அழுத்த சமநிலையை பயன்படுத்தி வடிவமைக்கப்பட்ட ஒரு விசித்திரமான விளக்கு.',
             historicalInfo: 'முதலாம் பராக்கிரமபாகு மன்னரின் ஆட்சிக்காலத்தில் (கி.பி. 1153 – 1186) உருவாக்கப்பட்ட இந்த விளக்கு தெதிகம கொட்டவெஹெர ஸ்தூபியிலிருந்து கண்டெடுக்கப்பட்டது. யானையின் வெற்று உடலுக்குள் நீர்ம அழுத்த வெற்றிடக் கொள்கையைப் பயன்படுத்தி இந்த பொறியியல் சவால் தீர்க்கப்பட்டுள்ளது.',
             timeline: [
               { year: '1153 AD', title: 'முதலாம் பராக்கிரமபாகு மன்னரின் ஆட்சி', description: 'கலை மற்றும் பொறியியல் திறனின் உச்சமாக அரச கைவினைஞர்களால் இந்த விளக்கு உருவாக்கப்பட்டது.' },
@@ -250,6 +258,7 @@ const seedData = async () => {
         }
       },
       {
+        _id: new mongoose.Types.ObjectId('65d75b0a66f50b2984950023'),
         title: 'Jetavana Stupa (Jethawanarama)',
         description: 'One of the largest colossal monuments of the ancient world, showcasing massive structural brick engineering.',
         historicalInfo: 'The construction of the colossal Stupa of Jetavana is attributed to King Mahasen [275-301 AD]. It is said to be the biggest Stupa ever built, perhaps anywhere in the Buddhist world, and the third largest building of its time. Its height is given in the Chulavamsa as 160 vadu riyan, which is equivalent to 400 feet (122.0m) to the tip of its spire, and 370 feet (113.0m) across its base. During the archaeological investigations, it has been found that the interior of the Jetavana Stupa is constituted of different materials arranged in different orders, beginning from the bedrock 7.0m-8.8m below the terrace, constructed in two levels using fully burnt bricks and a very thin clay mortar.',
@@ -292,6 +301,7 @@ const seedData = async () => {
         }
       },
       {
+        _id: new mongoose.Types.ObjectId('65d75b0a66f50b2984950024'),
         title: 'Bisokotuwa (Reservoir Sluice Gate)',
         description: 'The grandfather of modern sluice gates, used to regulate water release in ancient reservoirs.',
         historicalInfo: 'Developed around 2000 years ago by the engineers of ancient Sri Lanka, the Bisokotuwa was used to control and issue water from reservoirs, that generally had high heads. It was a rectangular pit lined with long, thin granite slabs built parallel to the reservoir bund, housing the inlet and outlet conduits. It enabled to reduce the potentially destructive kinetic energy of the incoming water which could have eroded the structure, preventing the collapse of the embankment. The system shows early mastership of hydraulics.',
@@ -331,6 +341,7 @@ const seedData = async () => {
         }
       },
       {
+        _id: new mongoose.Types.ObjectId('65d75b0a66f50b2984950025'),
         title: 'Sigiriya Water Management Technology',
         description: 'An outstanding example of ancient urban planning, micro-hydraulics, and symmetrical landscape gardens.',
         historicalInfo: 'Sigiriya is well known for its water management systems. The main problem encountered during the design of a water garden system would have been sourcing of the required amount of water throughout the year. Accordingly, Sigiriya Engineers constructed collection ponds in strategic locations, to retain the rain water. The water retained in these facilities had been meticulously arranged to feed the palace complex, gardens, and moats. The system uses a network of underground clay pipes and gravity pressure to feed fountains that still operate during the rainy season.',
@@ -352,7 +363,7 @@ const seedData = async () => {
           si: {
             title: 'සීගිරි ජල කළමනාකරණ තාක්ෂණය',
             description: 'මයික්‍රෝ-හයිඩ්‍රොලික් සහ සමමිතික භූ දර්ශන උද්‍යාන භාවිතයෙන් නිර්මාණය කළ විශිෂ්ට පැරණි නාගරික සැලසුම්කරණයක්.',
-            historicalInfo: 'සීගිරි ජල කළමනාකරණ ක්‍රමවේදය ඉතා දියුණු එකකි. සීගිරි ඉංජිනේරුවන් විසින් වැසි ජලය රැස් කිරීම සඳහා උපායමාර්ගික ස්ථාන වල පොකුණු ඉදිකළහ. භූගත මැටි නල සහ ගුරුත්වාකර්ෂණ බලයෙන් ක්‍රියාත්මක වන දියමල් මඟින් දිය අගල් සහ උද්‍යාන සඳහා අඛණ්ඩව ජලය සැපයීය.',
+            historicalInfo: 'සීගිරි ජල කළමනාකරණය පිළිබඳ ලොව පුරා ප්‍රසිද්ධය. සීගිරි ඉංජිනේරුවන් විසින් වැසි ජලය රැස් කිරීම සඳහා උපායමාර්ගික ස්ථාන වල පොකුණු ඉදිකළහ. භූගත මැටි නල සහ ගුරුත්වාකර්ෂණ බලයෙන් ක්‍රියාත්මක වන දියමල් මඟින් දිය අගල් සහ උද්‍යාන සඳහා අඛණ්ඩව ජලය සැපයීය.',
             timeline: [
               { year: '477 AD', title: 'සීගිරිය ඉදිකිරීම ඇරඹීම', description: 'කාශ්‍යප රජු විසින් සීගිරි පර්වතය තෝරාගෙන උද්‍යානවල සැලසුම් ඇරඹීම.' },
               { year: '495 AD', title: 'දියමල් ක්‍රියාත්මක කිරීම', description: 'ගුරුත්වාකර්ෂණ බලයෙන් ක්‍රියාත්මක වන ජල පද්ධතිය සහ දියමල්වල වැඩ අවසන් වීම.' }
@@ -370,6 +381,7 @@ const seedData = async () => {
         }
       },
       {
+        _id: new mongoose.Types.ObjectId('65d75b0a66f50b2984950026'),
         title: 'Eng. D. J. Wimalasurendra',
         description: 'The visionary pioneer known as the \'Father of Hydro-Electricity\' in Sri Lanka.',
         historicalInfo: 'Eng. D J Wimalasurendra considered the \'Father of Hydro-Electricity in Sri Lanka\' holds an unparalleled record in the annals of the history of civil and electrical engineering fields in the country. He was the eldest son of the master craftsman, Muhandiram Don Juan Devapura Wimalasurendra, born on the 17th September 1874 in the village of Galwadugoda, Galle. He surveyed the Kelani Valley in 1901 and recognized the hydro-power potential of Laxapana and Aberdeen Falls. His subsequent submission of a technical case study on \'Economics of power utilization in Ceylon\' in 1918 led to the Laxapana Power Project. He also designed the unique "loop-loop" railway track at Demodara.',
@@ -398,7 +410,7 @@ const seedData = async () => {
               { year: '1874 AD', title: 'විමලසුරේන්ද්‍ර මහතාගේ උපත', description: 'ගාල්ලේ සාම්ප්‍රදායික ශිල්පී පවුලක උපත ලැබීම.' },
               { year: '1901 AD', title: 'ලක්ෂපාන ජල විභවය හඳුනාගැනීම', description: 'කැළණි නිම්නය සමීක්ෂණය කර ජල විදුලි විභවය හඳුනාගැනීම.' },
               { year: '1918 AD', title: 'ජල විදුලි යෝජනාව', description: 'ලංකාවේ විදුලි බලය උපයෝගී කරගැනීමේ ආර්ථික විද්‍යාත්මක වාර්තාව ඉදිරිපත් කිරීම.' },
-              { year: '1950 AD', title: 'ලක්ෂපාන ජලවිදුලි බලාගාරය ඇරඹීම', description: 'ලක්ෂපාන ව්‍යාපෘතියේ පළමු අදියර සාර්ථකව විවෘත කිරීම.' }
+              { year: '1950 AD', title: 'ලක්ෂපාන බලාගාරය ඇරඹීම', description: 'ලක්ෂපාන ව්‍යාපෘතියේ පළමු අදියර සාර්ථකව විවෘත කිරීම.' }
             ]
           },
           ta: {
@@ -415,6 +427,7 @@ const seedData = async () => {
         }
       },
       {
+        _id: new mongoose.Types.ObjectId('65d75b0a66f50b2984950027'),
         title: 'Eng. B. D. Rampala',
         description: 'The legendary chief mechanical engineer who revolutionized Sri Lankan railways during its \'Golden Era\'.',
         historicalInfo: 'Eng. Bamunusinghearachchige Don Rampala, educated at Ananda and Nalanda Colleges, Colombo, joined the Ceylon Government Railway (CGR) as a Special Apprentice in 1931. He became the first Sri Lankan Chief Mechanical Engineer in 1949 and General Manager in 1955. His 15-year tenure is regarded as the Golden Era of the CGR. He dieselized the railway, introduced observation cars, 55 ft long coaches, and the famous long-distance express trains: Yal Devi, Udarata Menike, and Ruhunu Kumari.',
@@ -460,6 +473,7 @@ const seedData = async () => {
         }
       },
       {
+        _id: new mongoose.Types.ObjectId('65d75b0a66f50b2984950028'),
         title: 'Eng. A. N. S. Kulasinghe',
         description: 'The pioneer of pre-stressed concrete and maritime structural engineering in Sri Lanka.',
         historicalInfo: 'Arumadura Nandasena de Silva Kulasinghe obtained a BSc (London) in 1933 and qualified for membership in civil and mechanical engineering institutions. He pioneered the use of pre-stressed concrete in Sri Lanka, developing the CPC Kulasinghe System of Pre-stressing. He was responsible for the design and construction of the Colombo Planetarium, Colombo Port, the Kalutara Chaitya (hollow dome), the Sambuddha Jayanthi Chaitya, and the Kothmale Maha Seya, obtaining 24 patents.',
@@ -472,7 +486,7 @@ const seedData = async () => {
         images: [
           'https://images.unsplash.com/photo-1584467541268-b040f83be3fd?auto=format&fit=crop&q=80&w=600'
         ],
-        audioUrl: '/uploads/SoundHelix-Song-4.mp3',
+        audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3',
         videoUrl: '',
         categoryId: categories[3]._id,
         galleryId: galleries[1]._id,
@@ -483,7 +497,7 @@ const seedData = async () => {
           si: {
             title: 'ඉංජිනේරු ඒ. එන්. එස්. කුලසිංහ',
             description: 'පෙරසවි කොන්ක්‍රීට් තාක්ෂණය සහ සාගර ඉංජිනේරු විද්‍යාවේ ශ්‍රී ලාංකික පුරෝගාමියා.',
-            historicalInfo: 'අරුමදුර නන්දසේන ද සිල්වා කුලසිංහ මහතා පෙරසවි කොන්ක්‍රීට් තාක්ෂණය ලංකාවට හඳුන්වා දුන් අතර පේටන්ට් බලපත්‍ර 24ක් හිමිකර ගත්තේය. කොළඹ ග්‍රහලෝකාගාරය, කොළඹ වරාය, කළුතර චෛත්‍යය (කුහර ඩෝමය) සහ කොත්මලේ මහා සෑය එතුමාගේ විශිෂ්ට නිර්මාණයන් වේ.',
+            historicalInfo: 'අරුමදුර නන්දසේන ද සිල්වා කුලසිංහ මහතා පෙරසවි කොන්ක්‍රීට් තාක්ෂණය ලංකාවට හඳුන්වා දුන් අතර පේටන්ට් බලපත්‍ර 24ක් හිමിക്കර ගත්තේය. කොළඹ ග්‍රහලෝකාගාරය, කොළඹ වරාය, කළුතර චෛත්‍යය (කුහර ඩෝමය) සහ කොත්මලේ මහා සෑය එතුමාගේ විශිෂ්ට නිර්මාණයන් වේ.',
             timeline: [
               { year: '1919 AD', title: 'කුලසිංහ මහතාගේ උපත', description: 'ශ්‍රී ලංකාවේ උපත ලැබීම.' },
               { year: '1946 AD', title: 'වෘත්තීය ඉංජිනේරු සුදුසුකම්', description: 'එක්සත් රාජධානියේ සිවිල් හා යාන්ත්‍රික ඉංජිනේරු ආයතනවල සාමාජිකත්වය ලබා ගැනීම.' },
@@ -494,7 +508,7 @@ const seedData = async () => {
           ta: {
             title: 'பொறியியலாளர் ஏ. என். எஸ். குலசிங்க',
             description: 'இலங்கையில் முன்கூட்டியே வார்க்கப்பட்ட காங்கிரீட் தொழில்நுட்பத்தின் முன்னோடி.',
-            historicalInfo: 'ஏ. என். எஸ். குலசிங்க லண்டனில் பொறியியல் பட்டம் பெற்றார். அவர் இலங்கையில் முன்கூட்டியே வார்க்கப்பட்ட காங்கிரீட் பயன்பாட்டின் முன்னோடியாக விளங்கினார். கொழும்பு கோளரங்கம், கொழும்பு துறைமுகம், களுத்துறை சைத்யா (வெற்று குவிமாடம்) போன்றவற்றை வடிவமைத்து 24 காப்புரிமைகளைப் பெற்றார்.',
+            historicalInfo: 'ஏ. என். எஸ். குலசிங்க லண்டனில் பொறியியல் பட்டம் பெற்றார். அவர் இலங்கையில் முன்கூட்டியே வார்க்கப்பட்ட காங்கிரீட் பயன்பாட்டின் முன்னோடியாக விளங்கினார். கொழும்பு கோளரங்கம், கொழும்பு துறைமுகம், களுத்துறை சைத்யா (வெற்று குவிமாடம்) போன்றவற்றைออกแบบத்து 24 காப்புரிமைகளைப் பெற்றார்.',
             timeline: [
               { year: '1919 AD', title: 'குலசிங்கவின் பிறப்பு', description: 'இலங்கையில் பிறந்து, ஆரம்பத்திலிருந்தே பொறியியல் ஆர்வம் கொண்டவர்.' },
               { year: '1946 AD', title: 'தொழில்முறை பொறியியலாளர் தகுதி', description: 'பிரிட்டனின் சிவில் மற்றும் இயந்திர பொறியியல் நிறுவனங்களின் உறுப்பினர் தகுதியைப் பெற்றார்.' },
@@ -506,7 +520,7 @@ const seedData = async () => {
       }
     ]);
 
-    // Cross-link some related artifacts
+    // Cross-link related artifacts using their fixed ObjectIds
     exhibits[0].relatedArtifacts.push(exhibits[1]._id);
     exhibits[1].relatedArtifacts.push(exhibits[0]._id);
     exhibits[2].relatedArtifacts.push(exhibits[3]._id);
@@ -534,8 +548,9 @@ const seedData = async () => {
 
     console.log('Exhibits seeded.');
 
-    // 6. Seed Quiz questions and Quizzes
+    // 6. Seed Quiz questions and Quizzes (with explicit ObjectIds)
     const q1 = await QuizQuestion.create({
+      _id: new mongoose.Types.ObjectId('65d75d0d66f50b2984950041'),
       text: 'Which natural force powered the ancient steel smelting furnaces of Samanalawewa?',
       type: 'multiple-choice',
       options: ['Water power', 'Monsoon winds', 'Solar heat', 'Geothermal steam'],
@@ -544,6 +559,7 @@ const seedData = async () => {
     });
 
     const q2 = await QuizQuestion.create({
+      _id: new mongoose.Types.ObjectId('65d75d0d66f50b2984950042'),
       text: 'Where was the hydrostatic Elephant Lamp (Ath Pahana) discovered?',
       type: 'multiple-choice',
       options: ['Dedigama', 'Sigiriya', 'Anuradhapura', 'Polonnaruwa'],
@@ -552,6 +568,7 @@ const seedData = async () => {
     });
 
     const q3 = await QuizQuestion.create({
+      _id: new mongoose.Types.ObjectId('65d75d0d66f50b2984950043'),
       text: 'What is the primary function of a Bisokotuwa in ancient Sri Lankan reservoirs?',
       type: 'multiple-choice',
       options: ['To filter drinking water', 'To regulate water release and prevent erosion', 'To breed fresh-water fish', 'To measure water volume'],
@@ -560,6 +577,7 @@ const seedData = async () => {
     });
 
     const quiz1 = await Quiz.create({
+      _id: new mongoose.Types.ObjectId('65d75c0f66f50b2984950031'),
       title: 'Ancient Engineering Heritage',
       description: 'Test your knowledge on ancient Sri Lankan metallurgy, hydraulics, and stupa architecture.',
       difficulty: 'medium',
@@ -571,6 +589,7 @@ const seedData = async () => {
 
     // Quiz 2: Modern Engineering Pioneers
     const q4 = await QuizQuestion.create({
+      _id: new mongoose.Types.ObjectId('65d75d0d66f50b2984950044'),
       text: 'Who is recognized as the \'Father of Hydro-Electricity\' in Sri Lanka?',
       type: 'multiple-choice',
       options: ['B. D. Rampala', 'A. N. S. Kulasinghe', 'D. J. Wimalasurendra', 'Dr. Ray Wijewardene'],
@@ -579,6 +598,7 @@ const seedData = async () => {
     });
 
     const q5 = await QuizQuestion.create({
+      _id: new mongoose.Types.ObjectId('65d75d0d66f50b2984950045'),
       text: 'Which express train was introduced by Eng. B. D. Rampala during the CGR Golden Era?',
       type: 'multiple-choice',
       options: ['Udarata Menike', 'Yal Devi', 'Ruhunu Kumari', 'All of the above'],
@@ -587,6 +607,7 @@ const seedData = async () => {
     });
 
     const quiz2 = await Quiz.create({
+      _id: new mongoose.Types.ObjectId('65d75c0f66f50b2984950032'),
       title: 'Modern Engineering Pioneers',
       description: 'Test your knowledge on the visionaries who built modern Sri Lankan infrastructure and transport.',
       difficulty: 'hard',
