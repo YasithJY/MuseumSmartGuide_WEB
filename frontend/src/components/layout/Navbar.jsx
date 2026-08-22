@@ -28,7 +28,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="sticky top-0 z-50 bg-primary/95 text-parchment border-b-2 border-gold/70 shadow-md backdrop-blur-md">
+    <nav className="sticky top-0 z-50 bg-primary/95 dark:bg-stone-950/95 text-parchment border-b-2 border-gold/70 shadow-md backdrop-blur-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo & Brand */}
@@ -115,7 +115,7 @@ const Navbar = () => {
 
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
-        <div className="md:hidden bg-primary/98 border-t border-gold/40 px-4 pt-2 pb-6 space-y-3 flex flex-col text-center">
+        <div className="md:hidden bg-primary/98 dark:bg-stone-950/98 border-t border-gold/40 px-4 pt-2 pb-6 space-y-3 flex flex-col text-center">
           <Link to="/" onClick={() => setMobileMenuOpen(false)} className="py-2 border-b border-stone-800 text-parchment hover:text-gold">{t('home')}</Link>
           <Link to="/museums" onClick={() => setMobileMenuOpen(false)} className="py-2 border-b border-stone-800 text-parchment hover:text-gold">{t('museums')}</Link>
           <Link to="/search" onClick={() => setMobileMenuOpen(false)} className="py-2 border-b border-stone-800 text-parchment hover:text-gold">{t('search')}</Link>

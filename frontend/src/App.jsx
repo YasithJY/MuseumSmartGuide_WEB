@@ -19,7 +19,7 @@ import { ProtectedRoute, AdminRoute } from './routes/ProtectedRoutes';
 function App() {
   return (
     <Router>
-      <div className="flex flex-col min-h-screen bg-parchment bg-paper-texture">
+      <div className="flex flex-col min-h-screen bg-parchment bg-paper-texture dark:bg-dark-surface dark:bg-none transition-colors duration-300">
         {/* Navigation Bar */}
         <Navbar />
 

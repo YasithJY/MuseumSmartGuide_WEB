@@ -60,12 +60,12 @@ const Museums = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12">
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 border-b border-stone-200 pb-6">
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 border-b border-stone-200 dark:border-stone-700 pb-6">
         <div>
-          <h1 className="font-heading font-bold text-2xl sm:text-3xl text-primary uppercase">
+          <h1 className="font-heading font-bold text-2xl sm:text-3xl text-primary dark:text-parchment uppercase">
             Museums & Galleries
           </h1>
-          <p className="text-xs text-stone-500 mt-1">
+          <p className="text-xs text-stone-500 dark:text-stone-400 mt-1">
             Browse through directories or inspect locations on the interactive map.
           </p>
         </div>
@@ -83,8 +83,8 @@ const Museums = () => {
       {showMap ? (
         <div className="space-y-6">
           <div className="text-center space-y-2">
-            <h3 className="font-heading font-bold text-lg text-primary uppercase">Interactive Museum Layout</h3>
-            <p className="text-xs text-stone-500">Colombo National Museum grounds and display floor guides</p>
+            <h3 className="font-heading font-bold text-lg text-primary dark:text-parchment uppercase">Interactive Museum Layout</h3>
+            <p className="text-xs text-stone-500 dark:text-stone-400">Colombo National Museum grounds and display floor guides</p>
           </div>
           
           <div className="h-[450px] w-full rounded-xl overflow-hidden border-2 border-gold shadow-md">
@@ -131,7 +131,7 @@ const Museums = () => {
             </div>
             
             {galleries.length === 0 ? (
-              <p className="text-xs text-stone-400">No galleries available in this museum complex.</p>
+              <p className="text-xs text-stone-400 dark:text-stone-500">No galleries available in this museum complex.</p>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 {galleries.map(gallery => (

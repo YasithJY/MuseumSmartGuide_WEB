@@ -89,7 +89,7 @@ const Home = () => {
           <span className="text-xs uppercase text-accent font-bold tracking-widest font-heading">
             Recently Added
           </span>
-          <h2 className="font-heading font-bold text-2xl sm:text-3xl text-primary tracking-wide uppercase">
+          <h2 className="font-heading font-bold text-2xl sm:text-3xl text-primary dark:text-parchment tracking-wide uppercase">
             {t('featuredExhibits')}
           </h2>
           <div className="w-24 h-0.5 bg-gold mx-auto"></div>
@@ -102,8 +102,8 @@ const Home = () => {
         ) : featuredExhibits.length === 0 ? (
           <div className="text-center py-16 space-y-4">
             <p className="text-5xl">🗿</p>
-            <p className="font-heading font-bold text-primary text-lg uppercase tracking-wide">No Exhibits Yet</p>
-            <p className="text-sm text-stone-400 max-w-sm mx-auto">
+            <p className="font-heading font-bold text-primary dark:text-parchment text-lg uppercase tracking-wide">No Exhibits Yet</p>
+            <p className="text-sm text-stone-400 dark:text-stone-500 max-w-sm mx-auto">
               Exhibits added from the Admin Dashboard will appear here automatically.
             </p>
             {user?.role === 'admin' && (
@@ -123,32 +123,32 @@ const Home = () => {
       </section>
 
       {/* Museum News & Events */}
-      <section className="bg-primary/5 py-12 border-y border-stone-200/50">
+      <section className="bg-primary/5 dark:bg-stone-800/50 py-12 border-y border-stone-200/50 dark:border-stone-700/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-2 gap-12">
           <div className="space-y-6">
-            <h3 className="font-heading font-bold text-xl text-primary tracking-wider uppercase flex items-center gap-2">
+            <h3 className="font-heading font-bold text-xl text-primary dark:text-parchment tracking-wider uppercase flex items-center gap-2">
               <MdOutlineEventNote className="text-gold w-6 h-6" />
               <span>Museum News &amp; Events</span>
             </h3>
             <div className="space-y-4">
-              <div className="p-4 bg-white rounded-xl shadow-sm border border-stone-200/40 flex items-start gap-4">
+              <div className="p-4 bg-white dark:bg-stone-800 rounded-xl shadow-sm border border-stone-200/40 dark:border-stone-700/40 flex items-start gap-4">
                 <div className="text-center p-2 bg-gold/15 rounded-lg border border-gold/40 text-primary">
                   <span className="block font-bold text-base font-heading">15</span>
                   <span className="text-[10px] uppercase font-semibold">Aug</span>
                 </div>
                 <div>
-                  <h4 className="font-bold text-sm text-primary">Special Exhibition: Stone Carvings of Anuradhapura</h4>
-                  <p className="text-xs text-stone-500 mt-1">Join us in the Central Gallery for a guided walkthrough of our new excavation acquisitions.</p>
+                  <h4 className="font-bold text-sm text-primary dark:text-parchment">Special Exhibition: Stone Carvings of Anuradhapura</h4>
+                  <p className="text-xs text-stone-500 dark:text-stone-400 mt-1">Join us in the Central Gallery for a guided walkthrough of our new excavation acquisitions.</p>
                 </div>
               </div>
-              <div className="p-4 bg-white rounded-xl shadow-sm border border-stone-200/40 flex items-start gap-4">
+              <div className="p-4 bg-white dark:bg-stone-800 rounded-xl shadow-sm border border-stone-200/40 dark:border-stone-700/40 flex items-start gap-4">
                 <div className="text-center p-2 bg-gold/15 rounded-lg border border-gold/40 text-primary">
                   <span className="block font-bold text-base font-heading">28</span>
                   <span className="text-[10px] uppercase font-semibold">Aug</span>
                 </div>
                 <div>
-                  <h4 className="font-bold text-sm text-primary">Heritage Night: Colombo Museum 150 Anniversary</h4>
-                  <p className="text-xs text-stone-500 mt-1">Light projections, traditional Kandyan dancing and digital smart guide demonstrations.</p>
+                  <h4 className="font-bold text-sm text-primary dark:text-parchment">Heritage Night: Colombo Museum 150 Anniversary</h4>
+                  <p className="text-xs text-stone-500 dark:text-stone-400 mt-1">Light projections, traditional Kandyan dancing and digital smart guide demonstrations.</p>
                 </div>
               </div>
             </div>
@@ -176,8 +176,8 @@ const Home = () => {
 
       {/* Directory Callout */}
       <section className="max-w-5xl mx-auto px-4 text-center space-y-4 pb-12">
-        <h3 className="font-heading font-bold text-xl text-primary uppercase">Ready to Explore?</h3>
-        <p className="text-xs text-stone-500 max-w-xl mx-auto">
+        <h3 className="font-heading font-bold text-xl text-primary dark:text-parchment uppercase">Ready to Explore?</h3>
+        <p className="text-xs text-stone-500 dark:text-stone-400 max-w-xl mx-auto">
           Access the list of all galleries in our physical complex and locate exhibits on the map.
         </p>
         <div className="pt-2">

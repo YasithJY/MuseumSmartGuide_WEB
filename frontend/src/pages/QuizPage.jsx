@@ -134,10 +134,10 @@ const QuizPage = () => {
             <span className="text-xs uppercase text-accent font-bold tracking-widest font-heading block">
               Quiz Arena
             </span>
-            <h1 className="font-heading font-extrabold text-2xl sm:text-4xl text-primary uppercase">
+            <h1 className="font-heading font-extrabold text-2xl sm:text-4xl text-primary dark:text-parchment uppercase">
               Historical Trivia & Quizzes
             </h1>
-            <p className="text-xs text-stone-500 max-w-lg mx-auto">
+            <p className="text-xs text-stone-500 dark:text-stone-400 max-w-lg mx-auto">
               Test your understanding of the Colombo Museum artifacts and early dynasties of Sri Lanka.
             </p>
           </div>
@@ -146,7 +146,7 @@ const QuizPage = () => {
             {quizzes.map(quiz => (
               <div 
                 key={quiz._id} 
-                className="bg-white border border-stone-200 shadow-md rounded-2xl p-6 flex flex-col justify-between h-56 hover:border-gold transition-colors"
+                className="bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 shadow-md rounded-2xl p-6 flex flex-col justify-between h-56 hover:border-gold transition-colors"
               >
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
@@ -155,7 +155,7 @@ const QuizPage = () => {
                     </span>
                     <span className="text-xs text-stone-400 font-semibold">{quiz.questions?.length || 0} Questions</span>
                   </div>
-                  <h4 className="font-heading font-bold text-base text-primary leading-tight">
+                  <h4 className="font-heading font-bold text-base text-primary dark:text-parchment leading-tight">
                     {quiz.title}
                   </h4>
                   <p className="text-xs text-stone-500 leading-relaxed line-clamp-2">
@@ -163,7 +163,7 @@ const QuizPage = () => {
                   </p>
                 </div>
 
-                <div className="flex items-center justify-between border-t border-stone-100 pt-4">
+                <div className="flex items-center justify-between border-t border-stone-100 dark:border-stone-700 pt-4">
                   <span className="text-xs font-mono font-bold text-gold">+{quiz.pointsReward} Points Max</span>
                   <button 
                     onClick={() => handleStartQuiz(quiz)}
@@ -179,8 +179,8 @@ const QuizPage = () => {
       )}
 
       {selectedQuiz && !quizResult && (
-        <div className="bg-white border border-stone-200 shadow-xl rounded-2xl p-6 sm:p-8 space-y-6">
-          <div className="flex items-center justify-between border-b border-stone-100 pb-4">
+        <div className="bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 shadow-xl rounded-2xl p-6 sm:p-8 space-y-6">
+          <div className="flex items-center justify-between border-b border-stone-100 dark:border-stone-700 pb-4">
             <span className="text-xs font-mono text-stone-400 font-bold">
               Question {currentQuestionIdx + 1} of {selectedQuiz.questions.length}
             </span>
@@ -189,7 +189,7 @@ const QuizPage = () => {
             </span>
           </div>
 
-          <h3 className="font-heading font-bold text-lg text-primary leading-snug">
+          <h3 className="font-heading font-bold text-lg text-primary dark:text-parchment leading-snug">
             {selectedQuiz.questions[currentQuestionIdx]?.text}
           </h3>
 
@@ -198,7 +198,7 @@ const QuizPage = () => {
               <button
                 key={i}
                 onClick={() => handleOptionSelect(opt)}
-                className={`w-full text-left p-4 rounded-xl border text-xs font-semibold transition-all ${selectedOpt === opt ? 'border-gold bg-gold/10 text-primary' : 'border-stone-200 hover:bg-stone-50 text-stone-700'}`}
+                className={`w-full text-left p-4 rounded-xl border text-xs font-semibold transition-all ${selectedOpt === opt ? 'border-gold bg-gold/10 text-primary dark:text-parchment' : 'border-stone-200 dark:border-stone-700 hover:bg-stone-50 dark:hover:bg-stone-700 text-stone-700 dark:text-stone-300'}`}
               >
                 {opt}
               </button>
@@ -219,16 +219,16 @@ const QuizPage = () => {
       )}
 
       {quizResult && (
-        <div className="bg-white border border-stone-200 shadow-xl rounded-2xl p-6 sm:p-8 space-y-8 text-center">
+        <div className="bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 shadow-xl rounded-2xl p-6 sm:p-8 space-y-8 text-center">
           <div className="space-y-2">
             <div className="w-16 h-16 rounded-full bg-gold/15 flex items-center justify-center text-3xl mx-auto border border-gold/40">
               🎖️
             </div>
-            <h2 className="font-heading font-extrabold text-2xl text-primary uppercase">Quiz Completed!</h2>
+            <h2 className="font-heading font-extrabold text-2xl text-primary dark:text-parchment uppercase">Quiz Completed!</h2>
             <p className="text-xs text-stone-500">Grading evaluation and reward breakdown</p>
           </div>
 
-          <div className="grid grid-cols-3 gap-4 border-y border-stone-200 py-6 max-w-md mx-auto">
+          <div className="grid grid-cols-3 gap-4 border-y border-stone-200 dark:border-stone-700 py-6 max-w-md mx-auto">
             <div>
               <span className="block font-heading font-extrabold text-2xl text-primary">{quizResult.correctCount}/{quizResult.totalQuestions}</span>
               <span className="text-[10px] text-stone-400 font-bold uppercase">Correct</span>
@@ -260,11 +260,11 @@ const QuizPage = () => {
           )}
 
           <div className="text-left max-w-lg mx-auto space-y-4">
-            <h4 className="font-heading font-bold text-sm text-primary uppercase">Question Review</h4>
+            <h4 className="font-heading font-bold text-sm text-primary dark:text-parchment uppercase">Question Review</h4>
             <div className="space-y-3">
               {quizResult.results.map((r, i) => (
-                <div key={i} className="p-3 bg-stone-50 rounded-lg border border-stone-200 text-xs">
-                  <p className="font-bold text-stone-700">{i+1}. {r.text}</p>
+                <div key={i} className="p-3 bg-stone-50 dark:bg-stone-700/50 rounded-lg border border-stone-200 dark:border-stone-600 text-xs">
+                  <p className="font-bold text-stone-700 dark:text-stone-200">{i+1}. {r.text}</p>
                   <p className="mt-1 flex gap-2">
                     <span className="text-stone-500">Your Answer: <strong className={r.isCorrect ? 'text-green-600' : 'text-red-600'}>{r.userAnswer}</strong></span>
                     {!r.isCorrect && <span className="text-stone-500">Correct: <strong className="text-green-600">{r.correctAnswer}</strong></span>}

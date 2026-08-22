@@ -2,7 +2,7 @@ import React from 'react';
 
 const BadgeCard = ({ badge }) => {
   return (
-    <div className="flex flex-col items-center justify-center p-4 bg-[#FCFAF5] border border-gold/30 rounded-xl text-center shadow-sm hover:shadow-md hover:border-gold transition-all duration-300">
+    <div className="flex flex-col items-center justify-center p-4 bg-[#FCFAF5] dark:bg-stone-800 border border-gold/30 rounded-xl text-center shadow-sm hover:shadow-md hover:border-gold transition-all duration-300">
       {/* Icon Circle */}
       <div className="w-16 h-16 rounded-full bg-gold/15 flex items-center justify-center text-3xl border border-gold/50 mb-3 animate-pulse">
         {badge.icon || '🏆'}

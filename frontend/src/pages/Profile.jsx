@@ -32,9 +32,9 @@ const StatCard = ({ icon, label, value, sub }) => (
 
 // ── Badge display ─────────────────────────────────────────────────────────────
 const BadgeItem = ({ badge }) => (
-  <div className="flex flex-col items-center gap-3 p-5 bg-white rounded-2xl border border-stone-200 shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200">
+  <div className="flex flex-col items-center gap-3 p-5 bg-white dark:bg-stone-800 rounded-2xl border border-stone-200 dark:border-stone-700 shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200">
     <span className="text-4xl">{badge.icon}</span>
-    <p className="text-sm font-bold text-primary text-center leading-tight">{badge.title}</p>
+    <p className="text-sm font-bold text-primary dark:text-parchment text-center leading-tight">{badge.title}</p>
     <p className="text-xs text-stone-400 font-mono">
       {badge.earnedAt ? new Date(badge.earnedAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : ''}
     </p>
@@ -161,15 +161,15 @@ const Profile = () => {
   if (guestMode) return (
     <div className="max-w-xl mx-auto px-6 py-28 text-center space-y-8">
       <div className="text-7xl">🏛️</div>
-      <h2 className="font-heading font-extrabold text-3xl text-primary uppercase">You're Browsing as Guest</h2>
-      <p className="text-base text-stone-500 leading-relaxed max-w-md mx-auto">
+      <h2 className="font-heading font-extrabold text-3xl text-primary dark:text-parchment uppercase">You're Browsing as Guest</h2>
+      <p className="text-base text-stone-500 dark:text-stone-400 leading-relaxed max-w-md mx-auto">
         Create a free account to unlock your personal heritage journey — track exhibit visits, earn historical badges, take quizzes and build your museum profile.
       </p>
       <div className="flex justify-center gap-4 flex-wrap">
         <Link to="/register" className="bg-primary text-parchment font-bold px-8 py-3.5 rounded-xl hover:bg-stone-800 transition-colors text-sm uppercase tracking-wider">
           Create Account
         </Link>
-        <Link to="/login" className="border-2 border-stone-300 font-bold px-8 py-3.5 rounded-xl hover:bg-stone-50 transition-colors text-sm uppercase tracking-wider text-stone-600">
+        <Link to="/login" className="border-2 border-stone-300 dark:border-stone-600 font-bold px-8 py-3.5 rounded-xl hover:bg-stone-50 dark:hover:bg-stone-800 transition-colors text-sm uppercase tracking-wider text-stone-600 dark:text-stone-300">
           Sign In
         </Link>
       </div>
@@ -190,7 +190,7 @@ const Profile = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-parchment">
+    <div className="min-h-screen bg-parchment dark:bg-dark-surface">
 
       {/* ── Hero Banner ──────────────────────────────────────────────────────── */}
       <div className="bg-primary border-b-4 border-gold"
@@ -308,14 +308,14 @@ const Profile = () => {
       </div>
 
       {/* ── Tab nav ───────────────────────────────────────────────────────────── */}
-      <div className="sticky top-0 z-10 bg-white border-b border-stone-200 shadow-sm">
+      <div className="sticky top-0 z-10 bg-white dark:bg-stone-900 border-b border-stone-200 dark:border-stone-700 shadow-sm">
         <div className="max-w-5xl mx-auto px-4 flex gap-1 overflow-x-auto">
           {tabs.map(tab => (
             <button key={tab.id} onClick={() => setActiveTab(tab.id)}
               className={`flex items-center gap-2 px-5 py-4 text-sm font-bold uppercase tracking-wide whitespace-nowrap transition-colors border-b-3 -mb-px
                 ${activeTab === tab.id
-                  ? 'border-gold text-primary'
-                  : 'border-transparent text-stone-400 hover:text-stone-600'
+                  ? 'border-gold text-primary dark:text-gold'
+                  : 'border-transparent text-stone-400 hover:text-stone-600 dark:hover:text-stone-300'
                 }`}>
               <span className="text-lg">{tab.icon}</span>{tab.label}
             </button>
@@ -331,12 +331,12 @@ const Profile = () => {
           <div className="space-y-8">
             <div className="flex items-center gap-3">
               <MdOutlineCardMembership className="text-gold w-6 h-6" />
-              <h2 className="font-heading font-bold text-primary text-xl uppercase">Earned Badges</h2>
+              <h2 className="font-heading font-bold text-primary dark:text-parchment text-xl uppercase">Earned Badges</h2>
             </div>
             {badges.length === 0 ? (
-              <div className="text-center py-24 space-y-5 bg-white rounded-2xl border border-dashed border-stone-200">
+              <div className="text-center py-24 space-y-5 bg-white dark:bg-stone-800 rounded-2xl border border-dashed border-stone-200 dark:border-stone-700">
                 <p className="text-5xl">🏅</p>
-                <p className="font-heading font-bold text-primary text-lg uppercase">No Badges Yet</p>
+                <p className="font-heading font-bold text-primary dark:text-parchment text-lg uppercase">No Badges Yet</p>
                 <p className="text-sm text-stone-400 max-w-md mx-auto leading-relaxed">
                   Complete quizzes and explore exhibits to earn your first heritage badge!
                 </p>
@@ -361,7 +361,7 @@ const Profile = () => {
                       { icon: '🔭', title: 'Heritage Navigator', hint: 'View 10 exhibits' },
                       { icon: '📜', title: 'Trilingual Learner', hint: 'Read content in 3 languages' },
                     ].filter(b => !badges.some(eb => eb.title === b.title)).map((b, i) => (
-                      <div key={i} className="flex items-center gap-3 p-4 bg-stone-50 border border-stone-200 rounded-xl opacity-60 select-none">
+                      <div key={i} className="flex items-center gap-3 p-4 bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-xl opacity-60 select-none">
                         <span className="text-3xl grayscale">{b.icon}</span>
                         <div>
                           <p className="text-sm font-bold text-stone-500">{b.title}</p>
@@ -382,13 +382,13 @@ const Profile = () => {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <MdBookmark className="text-gold w-6 h-6" />
-                <h2 className="font-heading font-bold text-primary text-xl uppercase">Saved Exhibits</h2>
+                <h2 className="font-heading font-bold text-primary dark:text-parchment text-xl uppercase">Saved Exhibits</h2>
               </div>
             </div>
             {favourites.length === 0 ? (
-              <div className="text-center py-24 space-y-5 bg-white rounded-2xl border border-dashed border-stone-200">
+              <div className="text-center py-24 space-y-5 bg-white dark:bg-stone-800 rounded-2xl border border-dashed border-stone-200 dark:border-stone-700">
                 <p className="text-5xl">🔖</p>
-                <p className="font-heading font-bold text-primary text-lg uppercase">Nothing Saved Yet</p>
+                <p className="font-heading font-bold text-primary dark:text-parchment text-lg uppercase">Nothing Saved Yet</p>
                 <p className="text-sm text-stone-400 leading-relaxed">Bookmark exhibits from the detail page to see them here.</p>
                 <Link to="/museums"
                   className="inline-flex items-center gap-2 bg-primary text-parchment font-bold px-8 py-3 rounded-xl text-sm uppercase tracking-wider hover:bg-stone-800 transition-colors">
@@ -398,7 +398,7 @@ const Profile = () => {
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {favourites.map(exhibit => (
-                  <div key={exhibit._id} className="relative group bg-white rounded-2xl border border-stone-200 shadow-sm overflow-hidden hover:shadow-lg transition-shadow">
+                  <div key={exhibit._id} className="relative group bg-white dark:bg-stone-800 rounded-2xl border border-stone-200 dark:border-stone-700 shadow-sm overflow-hidden hover:shadow-lg transition-shadow">
                     <div className="h-48 overflow-hidden bg-stone-100">
                       <img
                         src={exhibit.images?.[0] || 'https://images.unsplash.com/photo-1544644181-1484b3fdfc62?auto=format&fit=crop&q=80&w=400'}
@@ -412,7 +412,7 @@ const Profile = () => {
                     </button>
                     <div className="p-5 space-y-2">
                       <p className="text-xs text-accent font-bold uppercase tracking-widest">{exhibit.galleryId?.name || 'Gallery'}</p>
-                      <h3 className="font-heading font-bold text-primary text-base leading-snug">{exhibit.title}</h3>
+                      <h3 className="font-heading font-bold text-primary dark:text-parchment text-base leading-snug">{exhibit.title}</h3>
                       <p className="text-sm text-stone-400 line-clamp-2">{exhibit.description}</p>
                       <Link to={`/exhibit/${exhibit._id}`}
                         className="inline-flex items-center text-sm font-semibold text-gold hover:underline mt-2">
@@ -431,12 +431,12 @@ const Profile = () => {
           <div className="space-y-8">
             <div className="flex items-center gap-3">
               <MdHistory className="text-gold w-6 h-6" />
-              <h2 className="font-heading font-bold text-primary text-xl uppercase">Visit History</h2>
+              <h2 className="font-heading font-bold text-primary dark:text-parchment text-xl uppercase">Visit History</h2>
             </div>
             {visitHistory.length === 0 ? (
-              <div className="text-center py-24 space-y-5 bg-white rounded-2xl border border-dashed border-stone-200">
+              <div className="text-center py-24 space-y-5 bg-white dark:bg-stone-800 rounded-2xl border border-dashed border-stone-200 dark:border-stone-700">
                 <p className="text-5xl">🗺️</p>
-                <p className="font-heading font-bold text-primary text-lg uppercase">No Visits Recorded</p>
+                <p className="font-heading font-bold text-primary dark:text-parchment text-lg uppercase">No Visits Recorded</p>
                 <p className="text-sm text-stone-400 leading-relaxed">Start exploring exhibits — your journey will be tracked here.</p>
                 <Link to="/"
                   className="inline-flex items-center gap-2 bg-primary text-parchment font-bold px-8 py-3 rounded-xl text-sm uppercase tracking-wider hover:bg-stone-800 transition-colors">
@@ -447,7 +447,7 @@ const Profile = () => {
               <div className="space-y-4">
                 {visitHistory.map((exhibit, i) => (
                   <Link key={exhibit._id} to={`/exhibit/${exhibit._id}`}
-                    className="flex items-center gap-5 p-5 bg-white rounded-2xl border border-stone-200 hover:border-gold hover:shadow-lg transition-all">
+                    className="flex items-center gap-5 p-5 bg-white dark:bg-stone-800 rounded-2xl border border-stone-200 dark:border-stone-700 hover:border-gold hover:shadow-lg transition-all">
                     <div className="flex-shrink-0 w-10 h-10 rounded-full bg-gold/10 border border-gold/30 flex items-center justify-center">
                       <span className="text-sm font-bold text-gold">{i + 1}</span>
                     </div>
@@ -457,7 +457,7 @@ const Profile = () => {
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-xs text-accent font-bold uppercase tracking-widest">{exhibit.galleryId?.name}</p>
-                      <p className="font-heading font-bold text-primary text-base truncate">{exhibit.title}</p>
+                      <p className="font-heading font-bold text-primary dark:text-parchment text-base truncate">{exhibit.title}</p>
                       <p className="text-sm text-stone-400 line-clamp-1">{exhibit.description}</p>
                     </div>
                     <span className="text-stone-300 text-lg flex-shrink-0">→</span>
@@ -474,7 +474,7 @@ const Profile = () => {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <MdQuiz className="text-gold w-6 h-6" />
-                <h2 className="font-heading font-bold text-primary text-xl uppercase">Quizzes</h2>
+                <h2 className="font-heading font-bold text-primary dark:text-parchment text-xl uppercase">Quizzes</h2>
               </div>
               {/* Points progress panel */}
               <div className="hidden sm:flex items-center gap-2 bg-amber-50 border border-amber-200 rounded-xl px-5 py-2.5">
@@ -484,22 +484,22 @@ const Profile = () => {
             </div>
 
             {recentQuizzes.length === 0 ? (
-              <div className="text-center py-24 space-y-5 bg-white rounded-2xl border border-dashed border-stone-200">
+              <div className="text-center py-24 space-y-5 bg-white dark:bg-stone-800 rounded-2xl border border-dashed border-stone-200 dark:border-stone-700">
                 <p className="text-5xl">🧠</p>
-                <p className="font-heading font-bold text-primary text-lg uppercase">No Quizzes Available</p>
+                <p className="font-heading font-bold text-primary dark:text-parchment text-lg uppercase">No Quizzes Available</p>
                 <p className="text-sm text-stone-400 leading-relaxed">Check back later when quizzes are added by the museum curators.</p>
               </div>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 {recentQuizzes.map(quiz => (
                   <Link key={quiz._id} to="/quiz"
-                    className="flex gap-5 items-start p-6 bg-white rounded-2xl border border-stone-200 hover:border-gold hover:shadow-lg transition-all group">
+                    className="flex gap-5 items-start p-6 bg-white dark:bg-stone-800 rounded-2xl border border-stone-200 dark:border-stone-700 hover:border-gold hover:shadow-lg transition-all group">
                     {quiz.coverImage
                       ? <img src={quiz.coverImage} alt={quiz.title} className="w-20 h-20 rounded-xl object-cover flex-shrink-0 border border-stone-100" />
                       : <div className="w-20 h-20 rounded-xl bg-amber-50 flex items-center justify-center text-4xl flex-shrink-0">🧠</div>
                     }
                     <div className="flex-1 min-w-0 space-y-1.5">
-                      <p className="font-heading font-bold text-primary text-base group-hover:text-gold transition-colors">{quiz.title}</p>
+                      <p className="font-heading font-bold text-primary dark:text-parchment text-base group-hover:text-gold transition-colors">{quiz.title}</p>
                       <p className="text-sm text-stone-400 line-clamp-2">{quiz.description}</p>
                       <div className="flex items-center gap-2 flex-wrap mt-2">
                         <span className={`text-xs font-bold px-3 py-1 rounded-full capitalize

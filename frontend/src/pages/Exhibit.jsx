@@ -117,7 +117,7 @@ const Exhibit = () => {
     return (
       <div className="max-w-md mx-auto py-24 text-center space-y-4">
         <p className="text-5xl">🗿</p>
-        <p className="text-sm text-stone-500 font-semibold">{error || 'Artifact details not found.'}</p>
+        <p className="text-sm text-stone-500 dark:text-stone-400 font-semibold">{error || 'Artifact details not found.'}</p>
         <Link to="/museums" className="text-gold hover:underline text-sm">Back to Galleries</Link>
       </div>
     );
@@ -131,14 +131,14 @@ const Exhibit = () => {
       {/* ── Top Nav bar ──────────────────────────────────────────────────────── */}
       <div className="flex items-center justify-between flex-wrap gap-3">
         <Link to={exhibit.galleryId?._id ? `/gallery/${exhibit.galleryId._id}` : '/museums'}
-          className="inline-flex items-center gap-1 text-xs text-primary hover:text-gold uppercase font-bold">
+          className="inline-flex items-center gap-1 text-xs text-primary dark:text-stone-300 hover:text-gold uppercase font-bold">
           <MdArrowBack className="w-4 h-4" />
           <span>Back to {exhibit.galleryId?.name || 'Galleries'}</span>
         </Link>
 
         <div className="flex items-center gap-2 flex-wrap">
           {/* ── Language Switcher ── */}
-          <div className="flex items-center bg-stone-100 border border-stone-200 rounded-lg overflow-hidden shadow-sm">
+          <div className="flex items-center bg-stone-100 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-lg overflow-hidden shadow-sm">
             {LANGS.map(l => (
               <button
                 key={l.code}
@@ -147,7 +147,7 @@ const Exhibit = () => {
                 className={`px-3 py-1.5 text-xs font-bold tracking-wide transition-colors
                   ${displayLang === l.code
                     ? 'bg-primary text-parchment'
-                    : 'text-stone-500 hover:bg-stone-200'
+                    : 'text-stone-500 dark:text-stone-400 hover:bg-stone-200 dark:hover:bg-stone-700'
                   }`}
               >
                 {l.label}
@@ -157,14 +157,14 @@ const Exhibit = () => {
 
           {/* Save */}
           <button onClick={toggleFav}
-            className="flex items-center gap-1 text-xs border border-stone-300 bg-white px-3 py-1.5 rounded-lg shadow-sm hover:border-gold transition-colors font-bold uppercase">
+            className="flex items-center gap-1 text-xs border border-stone-300 dark:border-stone-600 bg-white dark:bg-stone-800 px-3 py-1.5 rounded-lg shadow-sm hover:border-gold transition-colors font-bold uppercase">
             {isFav ? <MdBookmark className="text-gold w-4 h-4" /> : <MdBookmarkBorder className="w-4 h-4" />}
             <span>{isFav ? 'Saved' : 'Save'}</span>
           </button>
 
           {/* Share */}
           <button onClick={handleShare}
-            className="flex items-center gap-1 text-xs border border-stone-300 bg-white px-3 py-1.5 rounded-lg shadow-sm hover:border-gold transition-colors font-bold uppercase">
+            className="flex items-center gap-1 text-xs border border-stone-300 dark:border-stone-600 bg-white dark:bg-stone-800 px-3 py-1.5 rounded-lg shadow-sm hover:border-gold transition-colors font-bold uppercase">
             <MdShare className="w-4 h-4 text-primary" />
             <span>{shareSuccess ? 'Copied!' : 'Share'}</span>
           </button>
@@ -178,7 +178,7 @@ const Exhibit = () => {
         <div className="space-y-4">
           {/* Main image with zoom-on-hover */}
           <div
-            className="relative h-96 w-full rounded-xl overflow-hidden border border-stone-200 shadow-md bg-stone-100 group cursor-zoom-in"
+            className="relative h-96 w-full rounded-xl overflow-hidden border border-stone-200 dark:border-stone-700 shadow-md bg-stone-100 dark:bg-stone-800 group cursor-zoom-in"
             onClick={() => openZoom(activeImage || fallbackImg)}
           >
             <img
@@ -216,13 +216,13 @@ const Exhibit = () => {
                 {exhibit.galleryId.name}
               </span>
             )}
-            <h1 className="font-heading font-extrabold text-2xl sm:text-4xl text-primary uppercase leading-tight">
+            <h1 className="font-heading font-extrabold text-2xl sm:text-4xl text-primary dark:text-parchment uppercase leading-tight">
               {tx('title')}
             </h1>
             <div className="w-20 h-1 bg-gold"></div>
           </div>
 
-          <p className="text-sm text-stone-500 leading-relaxed font-light" style={{ whiteSpace: 'pre-wrap' }}>{tx('description')}</p>
+          <p className="text-base text-stone-500 dark:text-stone-300 leading-relaxed font-light" style={{ whiteSpace: 'pre-wrap' }}>{tx('description')}</p>
 
 
           {exhibit.audioUrl && <AudioPlayer src={exhibit.audioUrl} title={exhibit.title} />}
@@ -230,7 +230,7 @@ const Exhibit = () => {
           {exhibit.videoUrl && (
             <div className="space-y-2">
               <h3 className="font-heading font-bold text-sm text-primary uppercase">Video Guide</h3>
-              <div className="aspect-video w-full rounded-xl overflow-hidden border border-stone-200 shadow">
+              <div className="aspect-video w-full rounded-xl overflow-hidden border border-stone-200 dark:border-stone-700 shadow">
                 <video src={exhibit.videoUrl} controls className="w-full h-full object-cover" />
               </div>
             </div>
@@ -239,27 +239,27 @@ const Exhibit = () => {
       </div>
 
       {/* ── Historical & Timeline ─────────────────────────────────────────────── */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 pt-8 border-t border-stone-200/60">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 pt-8 border-t border-stone-200/60 dark:border-stone-700/60">
         <div className="lg:col-span-2 space-y-4">
-          <h3 className="font-heading font-bold text-lg text-primary uppercase tracking-wide">
+          <h3 className="font-heading font-bold text-lg text-primary dark:text-parchment uppercase tracking-wide">
             Historical Background &amp; Significance
           </h3>
-          <p className="text-xs text-stone-500 leading-relaxed font-light whitespace-pre-line">
+          <p className="text-sm text-stone-500 dark:text-stone-300 leading-relaxed font-light whitespace-pre-line">
             {tx('historicalInfo')}
           </p>
         </div>
 
         <div className="lg:col-span-1 space-y-6">
-          <h3 className="font-heading font-bold text-lg text-primary uppercase tracking-wide">Chronological Timeline</h3>
+          <h3 className="font-heading font-bold text-lg text-primary dark:text-parchment uppercase tracking-wide">Chronological Timeline</h3>
           <div className="relative border-l-2 border-gold/40 pl-6 ml-2 space-y-6">
             {exhibit.timeline?.length > 0 ? (
               exhibit.timeline.map((event, idx) => (
                 <div key={idx} className="relative">
-                  <span className="absolute -left-[31px] top-1.5 w-4 h-4 rounded-full bg-gold border-2 border-parchment block"></span>
+                  <span className="absolute -left-[31px] top-1.5 w-4 h-4 rounded-full bg-gold border-2 border-parchment dark:border-stone-900 block"></span>
                   <div className="space-y-1">
                     <span className="text-xs font-bold text-gold font-mono block">{event.year}</span>
-                    <h4 className="font-bold text-xs text-primary leading-tight">{event.title}</h4>
-                    <p className="text-[10px] text-stone-500 leading-relaxed font-light">{event.description}</p>
+                    <h4 className="font-bold text-xs text-primary dark:text-parchment leading-tight">{event.title}</h4>
+                    <p className="text-xs text-stone-500 dark:text-stone-400 leading-relaxed font-light">{event.description}</p>
                   </div>
                 </div>
               ))
@@ -272,17 +272,17 @@ const Exhibit = () => {
 
       {/* ── Related Artifacts ─────────────────────────────────────────────────── */}
       {related.length > 0 && (
-        <div className="space-y-6 pt-8 border-t border-stone-200/60">
-          <h3 className="font-heading font-bold text-lg text-primary uppercase tracking-wide">Related Artifacts</h3>
+        <div className="space-y-6 pt-8 border-t border-stone-200/60 dark:border-stone-700/60">
+          <h3 className="font-heading font-bold text-lg text-primary dark:text-parchment uppercase tracking-wide">Related Artifacts</h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {related.map(rel => (
               <Link key={rel._id} to={`/exhibit/${rel._id}`}
-                className="group block space-y-2 bg-[#FCFAF5] border border-stone-200/50 p-3 rounded-lg hover:border-gold transition-colors">
+                className="group block space-y-2 bg-[#FCFAF5] dark:bg-stone-800 border border-stone-200/50 dark:border-stone-700/50 p-3 rounded-lg hover:border-gold transition-colors">
                 <div className="h-28 rounded overflow-hidden bg-stone-200">
                   <img src={rel.images?.[0] || fallbackImg} alt={rel.title}
                     className="w-full h-full object-cover transition-transform group-hover:scale-105" />
                 </div>
-                <h4 className="font-heading font-bold text-xs text-primary truncate group-hover:text-gold">{rel.title}</h4>
+                <h4 className="font-heading font-bold text-xs text-primary dark:text-parchment truncate group-hover:text-gold">{rel.title}</h4>
               </Link>
             ))}
           </div>

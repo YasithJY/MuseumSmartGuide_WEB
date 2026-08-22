@@ -25,7 +25,12 @@
   @apply bg-[#FCFAF5] border border-stone-200/60 rounded-xl overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:border-gold/50;
 }
 
-/* Custom scrollbars */
+/* Dark mode premium card */
+.dark .premium-card {
+  @apply bg-stone-800 border-stone-700/60 hover:border-gold/50;
+}
+
+/* Custom scrollbars — Light */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -42,6 +47,22 @@
 
 ::-webkit-scrollbar-thumb:hover {
   background: #2C1A14;
+}
+
+/* Custom scrollbars — Dark */
+.dark ::-webkit-scrollbar-track,
+.dark::-webkit-scrollbar-track {
+  background: #1c1917;
+}
+
+.dark ::-webkit-scrollbar-thumb,
+.dark::-webkit-scrollbar-thumb {
+  background: #57534e;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover,
+.dark::-webkit-scrollbar-thumb:hover {
+  background: #78716c;
 }
 
 /* Leaflet Map responsiveness */

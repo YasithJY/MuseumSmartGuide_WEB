@@ -34,7 +34,7 @@ const Gallery = () => {
   if (!gallery) {
     return (
       <div className="max-w-md mx-auto py-24 text-center space-y-4">
-        <p className="text-sm text-stone-500 font-semibold">Gallery not found</p>
+        <p className="text-sm text-stone-500 dark:text-stone-400 font-semibold">Gallery not found</p>
         <Link to="/museums" className="text-gold hover:underline">Back to Museums</Link>
       </div>
     );
@@ -68,14 +68,14 @@ const Gallery = () => {
       {/* Description & Exhibit List */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-3 gap-12">
         {/* Left Column: Gallery Info */}
-        <div className="lg:col-span-1 space-y-4 bg-white/70 p-6 rounded-xl border border-stone-200/50 shadow-sm self-start">
-          <h3 className="font-heading font-bold text-sm text-primary uppercase">About Gallery</h3>
-          <p className="text-xs text-stone-500 leading-relaxed font-light">
+        <div className="lg:col-span-1 space-y-4 bg-white/70 dark:bg-stone-800/70 p-6 rounded-xl border border-stone-200/50 dark:border-stone-700/50 shadow-sm self-start">
+          <h3 className="font-heading font-bold text-sm text-primary dark:text-parchment uppercase">About Gallery</h3>
+          <p className="text-xs text-stone-500 dark:text-stone-400 leading-relaxed font-light">
             {gallery.description}
           </p>
-          <div className="border-t border-stone-200/50 pt-4 text-xs font-mono text-stone-500 flex justify-between">
+          <div className="border-t border-stone-200/50 dark:border-stone-700/50 pt-4 text-xs font-mono text-stone-500 dark:text-stone-400 flex justify-between">
             <span>Total Artifacts:</span>
-            <span className="font-bold text-primary">{exhibits.length}</span>
+            <span className="font-bold text-primary dark:text-parchment">{exhibits.length}</span>
           </div>
         </div>
 
@@ -86,7 +86,7 @@ const Gallery = () => {
           </h3>
           
           {exhibits.length === 0 ? (
-            <p className="text-xs text-stone-400">No exhibits currently logged inside this gallery.</p>
+            <p className="text-xs text-stone-400 dark:text-stone-500">No exhibits currently logged inside this gallery.</p>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               {exhibits.map(exhibit => (

@@ -51,7 +51,7 @@ const Toast = ({ msg, type, onClose }) => {
 // ─── Modal Component ──────────────────────────────────────────────────────────
 const Modal = ({ title, children, onClose }) => (
   <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4">
-    <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col">
+    <div className="bg-white dark:bg-stone-800 rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col">
       <div className="flex items-center justify-between px-6 py-4 border-b border-stone-200 bg-primary rounded-t-2xl">
         <h2 className="font-heading font-bold text-white text-lg uppercase tracking-wide">{title}</h2>
         <button onClick={onClose} className="text-white/70 hover:text-white transition-colors">
@@ -66,24 +66,24 @@ const Modal = ({ title, children, onClose }) => (
 // ─── Field Component ──────────────────────────────────────────────────────────
 const Field = ({ label, children }) => (
   <div className="space-y-1">
-    <label className="text-xs font-bold text-stone-600 block uppercase tracking-wide">{label}</label>
+    <label className="text-xs font-bold text-stone-600 dark:text-stone-400 block uppercase tracking-wide">{label}</label>
     {children}
   </div>
 );
 
-const inputCls = "w-full text-sm p-2.5 rounded-lg border border-stone-200 focus:outline-none focus:ring-2 focus:ring-gold bg-stone-50";
+const inputCls = "w-full text-sm p-2.5 rounded-lg border border-stone-200 dark:border-stone-600 focus:outline-none focus:ring-2 focus:ring-gold bg-stone-50 dark:bg-stone-700 dark:text-parchment";
 const textareaCls = `${inputCls} resize-none`;
-const descriptionCls = "w-full text-base p-3.5 rounded-xl border-2 border-stone-200 focus:outline-none focus:ring-2 focus:ring-gold bg-stone-50 resize-none leading-relaxed font-normal";
+const descriptionCls = "w-full text-base p-3.5 rounded-xl border-2 border-stone-200 dark:border-stone-600 focus:outline-none focus:ring-2 focus:ring-gold bg-stone-50 dark:bg-stone-700 dark:text-parchment resize-none leading-relaxed font-normal";
 
 // ─── Stat Card ────────────────────────────────────────────────────────────────
 const StatCard = ({ icon, label, value, color }) => (
-  <div className="bg-white rounded-2xl border border-stone-200 shadow-sm p-5 flex items-center gap-4">
+  <div className="bg-white dark:bg-stone-800 rounded-2xl border border-stone-200 dark:border-stone-700 shadow-sm p-5 flex items-center gap-4">
     <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-white text-xl flex-shrink-0 ${color}`}>
       {icon}
     </div>
     <div>
-      <p className="text-xs text-stone-500 font-semibold uppercase tracking-wide">{label}</p>
-      <p className="text-2xl font-heading font-bold text-primary">{value}</p>
+      <p className="text-xs text-stone-500 dark:text-stone-400 font-semibold uppercase tracking-wide">{label}</p>
+      <p className="text-2xl font-heading font-bold text-primary dark:text-parchment">{value}</p>
     </div>
   </div>
 );
@@ -517,11 +517,11 @@ const Dashboard = () => {
 
 
   return (
-    <div className="min-h-screen bg-parchment bg-paper-texture">
+    <div className="min-h-screen bg-parchment dark:bg-dark-surface bg-paper-texture dark:bg-none transition-colors duration-300">
       {toast && <Toast msg={toast.msg} type={toast.type} onClose={() => setToast(null)} />}
 
       {/* ── Header ── */}
-      <div className="bg-primary text-parchment px-6 py-5 shadow-lg">
+      <div className="bg-primary dark:bg-stone-950 text-parchment px-6 py-5 shadow-lg">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div>
             <h1 className="font-heading font-extrabold text-xl uppercase tracking-widest">
@@ -547,7 +547,7 @@ const Dashboard = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 space-y-6">
 
         {/* ── Tabs ── */}
-        <div className="flex flex-wrap gap-2 bg-white border border-stone-200 shadow-sm p-1.5 rounded-xl w-fit">
+        <div className="flex flex-wrap gap-2 bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 shadow-sm p-1.5 rounded-xl w-fit">
           {tabs.map(tab => (
             <button
               key={tab.id}
@@ -555,7 +555,7 @@ const Dashboard = () => {
               className={`flex items-center gap-2 px-5 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wide transition-all duration-200
                 ${activeTab === tab.id
                   ? 'bg-primary text-parchment shadow-md'
-                  : 'text-stone-500 hover:bg-stone-100 hover:text-primary'
+                  : 'text-stone-500 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-700 hover:text-primary dark:hover:text-parchment'
                 }`}
             >
               {tab.icon} {tab.label}
@@ -573,13 +573,13 @@ const Dashboard = () => {
               <StatCard icon="📱" label="QR Codes Ready" value={exhibits.filter(e => e.qrCodeUrl).length} color="bg-green-700" />
             </div>
 
-            <div className="bg-white rounded-2xl border border-stone-200 shadow-sm p-6">
-              <h2 className="font-heading font-bold text-primary text-lg uppercase mb-4">Recent Exhibits</h2>
+            <div className="bg-white dark:bg-stone-800 rounded-2xl border border-stone-200 dark:border-stone-700 shadow-sm p-6">
+              <h2 className="font-heading font-bold text-primary dark:text-parchment text-lg uppercase mb-4">Recent Exhibits</h2>
               <div className="space-y-3">
                 {exhibits.slice(0, 5).map(e => (
-                  <div key={e._id} className="flex items-center justify-between p-3 bg-stone-50 rounded-xl border border-stone-100">
+                  <div key={e._id} className="flex items-center justify-between p-3 bg-stone-50 dark:bg-stone-700/50 rounded-xl border border-stone-100 dark:border-stone-600">
                     <div>
-                      <p className="font-semibold text-sm text-primary">{e.title}</p>
+                      <p className="font-semibold text-sm text-primary dark:text-parchment">{e.title}</p>
                       <p className="text-xs text-stone-400">{e.galleryId?.name || 'No gallery'} · {e.categoryId?.name || 'No category'}</p>
                     </div>
                     <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${e.qrCodeUrl ? 'bg-green-100 text-green-700' : 'bg-stone-100 text-stone-500'}`}>
@@ -597,13 +597,13 @@ const Dashboard = () => {
           <div className="space-y-4">
             {/* Toolbar */}
             <div className="flex items-center justify-between">
-              <h2 className="font-heading font-bold text-primary text-xl uppercase">
+              <h2 className="font-heading font-bold text-primary dark:text-parchment text-xl uppercase">
                 Exhibit Management
               </h2>
               <div className="flex gap-2">
                 <button
                   onClick={fetchAll}
-                  className="flex items-center gap-2 bg-white border border-stone-200 text-stone-600 hover:bg-stone-50 text-xs font-bold px-4 py-2.5 rounded-xl transition-colors shadow-sm"
+                  className="flex items-center gap-2 bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-stone-600 dark:text-stone-300 hover:bg-stone-50 dark:hover:bg-stone-700 text-xs font-bold px-4 py-2.5 rounded-xl transition-colors shadow-sm"
                 >
                   <MdRefresh size={16} /> Refresh
                 </button>
@@ -622,13 +622,13 @@ const Dashboard = () => {
                 <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-gold" />
               </div>
             ) : exhibits.length === 0 ? (
-              <div className="bg-white rounded-2xl border border-stone-200 p-16 text-center">
+              <div className="bg-white dark:bg-stone-800 rounded-2xl border border-stone-200 dark:border-stone-700 p-16 text-center">
                 <p className="text-4xl mb-3">🗿</p>
-                <p className="font-heading font-bold text-primary text-lg">No Exhibits Found</p>
+                <p className="font-heading font-bold text-primary dark:text-parchment text-lg">No Exhibits Found</p>
                 <p className="text-xs text-stone-400 mt-1">Run the seeder or create an exhibit above.</p>
               </div>
             ) : (
-              <div className="bg-white rounded-2xl border border-stone-200 shadow-sm overflow-hidden">
+              <div className="bg-white dark:bg-stone-800 rounded-2xl border border-stone-200 dark:border-stone-700 shadow-sm overflow-hidden">
                 <div className="overflow-x-auto">
                   <table className="w-full text-sm">
                     <thead className="bg-primary text-parchment">
@@ -640,15 +640,15 @@ const Dashboard = () => {
                         <th className="px-4 py-3.5 text-center text-xs font-bold uppercase tracking-wider">Actions</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-stone-100">
+                    <tbody className="divide-y divide-stone-100 dark:divide-stone-700">
                       {exhibits.map((exhibit, idx) => (
-                        <tr key={exhibit._id} className={`hover:bg-amber-50/40 transition-colors ${idx % 2 === 0 ? 'bg-white' : 'bg-stone-50/40'}`}>
+                        <tr key={exhibit._id} className={`hover:bg-amber-50/40 dark:hover:bg-stone-700/40 transition-colors ${idx % 2 === 0 ? 'bg-white dark:bg-stone-800' : 'bg-stone-50/40 dark:bg-stone-800/60'}`}>
                           <td className="px-5 py-4">
-                            <p className="font-semibold text-primary text-sm">{exhibit.title}</p>
+                            <p className="font-semibold text-primary dark:text-parchment text-sm">{exhibit.title}</p>
                             <p className="text-xs text-stone-400 mt-0.5 line-clamp-1">{exhibit.description}</p>
                           </td>
                           <td className="px-4 py-4 hidden md:table-cell">
-                            <span className="text-xs font-medium text-stone-600">{exhibit.galleryId?.name || '—'}</span>
+                            <span className="text-xs font-medium text-stone-600 dark:text-stone-400">{exhibit.galleryId?.name || '—'}</span>
                           </td>
                           <td className="px-4 py-4 hidden lg:table-cell">
                             <span className="inline-block bg-gold/10 text-gold text-xs font-bold px-2.5 py-1 rounded-full">
@@ -691,7 +691,7 @@ const Dashboard = () => {
                     </tbody>
                   </table>
                 </div>
-                <div className="px-5 py-3 bg-stone-50 border-t border-stone-100">
+                <div className="px-5 py-3 bg-stone-50 dark:bg-stone-800/50 border-t border-stone-100 dark:border-stone-700">
                   <p className="text-xs text-stone-400">{exhibits.length} exhibit{exhibits.length !== 1 ? 's' : ''} total</p>
                 </div>
               </div>
@@ -703,17 +703,17 @@ const Dashboard = () => {
         {activeTab === 'galleries' && (
           <div className="space-y-6">
             <div className="flex items-center justify-between">
-              <h2 className="font-heading font-bold text-primary text-xl uppercase">Gallery Management</h2>
+              <h2 className="font-heading font-bold text-primary dark:text-parchment text-xl uppercase">Gallery Management</h2>
               <button onClick={fetchAll}
-                className="flex items-center gap-2 bg-white border border-stone-200 text-stone-600 hover:bg-stone-50 text-xs font-bold px-4 py-2.5 rounded-xl transition-colors shadow-sm">
+                className="flex items-center gap-2 bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-stone-600 dark:text-stone-300 hover:bg-stone-50 dark:hover:bg-stone-700 text-xs font-bold px-4 py-2.5 rounded-xl transition-colors shadow-sm">
                 <MdRefresh size={16} /> Refresh
               </button>
             </div>
 
             {/* Existing Galleries */}
-            <div className="bg-white rounded-2xl border border-stone-200 shadow-sm overflow-hidden">
-              <div className="px-5 py-4 border-b border-stone-100 bg-stone-50 flex items-center justify-between">
-                <h3 className="font-heading font-bold text-primary text-sm uppercase tracking-wide">Current Galleries</h3>
+            <div className="bg-white dark:bg-stone-800 rounded-2xl border border-stone-200 dark:border-stone-700 shadow-sm overflow-hidden">
+              <div className="px-5 py-4 border-b border-stone-100 dark:border-stone-700 bg-stone-50 dark:bg-stone-800/50 flex items-center justify-between">
+                <h3 className="font-heading font-bold text-primary dark:text-parchment text-sm uppercase tracking-wide">Current Galleries</h3>
                 <span className="text-xs text-stone-400">{galleries.length} total</span>
               </div>
               {loading ? (
@@ -726,9 +726,9 @@ const Dashboard = () => {
                   <p className="text-sm font-semibold text-stone-400">No galleries yet. Create one below.</p>
                 </div>
               ) : (
-                <div className="divide-y divide-stone-100">
+                <div className="divide-y divide-stone-100 dark:divide-stone-700">
                   {galleries.map(g => (
-                    <div key={g._id} className="flex items-center gap-4 px-5 py-4 hover:bg-amber-50/30 transition-colors">
+                    <div key={g._id} className="flex items-center gap-4 px-5 py-4 hover:bg-amber-50/30 dark:hover:bg-stone-700/40 transition-colors">
                       {/* Cover image */}
                       {g.coverImage ? (
                         <img src={g.coverImage} alt={g.name}
@@ -738,7 +738,7 @@ const Dashboard = () => {
                       )}
                       {/* Info */}
                       <div className="flex-1 min-w-0">
-                        <p className="font-semibold text-primary text-sm">{g.name}</p>
+                        <p className="font-semibold text-primary dark:text-parchment text-sm">{g.name}</p>
                         <p className="text-xs text-stone-400 mt-0.5 line-clamp-1">{g.description}</p>
                         <div className="flex flex-wrap items-center gap-2 mt-1.5">
                           <span className="text-[10px] font-bold text-stone-400">{g.museumId?.name || 'No museum'}</span>
@@ -779,10 +779,10 @@ const Dashboard = () => {
             </div>
 
             {/* Create New Gallery Form */}
-            <div className="bg-white rounded-2xl border border-stone-200 shadow-sm p-6 space-y-5">
+            <div className="bg-white dark:bg-stone-800 rounded-2xl border border-stone-200 dark:border-stone-700 shadow-sm p-6 space-y-5">
               <div className="flex items-center gap-2">
                 <MdAdd size={20} className="text-gold" />
-                <h3 className="font-heading font-bold text-primary text-sm uppercase tracking-wide">Add New Gallery</h3>
+                <h3 className="font-heading font-bold text-primary dark:text-parchment text-sm uppercase tracking-wide">Add New Gallery</h3>
               </div>
 
               <form onSubmit={handleCreateGallery} className="space-y-4">
@@ -849,7 +849,7 @@ const Dashboard = () => {
         {activeTab === 'quizzes' && (
           <div className="space-y-6">
             <div className="flex items-center justify-between">
-              <h2 className="font-heading font-bold text-primary text-xl uppercase">Quiz Management</h2>
+              <h2 className="font-heading font-bold text-primary dark:text-parchment text-xl uppercase">Quiz Management</h2>
               <button onClick={openCreateQuiz}
                 className="flex items-center gap-2 bg-gold text-white font-bold text-xs px-4 py-2.5 rounded-xl hover:bg-amber-600 transition-colors shadow-md uppercase tracking-wider">
                 <MdAdd size={16} /> New Quiz
@@ -857,9 +857,9 @@ const Dashboard = () => {
             </div>
 
             {/* Quiz list */}
-            <div className="bg-white rounded-2xl border border-stone-200 shadow-sm overflow-hidden">
-              <div className="px-5 py-4 border-b border-stone-100 bg-stone-50 flex items-center justify-between">
-                <h3 className="font-heading font-bold text-primary text-sm uppercase tracking-wide">All Quizzes</h3>
+            <div className="bg-white dark:bg-stone-800 rounded-2xl border border-stone-200 dark:border-stone-700 shadow-sm overflow-hidden">
+              <div className="px-5 py-4 border-b border-stone-100 dark:border-stone-700 bg-stone-50 dark:bg-stone-800/50 flex items-center justify-between">
+                <h3 className="font-heading font-bold text-primary dark:text-parchment text-sm uppercase tracking-wide">All Quizzes</h3>
                 <span className="text-xs text-stone-400">{quizzes.length} total</span>
               </div>
               {loading ? (
@@ -872,9 +872,9 @@ const Dashboard = () => {
                   <p className="text-sm font-semibold text-stone-400">No quizzes yet. Create one above.</p>
                 </div>
               ) : (
-                <div className="divide-y divide-stone-100">
+                <div className="divide-y divide-stone-100 dark:divide-stone-700">
                   {quizzes.map(q => (
-                    <div key={q._id} className="flex items-center gap-4 px-5 py-4 hover:bg-amber-50/30 transition-colors">
+                    <div key={q._id} className="flex items-center gap-4 px-5 py-4 hover:bg-amber-50/30 dark:hover:bg-stone-700/40 transition-colors">
                       {/* Cover image */}
                       {q.coverImage ? (
                         <img src={q.coverImage} alt={q.title}
@@ -884,7 +884,7 @@ const Dashboard = () => {
                       )}
                       {/* Info */}
                       <div className="flex-1 min-w-0">
-                        <p className="font-semibold text-primary text-sm">{q.title}</p>
+                        <p className="font-semibold text-primary dark:text-parchment text-sm">{q.title}</p>
                         <p className="text-xs text-stone-400 mt-0.5 line-clamp-1">{q.description}</p>
                         <div className="flex flex-wrap items-center gap-2 mt-1.5">
                           <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full capitalize
@@ -924,9 +924,9 @@ const Dashboard = () => {
         {activeTab === 'analytics' && (
           <div className="space-y-6">
             <div className="flex items-center justify-between">
-              <h2 className="font-heading font-bold text-primary text-xl uppercase">User Analytics</h2>
+              <h2 className="font-heading font-bold text-primary dark:text-parchment text-xl uppercase">User Analytics</h2>
               <button onClick={fetchAnalytics}
-                className="flex items-center gap-2 bg-white border border-stone-200 text-stone-600 hover:bg-stone-50 text-xs font-bold px-4 py-2.5 rounded-xl transition-colors shadow-sm">
+                className="flex items-center gap-2 bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-stone-600 dark:text-stone-300 hover:bg-stone-50 dark:hover:bg-stone-700 text-xs font-bold px-4 py-2.5 rounded-xl transition-colors shadow-sm">
                 <MdRefresh size={16} /> Refresh
               </button>
             </div>
@@ -936,9 +936,9 @@ const Dashboard = () => {
                 <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-gold" />
               </div>
             ) : !analyticsData ? (
-              <div className="bg-white rounded-2xl border border-stone-200 p-16 text-center">
+              <div className="bg-white dark:bg-stone-800 rounded-2xl border border-stone-200 dark:border-stone-700 p-16 text-center">
                 <p className="text-4xl mb-3">📊</p>
-                <p className="font-heading font-bold text-primary text-lg">Analytics Not Loaded</p>
+                <p className="font-heading font-bold text-primary dark:text-parchment text-lg">Analytics Not Loaded</p>
                 <p className="text-xs text-stone-400 mt-1">Click the Analytics tab or Refresh to load data.</p>
               </div>
             ) : (
@@ -952,10 +952,10 @@ const Dashboard = () => {
                 </div>
 
                 {/* ── User Registration Trend (Area Chart) ── */}
-                <div className="bg-white rounded-2xl border border-stone-200 shadow-sm p-6">
+                <div className="bg-white dark:bg-stone-800 rounded-2xl border border-stone-200 dark:border-stone-700 shadow-sm p-6">
                   <div className="flex items-center gap-2 mb-6">
                     <MdTrendingUp size={20} className="text-gold" />
-                    <h3 className="font-heading font-bold text-primary text-sm uppercase tracking-wide">User Registration Trend (12 Months)</h3>
+                    <h3 className="font-heading font-bold text-primary dark:text-parchment text-sm uppercase tracking-wide">User Registration Trend (12 Months)</h3>
                   </div>
                   <div className="h-72">
                     <ResponsiveContainer width="100%" height="100%">
@@ -980,10 +980,10 @@ const Dashboard = () => {
                 </div>
 
                 {/* ── QR Scans Per Exhibit (Bar Chart) ── */}
-                <div className="bg-white rounded-2xl border border-stone-200 shadow-sm p-6">
+                <div className="bg-white dark:bg-stone-800 rounded-2xl border border-stone-200 dark:border-stone-700 shadow-sm p-6">
                   <div className="flex items-center gap-2 mb-6">
-                    <MdQrCode2 size={20} className="text-primary" />
-                    <h3 className="font-heading font-bold text-primary text-sm uppercase tracking-wide">QR Scans Per Exhibit</h3>
+                    <MdQrCode2 size={20} className="text-primary dark:text-parchment" />
+                    <h3 className="font-heading font-bold text-primary dark:text-parchment text-sm uppercase tracking-wide">QR Scans Per Exhibit</h3>
                   </div>
                   {analyticsData.qrScans.length === 0 ? (
                     <div className="py-10 text-center">
@@ -1023,10 +1023,10 @@ const Dashboard = () => {
                 </div>
 
                 {/* ── Daily Scan Trend (Line Chart) ── */}
-                <div className="bg-white rounded-2xl border border-stone-200 shadow-sm p-6">
+                <div className="bg-white dark:bg-stone-800 rounded-2xl border border-stone-200 dark:border-stone-700 shadow-sm p-6">
                   <div className="flex items-center gap-2 mb-6">
                     <MdTrendingUp size={20} className="text-green-700" />
-                    <h3 className="font-heading font-bold text-primary text-sm uppercase tracking-wide">Daily Scan Activity (30 Days)</h3>
+                    <h3 className="font-heading font-bold text-primary dark:text-parchment text-sm uppercase tracking-wide">Daily Scan Activity (30 Days)</h3>
                   </div>
                   <div className="h-64">
                     <ResponsiveContainer width="100%" height="100%">
@@ -1051,13 +1051,13 @@ const Dashboard = () => {
                 {/* ── Two-column: Top Scanned + User Role Pie ── */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                   {/* Top Scanned Exhibits Table */}
-                  <div className="bg-white rounded-2xl border border-stone-200 shadow-sm overflow-hidden">
-                    <div className="px-5 py-4 border-b border-stone-100 bg-stone-50">
-                      <h3 className="font-heading font-bold text-primary text-sm uppercase tracking-wide">Top Scanned Exhibits</h3>
+                  <div className="bg-white dark:bg-stone-800 rounded-2xl border border-stone-200 dark:border-stone-700 shadow-sm overflow-hidden">
+                    <div className="px-5 py-4 border-b border-stone-100 dark:border-stone-700 bg-stone-50 dark:bg-stone-800/50">
+                      <h3 className="font-heading font-bold text-primary dark:text-parchment text-sm uppercase tracking-wide">Top Scanned Exhibits</h3>
                     </div>
-                    <div className="divide-y divide-stone-100">
+                    <div className="divide-y divide-stone-100 dark:divide-stone-700">
                       {analyticsData.qrScans.slice(0, 8).map((item, idx) => (
-                        <div key={item.exhibitId} className="flex items-center gap-3 px-5 py-3 hover:bg-amber-50/30 transition-colors">
+                        <div key={item.exhibitId} className="flex items-center gap-3 px-5 py-3 hover:bg-amber-50/30 dark:hover:bg-stone-700/40 transition-colors">
                           <span className="w-6 h-6 rounded-full bg-primary text-parchment flex items-center justify-center text-xs font-bold flex-shrink-0">
                             {idx + 1}
                           </span>
@@ -1067,7 +1067,7 @@ const Dashboard = () => {
                             <div className="w-10 h-10 rounded-lg bg-stone-100 border border-stone-200 flex items-center justify-center text-lg flex-shrink-0">🗿</div>
                           )}
                           <div className="flex-1 min-w-0">
-                            <p className="text-sm font-semibold text-primary truncate">{item.exhibitTitle}</p>
+                            <p className="text-sm font-semibold text-primary dark:text-parchment truncate">{item.exhibitTitle}</p>
                             <div className="flex items-center gap-2 mt-0.5">
                               <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${item.hasQR ? 'bg-green-100 text-green-700' : 'bg-stone-100 text-stone-500'}`}>
                                 {item.hasQR ? '✓ QR Active' : 'No QR'}
@@ -1075,7 +1075,7 @@ const Dashboard = () => {
                             </div>
                           </div>
                           <div className="text-right flex-shrink-0">
-                            <p className="text-lg font-heading font-bold text-primary">{item.scanCount}</p>
+                            <p className="text-lg font-heading font-bold text-primary dark:text-parchment">{item.scanCount}</p>
                             <p className="text-[10px] text-stone-400 font-semibold uppercase">scans</p>
                           </div>
                         </div>
@@ -1089,8 +1089,8 @@ const Dashboard = () => {
                   </div>
 
                   {/* User Role Distribution Pie */}
-                  <div className="bg-white rounded-2xl border border-stone-200 shadow-sm p-6">
-                    <h3 className="font-heading font-bold text-primary text-sm uppercase tracking-wide mb-4">User Role Distribution</h3>
+                  <div className="bg-white dark:bg-stone-800 rounded-2xl border border-stone-200 dark:border-stone-700 shadow-sm p-6">
+                    <h3 className="font-heading font-bold text-primary dark:text-parchment text-sm uppercase tracking-wide mb-4">User Role Distribution</h3>
                     <div className="h-64">
                       <ResponsiveContainer width="100%" height="100%">
                         <PieChart>
@@ -1116,8 +1116,8 @@ const Dashboard = () => {
                       </ResponsiveContainer>
                     </div>
                     <div className="grid grid-cols-2 gap-3 mt-4">
-                      <div className="p-3 bg-stone-50 rounded-xl border border-stone-100 text-center">
-                        <p className="text-2xl font-heading font-bold text-primary">{analyticsData.totalVisitors}</p>
+                      <div className="p-3 bg-stone-50 dark:bg-stone-700/50 rounded-xl border border-stone-100 dark:border-stone-600 text-center">
+                        <p className="text-2xl font-heading font-bold text-primary dark:text-parchment">{analyticsData.totalVisitors}</p>
                         <p className="text-[10px] font-bold text-stone-500 uppercase tracking-wide">Visitors</p>
                       </div>
                       <div className="p-3 bg-amber-50 rounded-xl border border-amber-200 text-center">
@@ -1129,9 +1129,9 @@ const Dashboard = () => {
                 </div>
 
                 {/* ── Recent Registrations ── */}
-                <div className="bg-white rounded-2xl border border-stone-200 shadow-sm overflow-hidden">
-                  <div className="px-5 py-4 border-b border-stone-100 bg-stone-50 flex items-center justify-between">
-                    <h3 className="font-heading font-bold text-primary text-sm uppercase tracking-wide">Recent Registrations</h3>
+                <div className="bg-white dark:bg-stone-800 rounded-2xl border border-stone-200 dark:border-stone-700 shadow-sm overflow-hidden">
+                  <div className="px-5 py-4 border-b border-stone-100 dark:border-stone-700 bg-stone-50 dark:bg-stone-800/50 flex items-center justify-between">
+                    <h3 className="font-heading font-bold text-primary dark:text-parchment text-sm uppercase tracking-wide">Recent Registrations</h3>
                     <span className="text-xs text-stone-400">Last 10 users</span>
                   </div>
                   <div className="overflow-x-auto">
@@ -1144,14 +1144,14 @@ const Dashboard = () => {
                           <th className="px-4 py-3 text-right text-xs font-bold uppercase tracking-wider">Registered</th>
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-stone-100">
+                      <tbody className="divide-y divide-stone-100 dark:divide-stone-700">
                         {analyticsData.recentUsers.map((u, idx) => (
-                          <tr key={u._id} className={`hover:bg-amber-50/40 transition-colors ${idx % 2 === 0 ? 'bg-white' : 'bg-stone-50/40'}`}>
+                          <tr key={u._id} className={`hover:bg-amber-50/40 dark:hover:bg-stone-700/40 transition-colors ${idx % 2 === 0 ? 'bg-white dark:bg-stone-800' : 'bg-stone-50/40 dark:bg-stone-800/60'}`}>
                             <td className="px-5 py-3">
-                              <p className="font-semibold text-primary text-sm">{u.name}</p>
+                              <p className="font-semibold text-primary dark:text-parchment text-sm">{u.name}</p>
                             </td>
                             <td className="px-4 py-3">
-                              <p className="text-xs text-stone-600">{u.email}</p>
+                              <p className="text-xs text-stone-600 dark:text-stone-400">{u.email}</p>
                             </td>
                             <td className="px-4 py-3 text-center">
                               <span className={`text-[10px] font-bold px-2.5 py-1 rounded-full ${u.role === 'admin' ? 'bg-primary text-parchment' : 'bg-stone-100 text-stone-600'}`}>
@@ -1175,9 +1175,9 @@ const Dashboard = () => {
         {/* ═══════════ TAB: ADMIN ACCOUNTS ═══════════ */}
         {activeTab === 'admins' && (
           <div className="max-w-xl space-y-6">
-            <h2 className="font-heading font-bold text-primary text-xl uppercase">Create Account</h2>
+            <h2 className="font-heading font-bold text-primary dark:text-parchment text-xl uppercase">Create Account</h2>
 
-            <div className="bg-white rounded-2xl border border-stone-200 shadow-sm p-6 space-y-5">
+            <div className="bg-white dark:bg-stone-800 rounded-2xl border border-stone-200 dark:border-stone-700 shadow-sm p-6 space-y-5">
               <p className="text-xs text-stone-500 bg-amber-50 border border-amber-200 px-4 py-3 rounded-xl">
                 ⚡ Use this form to create new <strong>Admin</strong> or <strong>Visitor</strong> accounts directly in the database.
               </p>

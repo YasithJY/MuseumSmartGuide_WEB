@@ -13,6 +13,8 @@ export default {
         parchment: "#FFFFF0", // Tusker Ivory
         accent: "#8D6E63",  // Muted Terracotta/Warm Brown
         dark: "#2D2D2D",    // Charcoal
+        'dark-surface': '#1c1917', // Dark mode page background
+        'dark-card': '#292524',    // Dark mode card/panel background
       },
       fontFamily: {
         heading: ["Cinzel", "serif"],
