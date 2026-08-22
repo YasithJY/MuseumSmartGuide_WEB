@@ -24,7 +24,7 @@ function App() {
         <Navbar />
 
         {/* Main Content Area */}
-        <main className="flex-grow pt-16">
+        <main className="flex-grow pt-[66px]">
           <Routes>
             {/* Public routes */}
             <Route path="/" element={<Home />} />
