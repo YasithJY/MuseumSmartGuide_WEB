@@ -77,20 +77,36 @@ export const getUserProfile = async (req, res) => {
   }
 };
 
+export const updateUserProfile = async (req, res) => {
+  const { name, profileImage } = req.body;
+  try {
+    const user = await User.findById(req.user._id);
+    if (!user) return res.status(404).json({ success: false, message: 'User not found' });
+    if (name) user.name = name;
+    if (profileImage !== undefined) user.profileImage = profileImage;
+    await user.save();
+    res.json({
+      success: true,
+      user: {
+        _id: user._id, name: user.name, email: user.email,
+        role: user.role, points: user.points,
+        earnedBadges: user.earnedBadges, profileImage: user.profileImage
+      }
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
 export const updateUserPointsAndBadges = async (req, res) => {
   const { points, newBadge } = req.body;
   try {
     const user = await User.findById(req.user._id);
     if (user) {
-      if (points) {
-        user.points += points;
-      }
+      if (points) user.points += points;
       if (newBadge) {
-        // Prevent duplicate badge earning
         const exists = user.earnedBadges.some(b => b.badgeId === newBadge.badgeId);
-        if (!exists) {
-          user.earnedBadges.push(newBadge);
-        }
+        if (!exists) user.earnedBadges.push(newBadge);
       }
       await user.save();
       res.json({ success: true, user: { _id: user._id, points: user.points, earnedBadges: user.earnedBadges } });
@@ -101,3 +117,4 @@ export const updateUserPointsAndBadges = async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 };
+

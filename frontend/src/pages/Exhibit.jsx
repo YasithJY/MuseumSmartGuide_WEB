@@ -222,7 +222,8 @@ const Exhibit = () => {
             <div className="w-20 h-1 bg-gold"></div>
           </div>
 
-          <p className="text-xs text-stone-500 leading-relaxed font-light">{tx('description')}</p>
+          <p className="text-sm text-stone-500 leading-relaxed font-light" style={{ whiteSpace: 'pre-wrap' }}>{tx('description')}</p>
+
 
           {exhibit.audioUrl && <AudioPlayer src={exhibit.audioUrl} title={exhibit.title} />}
 

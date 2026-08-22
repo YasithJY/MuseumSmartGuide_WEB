@@ -8,6 +8,7 @@ import Gallery from './pages/Gallery';
 import Exhibit from './pages/Exhibit';
 import Search from './pages/Search';
 import Login from './pages/Login';
+import AdminLogin from './pages/AdminLogin';
 import Register from './pages/Register';
 import Profile from './pages/Profile';
 import Dashboard from './pages/Dashboard';
@@ -21,7 +22,7 @@ function App() {
       <div className="flex flex-col min-h-screen bg-parchment bg-paper-texture">
         {/* Navigation Bar */}
         <Navbar />
-        
+
         {/* Main Content Area */}
         <main className="flex-grow">
           <Routes>
@@ -34,6 +35,9 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/scan" element={<ScanPage />} />
+
+            {/* 🔒 Hidden admin login — NOT linked anywhere in the UI */}
+            <Route path="/admin-login" element={<AdminLogin />} />
 
             {/* Protected Visitor Routes */}
             <Route element={<ProtectedRoute />}>

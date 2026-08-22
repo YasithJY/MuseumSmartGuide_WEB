@@ -3,6 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
 import {
+  AreaChart, Area, BarChart, Bar, LineChart, Line,
+  XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend, PieChart, Pie, Cell
+} from 'recharts';
+import {
   MdOutlineDashboard,
   MdOutlinePhotoSizeSelectActual,
   MdOutlinePersonAdd,
@@ -17,6 +21,9 @@ import {
   MdQrCode2,
   MdLogout,
   MdRefresh,
+  MdBarChart,
+  MdPeople,
+  MdTrendingUp,
 } from 'react-icons/md';
 
 const API = 'http://localhost:5000/api';
@@ -66,6 +73,7 @@ const Field = ({ label, children }) => (
 
 const inputCls = "w-full text-sm p-2.5 rounded-lg border border-stone-200 focus:outline-none focus:ring-2 focus:ring-gold bg-stone-50";
 const textareaCls = `${inputCls} resize-none`;
+const descriptionCls = "w-full text-base p-3.5 rounded-xl border-2 border-stone-200 focus:outline-none focus:ring-2 focus:ring-gold bg-stone-50 resize-none leading-relaxed font-normal";
 
 // ─── Stat Card ────────────────────────────────────────────────────────────────
 const StatCard = ({ icon, label, value, color }) => (
@@ -95,6 +103,10 @@ const Dashboard = () => {
   const [quizzes, setQuizzes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [toast, setToast] = useState(null);
+
+  // Analytics states
+  const [analyticsData, setAnalyticsData] = useState(null);
+  const [analyticsLoading, setAnalyticsLoading] = useState(false);
 
   // Quiz states
   const blankQuestion = { text: '', type: 'multiple-choice', imageUrl: '', options: ['', '', '', ''], correctAnswer: '', points: 10 };
@@ -191,6 +203,19 @@ const Dashboard = () => {
       if (data.data) setCategories(data.data);
     } catch { /* ignore if route doesn't exist */ }
   }, []);
+
+  // ── Fetch User Analytics ────────────────────────────────────────────────────
+  const fetchAnalytics = useCallback(async () => {
+    if (!token) return;
+    setAnalyticsLoading(true);
+    try {
+      const { data } = await axios.get(`${API}/analytics/user-analytics`, authHeaders(token));
+      if (data.success) setAnalyticsData(data.data);
+    } catch (err) {
+      showToast('Failed to load analytics data.', 'error');
+    }
+    setAnalyticsLoading(false);
+  }, [token, showToast]);
 
   useEffect(() => {
     fetchAll();
@@ -483,8 +508,12 @@ const Dashboard = () => {
     { id: 'galleries', label: 'Galleries', icon: <MdOutlineCollections size={18} /> },
     { id: 'quizzes', label: 'Quizzes', icon: <MdOutlineQuiz size={18} /> },
     { id: 'overview', label: 'Overview', icon: <MdOutlineDashboard size={18} /> },
+    { id: 'analytics', label: 'Analytics', icon: <MdBarChart size={18} />, onActivate: fetchAnalytics },
     { id: 'admins', label: 'Admin Accounts', icon: <MdOutlinePersonAdd size={18} /> },
   ];
+
+  // Chart color palette
+  const CHART_COLORS = ['#4E342E', '#D4A34B', '#6D4C41', '#8D6E63', '#A1887F', '#BCAAA4', '#795548', '#3E2723', '#FFAB91', '#FF8A65'];
 
 
   return (
@@ -518,11 +547,11 @@ const Dashboard = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 space-y-6">
 
         {/* ── Tabs ── */}
-        <div className="flex gap-2 bg-white border border-stone-200 shadow-sm p-1.5 rounded-xl w-fit">
+        <div className="flex flex-wrap gap-2 bg-white border border-stone-200 shadow-sm p-1.5 rounded-xl w-fit">
           {tabs.map(tab => (
             <button
               key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
+              onClick={() => { setActiveTab(tab.id); tab.onActivate?.(); }}
               className={`flex items-center gap-2 px-5 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wide transition-all duration-200
                 ${activeTab === tab.id
                   ? 'bg-primary text-parchment shadow-md'
@@ -891,6 +920,258 @@ const Dashboard = () => {
           </div>
         )}
 
+        {/* ═══════════ TAB: ANALYTICS ═══════════ */}
+        {activeTab === 'analytics' && (
+          <div className="space-y-6">
+            <div className="flex items-center justify-between">
+              <h2 className="font-heading font-bold text-primary text-xl uppercase">User Analytics</h2>
+              <button onClick={fetchAnalytics}
+                className="flex items-center gap-2 bg-white border border-stone-200 text-stone-600 hover:bg-stone-50 text-xs font-bold px-4 py-2.5 rounded-xl transition-colors shadow-sm">
+                <MdRefresh size={16} /> Refresh
+              </button>
+            </div>
+
+            {analyticsLoading ? (
+              <div className="flex justify-center py-20">
+                <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-gold" />
+              </div>
+            ) : !analyticsData ? (
+              <div className="bg-white rounded-2xl border border-stone-200 p-16 text-center">
+                <p className="text-4xl mb-3">📊</p>
+                <p className="font-heading font-bold text-primary text-lg">Analytics Not Loaded</p>
+                <p className="text-xs text-stone-400 mt-1">Click the Analytics tab or Refresh to load data.</p>
+              </div>
+            ) : (
+              <>
+                {/* ── Stat Cards Row ── */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  <StatCard icon={<MdPeople size={22} />} label="Total Users" value={analyticsData.totalUsers} color="bg-primary" />
+                  <StatCard icon="👤" label="Visitors" value={analyticsData.totalVisitors} color="bg-accent" />
+                  <StatCard icon="🛡️" label="Admins" value={analyticsData.totalAdmins} color="bg-gold" />
+                  <StatCard icon={<MdQrCode2 size={22} />} label="Total QR Scans" value={analyticsData.totalScans} color="bg-green-700" />
+                </div>
+
+                {/* ── User Registration Trend (Area Chart) ── */}
+                <div className="bg-white rounded-2xl border border-stone-200 shadow-sm p-6">
+                  <div className="flex items-center gap-2 mb-6">
+                    <MdTrendingUp size={20} className="text-gold" />
+                    <h3 className="font-heading font-bold text-primary text-sm uppercase tracking-wide">User Registration Trend (12 Months)</h3>
+                  </div>
+                  <div className="h-72">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <AreaChart data={analyticsData.registrationChart} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
+                        <defs>
+                          <linearGradient id="regGradient" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="5%" stopColor="#D4A34B" stopOpacity={0.4} />
+                            <stop offset="95%" stopColor="#D4A34B" stopOpacity={0.05} />
+                          </linearGradient>
+                        </defs>
+                        <CartesianGrid strokeDasharray="3 3" stroke="#e7e5e4" />
+                        <XAxis dataKey="month" tick={{ fontSize: 11, fill: '#78716c' }} axisLine={{ stroke: '#d6d3d1' }} />
+                        <YAxis allowDecimals={false} tick={{ fontSize: 11, fill: '#78716c' }} axisLine={{ stroke: '#d6d3d1' }} />
+                        <Tooltip
+                          contentStyle={{ borderRadius: '12px', border: '1px solid #e7e5e4', fontSize: '12px', fontWeight: 600 }}
+                          labelFormatter={(label, payload) => payload?.[0]?.payload?.label || label}
+                        />
+                        <Area type="monotone" dataKey="users" stroke="#D4A34B" strokeWidth={2.5} fill="url(#regGradient)" name="Registrations" />
+                      </AreaChart>
+                    </ResponsiveContainer>
+                  </div>
+                </div>
+
+                {/* ── QR Scans Per Exhibit (Bar Chart) ── */}
+                <div className="bg-white rounded-2xl border border-stone-200 shadow-sm p-6">
+                  <div className="flex items-center gap-2 mb-6">
+                    <MdQrCode2 size={20} className="text-primary" />
+                    <h3 className="font-heading font-bold text-primary text-sm uppercase tracking-wide">QR Scans Per Exhibit</h3>
+                  </div>
+                  {analyticsData.qrScans.length === 0 ? (
+                    <div className="py-10 text-center">
+                      <p className="text-2xl mb-2">📱</p>
+                      <p className="text-sm font-semibold text-stone-400">No scan data yet. Scans are recorded when users visit exhibit pages.</p>
+                    </div>
+                  ) : (
+                    <div className="h-80">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <BarChart
+                          data={analyticsData.qrScans.slice(0, 10)}
+                          margin={{ top: 5, right: 20, left: 0, bottom: 60 }}
+                          barSize={36}
+                        >
+                          <CartesianGrid strokeDasharray="3 3" stroke="#e7e5e4" />
+                          <XAxis
+                            dataKey="exhibitTitle"
+                            tick={{ fontSize: 10, fill: '#78716c' }}
+                            interval={0}
+                            angle={-35}
+                            textAnchor="end"
+                            axisLine={{ stroke: '#d6d3d1' }}
+                          />
+                          <YAxis allowDecimals={false} tick={{ fontSize: 11, fill: '#78716c' }} axisLine={{ stroke: '#d6d3d1' }} />
+                          <Tooltip
+                            contentStyle={{ borderRadius: '12px', border: '1px solid #e7e5e4', fontSize: '12px', fontWeight: 600 }}
+                          />
+                          <Bar dataKey="scanCount" name="Scans" radius={[6, 6, 0, 0]}>
+                            {analyticsData.qrScans.slice(0, 10).map((_, idx) => (
+                              <Cell key={`bar-${idx}`} fill={CHART_COLORS[idx % CHART_COLORS.length]} />
+                            ))}
+                          </Bar>
+                        </BarChart>
+                      </ResponsiveContainer>
+                    </div>
+                  )}
+                </div>
+
+                {/* ── Daily Scan Trend (Line Chart) ── */}
+                <div className="bg-white rounded-2xl border border-stone-200 shadow-sm p-6">
+                  <div className="flex items-center gap-2 mb-6">
+                    <MdTrendingUp size={20} className="text-green-700" />
+                    <h3 className="font-heading font-bold text-primary text-sm uppercase tracking-wide">Daily Scan Activity (30 Days)</h3>
+                  </div>
+                  <div className="h-64">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <LineChart data={analyticsData.scanChart} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="#e7e5e4" />
+                        <XAxis
+                          dataKey="date"
+                          tick={{ fontSize: 10, fill: '#78716c' }}
+                          interval={4}
+                          axisLine={{ stroke: '#d6d3d1' }}
+                        />
+                        <YAxis allowDecimals={false} tick={{ fontSize: 11, fill: '#78716c' }} axisLine={{ stroke: '#d6d3d1' }} />
+                        <Tooltip
+                          contentStyle={{ borderRadius: '12px', border: '1px solid #e7e5e4', fontSize: '12px', fontWeight: 600 }}
+                        />
+                        <Line type="monotone" dataKey="scans" stroke="#4E342E" strokeWidth={2.5} dot={{ fill: '#D4A34B', r: 3, strokeWidth: 0 }} activeDot={{ r: 5, fill: '#D4A34B', stroke: '#4E342E', strokeWidth: 2 }} name="Scans" />
+                      </LineChart>
+                    </ResponsiveContainer>
+                  </div>
+                </div>
+
+                {/* ── Two-column: Top Scanned + User Role Pie ── */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  {/* Top Scanned Exhibits Table */}
+                  <div className="bg-white rounded-2xl border border-stone-200 shadow-sm overflow-hidden">
+                    <div className="px-5 py-4 border-b border-stone-100 bg-stone-50">
+                      <h3 className="font-heading font-bold text-primary text-sm uppercase tracking-wide">Top Scanned Exhibits</h3>
+                    </div>
+                    <div className="divide-y divide-stone-100">
+                      {analyticsData.qrScans.slice(0, 8).map((item, idx) => (
+                        <div key={item.exhibitId} className="flex items-center gap-3 px-5 py-3 hover:bg-amber-50/30 transition-colors">
+                          <span className="w-6 h-6 rounded-full bg-primary text-parchment flex items-center justify-center text-xs font-bold flex-shrink-0">
+                            {idx + 1}
+                          </span>
+                          {item.image ? (
+                            <img src={item.image} alt={item.exhibitTitle} className="w-10 h-10 rounded-lg object-cover border border-stone-200 flex-shrink-0" />
+                          ) : (
+                            <div className="w-10 h-10 rounded-lg bg-stone-100 border border-stone-200 flex items-center justify-center text-lg flex-shrink-0">🗿</div>
+                          )}
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-semibold text-primary truncate">{item.exhibitTitle}</p>
+                            <div className="flex items-center gap-2 mt-0.5">
+                              <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${item.hasQR ? 'bg-green-100 text-green-700' : 'bg-stone-100 text-stone-500'}`}>
+                                {item.hasQR ? '✓ QR Active' : 'No QR'}
+                              </span>
+                            </div>
+                          </div>
+                          <div className="text-right flex-shrink-0">
+                            <p className="text-lg font-heading font-bold text-primary">{item.scanCount}</p>
+                            <p className="text-[10px] text-stone-400 font-semibold uppercase">scans</p>
+                          </div>
+                        </div>
+                      ))}
+                      {analyticsData.qrScans.length === 0 && (
+                        <div className="p-8 text-center">
+                          <p className="text-sm text-stone-400">No scan data available yet.</p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* User Role Distribution Pie */}
+                  <div className="bg-white rounded-2xl border border-stone-200 shadow-sm p-6">
+                    <h3 className="font-heading font-bold text-primary text-sm uppercase tracking-wide mb-4">User Role Distribution</h3>
+                    <div className="h-64">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <PieChart>
+                          <Pie
+                            data={[
+                              { name: 'Visitors', value: analyticsData.totalVisitors },
+                              { name: 'Admins', value: analyticsData.totalAdmins }
+                            ]}
+                            cx="50%"
+                            cy="50%"
+                            innerRadius={55}
+                            outerRadius={90}
+                            paddingAngle={4}
+                            dataKey="value"
+                            label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                          >
+                            <Cell fill="#4E342E" />
+                            <Cell fill="#D4A34B" />
+                          </Pie>
+                          <Tooltip contentStyle={{ borderRadius: '12px', border: '1px solid #e7e5e4', fontSize: '12px', fontWeight: 600 }} />
+                          <Legend wrapperStyle={{ fontSize: '12px', fontWeight: 600 }} />
+                        </PieChart>
+                      </ResponsiveContainer>
+                    </div>
+                    <div className="grid grid-cols-2 gap-3 mt-4">
+                      <div className="p-3 bg-stone-50 rounded-xl border border-stone-100 text-center">
+                        <p className="text-2xl font-heading font-bold text-primary">{analyticsData.totalVisitors}</p>
+                        <p className="text-[10px] font-bold text-stone-500 uppercase tracking-wide">Visitors</p>
+                      </div>
+                      <div className="p-3 bg-amber-50 rounded-xl border border-amber-200 text-center">
+                        <p className="text-2xl font-heading font-bold text-gold">{analyticsData.totalAdmins}</p>
+                        <p className="text-[10px] font-bold text-stone-500 uppercase tracking-wide">Admins</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* ── Recent Registrations ── */}
+                <div className="bg-white rounded-2xl border border-stone-200 shadow-sm overflow-hidden">
+                  <div className="px-5 py-4 border-b border-stone-100 bg-stone-50 flex items-center justify-between">
+                    <h3 className="font-heading font-bold text-primary text-sm uppercase tracking-wide">Recent Registrations</h3>
+                    <span className="text-xs text-stone-400">Last 10 users</span>
+                  </div>
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-sm">
+                      <thead className="bg-primary text-parchment">
+                        <tr>
+                          <th className="px-5 py-3 text-left text-xs font-bold uppercase tracking-wider">Name</th>
+                          <th className="px-4 py-3 text-left text-xs font-bold uppercase tracking-wider">Email</th>
+                          <th className="px-4 py-3 text-center text-xs font-bold uppercase tracking-wider">Role</th>
+                          <th className="px-4 py-3 text-right text-xs font-bold uppercase tracking-wider">Registered</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-stone-100">
+                        {analyticsData.recentUsers.map((u, idx) => (
+                          <tr key={u._id} className={`hover:bg-amber-50/40 transition-colors ${idx % 2 === 0 ? 'bg-white' : 'bg-stone-50/40'}`}>
+                            <td className="px-5 py-3">
+                              <p className="font-semibold text-primary text-sm">{u.name}</p>
+                            </td>
+                            <td className="px-4 py-3">
+                              <p className="text-xs text-stone-600">{u.email}</p>
+                            </td>
+                            <td className="px-4 py-3 text-center">
+                              <span className={`text-[10px] font-bold px-2.5 py-1 rounded-full ${u.role === 'admin' ? 'bg-primary text-parchment' : 'bg-stone-100 text-stone-600'}`}>
+                                {u.role}
+                              </span>
+                            </td>
+                            <td className="px-4 py-3 text-right">
+                              <span className="text-xs text-stone-500">{new Date(u.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</span>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
+        )}
+
         {/* ═══════════ TAB: ADMIN ACCOUNTS ═══════════ */}
         {activeTab === 'admins' && (
           <div className="max-w-xl space-y-6">
@@ -995,12 +1276,15 @@ const Dashboard = () => {
                   onChange={e => setExhibitForm(f => ({ ...f, title: e.target.value }))} className={inputCls} />
               </Field>
               <Field label="Description *">
-                <textarea required rows={3} placeholder="Brief description..." value={exhibitForm.description}
-                  onChange={e => setExhibitForm(f => ({ ...f, description: e.target.value }))} className={textareaCls} />
-              </Field>
-              <Field label="Historical Information *">
-                <textarea required rows={3} placeholder="Historical background..." value={exhibitForm.historicalInfo}
-                  onChange={e => setExhibitForm(f => ({ ...f, historicalInfo: e.target.value }))} className={textareaCls} />
+                <textarea
+                  required
+                  rows={10}
+                  placeholder="Enter exhibit description here. Spaces and line breaks will be preserved exactly as typed..."
+                  value={exhibitForm.description}
+                  onChange={e => setExhibitForm(f => ({ ...f, description: e.target.value }))}
+                  className={descriptionCls}
+                  style={{ whiteSpace: 'pre-wrap' }}
+                />
               </Field>
             </div>
 
