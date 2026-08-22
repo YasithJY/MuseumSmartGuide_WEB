@@ -2,6 +2,7 @@ import React, { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import { MdEmail, MdLock, MdVisibility, MdVisibilityOff, MdShield } from 'react-icons/md';
+import heroImage from '../assets/Hero.jpeg';
 
 /**
  * AdminLogin — accessible only at /admin-login
@@ -42,7 +43,7 @@ const AdminLogin = () => {
 
       {/* Subtle background texture */}
       <div className="absolute inset-0 opacity-5"
-        style={{ backgroundImage: "url('https://images.unsplash.com/photo-1544644181-1484b3fdfc62?auto=format&fit=crop&q=80&w=1200')", backgroundSize: 'cover', backgroundPosition: 'center' }} />
+        style={{ backgroundImage: `url(${heroImage})`, backgroundSize: 'cover', backgroundPosition: 'center' }} />
 
       <div className="relative w-full max-w-sm space-y-6">
 

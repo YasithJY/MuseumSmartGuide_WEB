@@ -5,6 +5,7 @@ import { LangContext } from '../context/LangContext';
 import { AuthContext } from '../context/AuthContext';
 import ExhibitCard from '../components/cards/ExhibitCard';
 import { MdSearch, MdQrCodeScanner, MdOutlineEventNote } from 'react-icons/md';
+import heroImage from '../assets/Hero.jpeg';
 
 const API = 'http://localhost:5000/api';
 
@@ -44,7 +45,7 @@ const Home = () => {
     <div className="space-y-16">
       {/* Premium Hero Banner */}
       <section className="relative min-h-[70vh] flex items-center justify-center text-center px-4 bg-primary text-parchment overflow-hidden border-b-4 border-gold">
-        <div className="absolute inset-0 z-0 opacity-40 bg-cover bg-center" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1544644181-1484b3fdfc62?auto=format&fit=crop&q=80&w=1200')" }}></div>
+        <div className="absolute inset-0 z-0 opacity-40 bg-cover bg-center" style={{ backgroundImage: `url(${heroImage})` }}></div>
         <div className="absolute inset-0 bg-gradient-to-t from-primary via-primary/70 to-transparent z-0"></div>
 
         <div className="relative z-10 max-w-4xl mx-auto space-y-6">
