@@ -23,7 +23,7 @@ const ExhibitCard = ({ exhibit, onToggleFav, isFav }) => {
         <img
           src={exhibit.images?.[0] || 'https://images.unsplash.com/photo-1544644181-1484b3fdfc62?auto=format&fit=crop&q=80&w=400'}
           alt={exhibit.title}
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+          className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
         />
         {exhibit.categoryId && (
           <span className="absolute bottom-3 left-3 bg-primary/80 backdrop-blur-sm text-gold border border-gold/45 text-[10px] uppercase font-bold tracking-widest px-2.5 py-0.5 rounded-full">

@@ -26,7 +26,7 @@ import {
   MdTrendingUp,
 } from 'react-icons/md';
 
-const API = 'http://localhost:5000/api';
+const API = 'http://localhost:5001/api';
 
 // ─── Helper: axios with auth header ───────────────────────────────────────────
 const authHeaders = (token) => ({ headers: { Authorization: `Bearer ${token}` } });
@@ -226,7 +226,7 @@ const Dashboard = () => {
   const downloadQR = async (exhibit) => {
     const qrUrl = exhibit.qrCodeUrl;
     if (!qrUrl) { showToast('No QR code for this exhibit yet.', 'error'); return; }
-    const fullUrl = `http://localhost:5000${qrUrl}`;
+    const fullUrl = `http://localhost:5001${qrUrl}`;
     try {
       const resp = await fetch(fullUrl);
       const blob = await resp.blob();
@@ -351,7 +351,7 @@ const Dashboard = () => {
         }
       });
       if (data.success) {
-        const fullUrl = `http://localhost:5000${data.url}`;
+        const fullUrl = `http://localhost:5001${data.url}`;
         onSuccess(fullUrl);
         showToast('Image uploaded successfully!');
       }
@@ -1503,7 +1503,7 @@ const Dashboard = () => {
                     value={editGalleryForm.coverImage}
                     onChange={e => setEditGalleryForm(f => ({ ...f, coverImage: e.target.value }))}
                     className={inputCls} />
-                  <p className="text-[10px] text-stone-400">Uploaded images are stored on the server and served at localhost:5000/uploads/</p>
+                  <p className="text-[10px] text-stone-400">Uploaded images are stored on the server and served at localhost:5001/uploads/</p>
                 </div>
               </div>
             </div>

@@ -5,7 +5,7 @@ import { AuthContext } from '../context/AuthContext';
 import AudioPlayer from '../components/common/AudioPlayer';
 import { MdBookmark, MdBookmarkBorder, MdShare, MdArrowBack, MdZoomIn, MdClose } from 'react-icons/md';
 
-const API = 'http://localhost:5000/api';
+const API = 'http://localhost:5001/api';
 
 const LANGS = [
   { code: 'en', label: 'EN', full: 'English' },
@@ -184,7 +184,7 @@ const Exhibit = () => {
             <img
               src={activeImage || fallbackImg}
               alt={exhibit.title}
-              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+              className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-110"
             />
             {/* Hover hint */}
             <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 flex items-center justify-center">
@@ -201,7 +201,7 @@ const Exhibit = () => {
               {exhibit.images.map((img, i) => (
                 <button key={i} onClick={() => setActiveImage(img)}
                   className={`w-20 h-16 rounded-md overflow-hidden border-2 flex-shrink-0 transition-all ${activeImage === img ? 'border-gold shadow-md scale-105' : 'border-transparent opacity-70 hover:opacity-100'}`}>
-                  <img src={img} alt="" className="w-full h-full object-cover" />
+                  <img src={img} alt="" className="w-full h-full object-cover object-top" />
                 </button>
               ))}
             </div>
@@ -280,7 +280,7 @@ const Exhibit = () => {
                 className="group block space-y-2 bg-[#FCFAF5] dark:bg-stone-800 border border-stone-200/50 dark:border-stone-700/50 p-3 rounded-lg hover:border-gold transition-colors">
                 <div className="h-28 rounded overflow-hidden bg-stone-200">
                   <img src={rel.images?.[0] || fallbackImg} alt={rel.title}
-                    className="w-full h-full object-cover transition-transform group-hover:scale-105" />
+                    className="w-full h-full object-cover object-top transition-transform group-hover:scale-105" />
                 </div>
                 <h4 className="font-heading font-bold text-xs text-primary dark:text-parchment truncate group-hover:text-gold">{rel.title}</h4>
               </Link>
@@ -309,7 +309,7 @@ const Exhibit = () => {
               {exhibit.images.map((img, i) => (
                 <button key={i} onClick={() => setZoomImg(img)}
                   className={`w-14 h-10 rounded overflow-hidden border-2 flex-shrink-0 transition-all ${zoomImg === img ? 'border-gold scale-110' : 'border-white/20 opacity-60 hover:opacity-100'}`}>
-                  <img src={img} alt="" className="w-full h-full object-cover" />
+                  <img src={img} alt="" className="w-full h-full object-cover object-top" />
                 </button>
               ))}
             </div>

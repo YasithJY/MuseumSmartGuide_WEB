@@ -51,17 +51,17 @@ const Navbar = () => {
             <Link to="/search" className="hover:text-gold transition-colors font-medium">{t('search')}</Link>
             <Link to="/quiz" className="hover:text-gold transition-colors font-medium">{t('quiz')}</Link>
             
-            {user?.role === 'admin' && (
-              <Link to="/dashboard" className="bg-gold/25 border border-gold text-gold px-3 py-1 rounded-md text-sm font-semibold hover:bg-gold/40 transition-all">
-                Dashboard
-              </Link>
-            )}
-            
             {(user || guestMode) ? (
               <Link to="/profile" className="hover:text-gold transition-colors font-medium">{t('profile')}</Link>
             ) : (
               <Link to="/login" className="bg-gold text-primary px-4 py-1.5 rounded-md font-semibold hover:bg-yellow-600 transition-all">
                 {t('login')}
+              </Link>
+            )}
+
+            {user?.role === 'admin' && (
+              <Link to="/dashboard" className="bg-gold/25 border border-gold text-gold px-3 py-1 rounded-md text-sm font-semibold hover:bg-gold/40 transition-all">
+                Dashboard
               </Link>
             )}
           </div>
@@ -121,16 +121,16 @@ const Navbar = () => {
           <Link to="/search" onClick={() => setMobileMenuOpen(false)} className="py-2 border-b border-stone-800 text-parchment hover:text-gold">{t('search')}</Link>
           <Link to="/quiz" onClick={() => setMobileMenuOpen(false)} className="py-2 border-b border-stone-800 text-parchment hover:text-gold">{t('quiz')}</Link>
           
-          {user?.role === 'admin' && (
-            <Link to="/dashboard" onClick={() => setMobileMenuOpen(false)} className="py-2 border-b border-stone-800 text-gold">
-              Admin Dashboard
-            </Link>
-          )}
-
           {(user || guestMode) ? (
             <Link to="/profile" onClick={() => setMobileMenuOpen(false)} className="py-2 border-b border-stone-800 text-parchment hover:text-gold">{t('profile')}</Link>
           ) : (
             <Link to="/login" onClick={() => setMobileMenuOpen(false)} className="py-2 text-gold font-bold">{t('login')}</Link>
+          )}
+
+          {user?.role === 'admin' && (
+            <Link to="/dashboard" onClick={() => setMobileMenuOpen(false)} className="py-2 border-b border-stone-800 text-gold">
+              Admin Dashboard
+            </Link>
           )}
 
           {/* Quick Access Grid */}
