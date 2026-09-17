@@ -11,7 +11,8 @@ import {
   MdFormatSize, 
   MdMenu, 
   MdClose,
-  MdQrCodeScanner
+  MdQrCodeScanner,
+  MdMuseum
 } from 'react-icons/md';
 
 const Navbar = () => {
@@ -33,7 +34,7 @@ const Navbar = () => {
         <div className="flex items-center justify-between h-16">
           {/* Logo & Brand */}
           <Link to="/" className="flex items-center space-x-2">
-            <span className="text-2xl">🏛️</span>
+            <MdMuseum className="text-2xl text-gold" />
             <div className="flex flex-col">
               <span className="font-heading font-bold text-base sm:text-lg tracking-wider text-gold gold-text-glow uppercase">
                 Museum 150

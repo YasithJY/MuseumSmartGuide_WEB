@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
-import { MdMuseum, MdEmail, MdLock, MdVisibility, MdVisibilityOff } from 'react-icons/md';
+import { MdMuseum, MdEmail, MdLock, MdVisibility, MdVisibilityOff, MdWarning } from 'react-icons/md';
 
 const Login = () => {
   const { login, enterGuestMode } = useContext(AuthContext);
@@ -59,7 +59,7 @@ const Login = () => {
 
           {error && (
             <div className="bg-red-50 border border-red-200 text-red-700 text-xs font-semibold px-4 py-3 rounded-xl flex items-center gap-2">
-              <span>⚠️</span> {error}
+              <MdWarning className="w-4 h-4" /> {error}
             </div>
           )}
 
@@ -100,7 +100,7 @@ const Login = () => {
               className="w-full bg-primary text-parchment font-bold py-3 rounded-xl hover:bg-stone-800 transition-colors uppercase tracking-wider text-xs shadow-md disabled:opacity-60 flex items-center justify-center gap-2">
               {loading
                 ? <><div className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" /> Signing in...</>
-                : '🏛️ Sign In to Museum Guide'
+                : <><MdMuseum className="w-4 h-4" /> Sign In to Museum Guide</>
               }
             </button>
           </form>

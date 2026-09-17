@@ -1,5 +1,7 @@
 import React, { useContext } from 'react';
 import { LangContext } from '../../context/LangContext';
+import { MdLocationOn, MdPhone, MdPublic } from 'react-icons/md';
+import { FaFacebook, FaTwitter } from 'react-icons/fa';
 
 const Footer = () => {
   const { t } = useContext(LangContext);
@@ -17,8 +19,8 @@ const Footer = () => {
           <p className="text-xs text-stone-300 leading-relaxed font-light">
             Colombo, Sri Lanka's largest library and antiquities hub, preserving the cultural heritage of our island nation for future generations.
           </p>
-          <p className="text-xs text-stone-400">
-            📍 Sir Marcus Fernando Mawatha, Colombo 07
+          <p className="text-xs text-stone-400 flex items-center">
+            <MdLocationOn className="mr-1 text-gold" /> Sir Marcus Fernando Mawatha, Colombo 07
           </p>
         </div>
 
@@ -48,14 +50,14 @@ const Footer = () => {
           <h4 className="font-heading font-bold text-sm text-gold tracking-wider uppercase">
             Contact Us
           </h4>
-          <p className="text-xs text-stone-300 font-light">
-            📞 Phone: +94 11 269 4767<br />
-            📧 Email: info@museum.gov.lk
+          <p className="text-xs text-stone-300 font-light flex flex-col gap-1">
+            <span className="flex items-center"><MdPhone className="mr-1 text-gold" /> Phone: +94 11 269 4767</span>
+            <span>📧 Email: info@museum.gov.lk</span>
           </p>
           <div className="flex space-x-3 pt-2">
-            <span className="text-xl cursor-pointer hover:text-gold">🌐</span>
-            <span className="text-xl cursor-pointer hover:text-gold">📘</span>
-            <span className="text-xl cursor-pointer hover:text-gold">🐦</span>
+            <MdPublic className="text-xl cursor-pointer hover:text-gold" />
+            <FaFacebook className="text-xl cursor-pointer hover:text-gold" />
+            <FaTwitter className="text-xl cursor-pointer hover:text-gold" />
           </div>
         </div>
 
