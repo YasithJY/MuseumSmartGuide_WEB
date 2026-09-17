@@ -1,13 +1,18 @@
 import React, { useState, useEffect, useContext } from 'react';
+import { useParams, Link } from 'react-router-dom';
+import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
 import { LangContext } from '../context/LangContext';
 import { mockQuizzes } from '../utils/mockData';
-import { MdOutlineQuiz, MdOutlineNavigateNext, MdOutlineStars } from 'react-icons/md';
+import { MdOutlineQuiz, MdOutlineNavigateNext, MdOutlineStars, MdArrowBack } from 'react-icons/md';
+
+const API = '/api';
 
 const QuizPage = () => {
   const { token, user, addPointsAndBadge } = useContext(AuthContext);
   const { t } = useContext(LangContext);
-  
+  const { exhibitId } = useParams();
+
   const [quizzes, setQuizzes] = useState([]);
   const [selectedQuiz, setSelectedQuiz] = useState(null);
   const [currentQuestionIdx, setCurrentQuestionIdx] = useState(0);
@@ -15,12 +20,31 @@ const QuizPage = () => {
   const [selectedOpt, setSelectedOpt] = useState('');
   const [quizResult, setQuizResult] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [exhibitQuizError, setExhibitQuizError] = useState('');
 
   useEffect(() => {
-    // Load local mock quizzes
-    setQuizzes(mockQuizzes);
-    setLoading(false);
-  }, []);
+    if (exhibitId) {
+      // Fetch this exhibit's own quiz from the backend
+      setLoading(true);
+      setExhibitQuizError('');
+      axios.get(`${API}/quizzes?exhibitId=${exhibitId}`)
+        .then(({ data }) => {
+          const found = data.data || [];
+          setQuizzes(found);
+          if (found.length > 0) {
+            handleStartQuiz(found[0]);
+          } else {
+            setExhibitQuizError('No quiz is available for this exhibit yet.');
+          }
+        })
+        .catch(() => setExhibitQuizError('Failed to load this exhibit\'s quiz.'))
+        .finally(() => setLoading(false));
+    } else {
+      // Load local mock quizzes for the general Quiz Arena
+      setQuizzes(mockQuizzes);
+      setLoading(false);
+    }
+  }, [exhibitId]);
 
   const handleStartQuiz = (quiz) => {
     setSelectedQuiz(quiz);
@@ -117,7 +141,7 @@ const QuizPage = () => {
     setQuizResult(null);
   };
 
-  if (loading && quizzes.length === 0) {
+  if (loading) {
     return (
       <div className="flex justify-center items-center py-24">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gold"></div>
@@ -125,10 +149,25 @@ const QuizPage = () => {
     );
   }
 
+  if (exhibitId && !selectedQuiz && !quizResult) {
+    return (
+      <div className="max-w-md mx-auto py-24 text-center space-y-4 px-4">
+        <p className="text-5xl">🧩</p>
+        <p className="text-sm text-stone-500 dark:text-stone-400 font-semibold">
+          {exhibitQuizError || 'No quiz is available for this exhibit yet.'}
+        </p>
+        <Link to={`/exhibit/${exhibitId}`} className="inline-flex items-center gap-1 text-gold hover:underline text-sm">
+          <MdArrowBack className="w-4 h-4" />
+          <span>Back to Exhibit</span>
+        </Link>
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-4xl mx-auto px-4 py-12 space-y-10">
-      
-      {!selectedQuiz && (
+
+      {!selectedQuiz && !exhibitId && (
         <div className="space-y-8">
           <div className="text-center space-y-2">
             <span className="text-xs uppercase text-accent font-bold tracking-widest font-heading block">
@@ -275,9 +314,15 @@ const QuizPage = () => {
           </div>
 
           <div className="pt-4">
-            <button onClick={resetQuizPage} className="bg-primary text-parchment font-bold px-6 py-2.5 rounded-lg hover:bg-stone-850 transition-colors text-xs uppercase">
-              Continue to Arena
-            </button>
+            {exhibitId ? (
+              <Link to={`/exhibit/${exhibitId}`} className="inline-block bg-primary text-parchment font-bold px-6 py-2.5 rounded-lg hover:bg-stone-850 transition-colors text-xs uppercase">
+                Back to Exhibit
+              </Link>
+            ) : (
+              <button onClick={resetQuizPage} className="bg-primary text-parchment font-bold px-6 py-2.5 rounded-lg hover:bg-stone-850 transition-colors text-xs uppercase">
+                Continue to Arena
+              </button>
+            )}
           </div>
         </div>
       )}

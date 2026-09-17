@@ -4,7 +4,9 @@ import User from '../models/User.js';
 
 export const getQuizzes = async (req, res) => {
   try {
-    const quizzes = await Quiz.find({}).populate('questions');
+    const filter = {};
+    if (req.query.exhibitId) filter.exhibitId = req.query.exhibitId;
+    const quizzes = await Quiz.find(filter).populate('questions');
     res.json({ success: true, count: quizzes.length, data: quizzes });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });

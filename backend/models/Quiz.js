@@ -8,6 +8,7 @@ const quizSchema = new mongoose.Schema({
   coverImage: { type: String, default: '' },
   museumId: { type: mongoose.Schema.Types.ObjectId, ref: 'Museum' },
   galleryId: { type: mongoose.Schema.Types.ObjectId, ref: 'Gallery' },
+  exhibitId: { type: mongoose.Schema.Types.ObjectId, ref: 'Exhibit', default: null },
   questions: [{ type: mongoose.Schema.Types.ObjectId, ref: 'QuizQuestion' }]
 }, { timestamps: true });
 

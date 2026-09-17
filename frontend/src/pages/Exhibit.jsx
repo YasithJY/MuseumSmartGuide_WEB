@@ -4,7 +4,7 @@ import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
 import AudioPlayer from '../components/common/AudioPlayer';
 import ARViewer from '../components/common/ARViewer';
-import { MdBookmark, MdBookmarkBorder, MdShare, MdArrowBack, MdZoomIn, MdClose, MdViewInAr } from 'react-icons/md';
+import { MdBookmark, MdBookmarkBorder, MdShare, MdArrowBack, MdZoomIn, MdClose, MdViewInAr, MdOutlineQuiz } from 'react-icons/md';
 import ironSmeltingOvenModel from '../assets/3Dmodels/Iron_Smelting_Oven_1.glb?url';
 
 const API = '/api';
@@ -180,6 +180,13 @@ const Exhibit = () => {
             <MdViewInAr className="w-4 h-4 text-gold" />
             <span>AR View</span>
           </button>
+
+          {/* Quiz */}
+          <Link to={`/quiz/exhibit/${exhibit._id}`}
+            className="flex items-center gap-1 text-xs border border-gold bg-gold text-primary px-3 py-1.5 rounded-lg shadow-sm hover:bg-yellow-600 transition-colors font-bold uppercase">
+            <MdOutlineQuiz className="w-4 h-4" />
+            <span>Quiz</span>
+          </Link>
         </div>
       </div>
 

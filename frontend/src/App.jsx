@@ -43,6 +43,7 @@ function App() {
             <Route element={<ProtectedRoute />}>
               <Route path="/profile" element={<Profile />} />
               <Route path="/quiz" element={<QuizPage />} />
+              <Route path="/quiz/exhibit/:exhibitId" element={<QuizPage />} />
             </Route>
 
             {/* Protected Curator/Admin Routes */}
