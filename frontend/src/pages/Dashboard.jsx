@@ -25,7 +25,7 @@ import {
   MdPeople,
   MdTrendingUp,
 } from 'react-icons/md';
-import { MdOutlineAccountBalance, MdOutlineCollections, MdExplore, MdOutlineQrCodeScanner, MdPerson, MdAdminPanelSettings, MdUpload, MdPsychology, MdLocationOn, MdBolt } from 'react-icons/md';
+import { MdOutlineAccountBalance, MdExplore, MdOutlineQrCodeScanner, MdPerson, MdAdminPanelSettings, MdUpload, MdPsychology, MdLocationOn, MdBolt } from 'react-icons/md';
 
 
 const API = '/api';
@@ -569,10 +569,10 @@ const Dashboard = () => {
         {activeTab === 'overview' && (
           <div className="space-y-6">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <StatCard icon="<MdOutlineAccountBalance className="inline-block" />" label="Museums" value={museums.length} color="bg-primary" />
-              <StatCard icon="<MdOutlineCollections className="inline-block" />" label="Galleries" value={galleries.length} color="bg-accent" />
-              <StatCard icon="<MdExplore className="inline-block" />" label="Exhibits" value={exhibits.length} color="bg-gold" />
-              <StatCard icon=<MdOutlineQrCodeScanner size={22} /> label="QR Codes Ready" value={exhibits.filter(e => e.qrCodeUrl).length} color="bg-green-700" />
+              <StatCard icon={<MdOutlineAccountBalance className="inline-block" />} label="Museums" value={museums.length} color="bg-primary" />
+              <StatCard icon={<MdOutlineCollections className="inline-block" />} label="Galleries" value={galleries.length} color="bg-accent" />
+              <StatCard icon={<MdExplore className="inline-block" />} label="Exhibits" value={exhibits.length} color="bg-gold" />
+              <StatCard icon={<MdOutlineQrCodeScanner size={22} />} label="QR Codes Ready" value={exhibits.filter(e => e.qrCodeUrl).length} color="bg-green-700" />
             </div>
 
             <div className="bg-white dark:bg-stone-800 rounded-2xl border border-stone-200 dark:border-stone-700 shadow-sm p-6">
