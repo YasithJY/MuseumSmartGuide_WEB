@@ -1,16 +1,55 @@
-# React + Vite
+# Museum 150 Smart Guide - Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+This is the frontend application for the Museum 150 Smart Guide, built with React and Vite. It serves as a Progressive Web App (PWA) to guide visitors through the museum with interactive maps, QR code scanning, and more.
 
-Currently, two official plugins are available:
+## Tech Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- **Framework**: React 19
+- **Build Tool**: Vite
+- **Styling**: Tailwind CSS, Framer Motion
+- **Routing**: React Router DOM
+- **Maps**: Leaflet & React Leaflet
+- **QR Code**: HTML5-QRCode
+- **Data Visualization**: Recharts
+- **HTTP Client**: Axios
 
-## React Compiler
+## Getting Started
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Prerequisites
+Make sure you have Node.js installed.
 
-## Expanding the Oxlint configuration
+### Installation
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+Navigate to the `frontend` directory and install dependencies (or run from the root directory using the root wrapper):
+
+```bash
+cd frontend
+npm install --legacy-peer-deps
+```
+
+### Running the Development Server
+
+To start the local development server:
+
+```bash
+npm run dev
+```
+
+The application will be available at `http://localhost:5173` (or the port specified by Vite).
+
+### Build for Production
+
+To create a production-ready build:
+
+```bash
+npm run build
+```
+
+This will generate optimized static files in the `dist` directory.
+
+## Features
+
+- Interactive indoor museum map using Leaflet
+- QR code scanning for artifacts and exhibits
+- Beautiful and responsive UI using Tailwind CSS
+- Smooth animations with Framer Motion
