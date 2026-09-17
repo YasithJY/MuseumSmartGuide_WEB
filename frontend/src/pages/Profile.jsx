@@ -6,7 +6,8 @@ import { LangContext } from '../context/LangContext';
 import {
   MdOutlineCardMembership, MdBookmark, MdHistory, MdEdit,
   MdCheck, MdClose, MdStar, MdTrendingUp, MdVisibility,
-  MdMuseum, MdQuiz, MdLogout, MdUpload, MdLockOutline, MdArrowForward
+  MdMuseum, MdQuiz, MdLogout, MdUpload, MdLockOutline, MdArrowForward,
+  MdSchool, MdEmojiEvents, MdOutlineAccountBalance, MdPsychology
 } from 'react-icons/md';
 
 const API = '/api';
@@ -47,7 +48,9 @@ const StatRow = ({ items }) => (
 // ── Badge display ─────────────────────────────────────────────────────────────
 const BadgeItem = ({ badge }) => (
   <div className="flex flex-col items-center gap-3 p-5 bg-white dark:bg-stone-800 rounded-2xl border border-stone-200 dark:border-stone-700 shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200">
-    <span className="text-4xl">{badge.icon}</span>
+    <span className="text-4xl text-gold flex items-center justify-center">
+      {badge.icon === 'MdEmojiEvents' ? <MdEmojiEvents /> : badge.icon === 'MdSchool' ? <MdSchool /> : badge.icon}
+    </span>
     <p className="text-sm font-bold text-primary dark:text-parchment text-center leading-tight">{badge.title}</p>
     <p className="text-xs text-stone-400 font-mono">
       {badge.earnedAt ? new Date(badge.earnedAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : ''}
@@ -174,7 +177,7 @@ const Profile = () => {
 
   if (guestMode) return (
     <div className="max-w-xl mx-auto px-6 py-28 text-center space-y-8">
-      <div className="text-7xl">🏛️</div>
+      <div className="flex justify-center"><MdOutlineAccountBalance className="text-7xl text-gold" /></div>
       <h2 className="font-heading font-extrabold text-3xl text-primary dark:text-parchment uppercase">You're Browsing as Guest</h2>
       <p className="text-base text-stone-500 dark:text-stone-400 leading-relaxed max-w-md mx-auto">
         Create a free account to unlock your personal heritage journey — track exhibit visits, earn historical badges, take quizzes and build your museum profile.
@@ -376,10 +379,10 @@ const Profile = () => {
                   <p className="text-sm text-stone-400 font-bold uppercase tracking-widest">Badges to unlock</p>
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                     {[
-                      { icon: '🎓', title: 'Colombo Scholar', hint: 'Get a perfect quiz score' },
-                      { icon: '👑', title: 'Golden Antiquarian', hint: 'Earn 500 total points' },
-                      { icon: '🔭', title: 'Heritage Navigator', hint: 'View 10 exhibits' },
-                      { icon: '📜', title: 'Trilingual Learner', hint: 'Read content in 3 languages' },
+                      { icon: <MdSchool />, title: 'Colombo Scholar', hint: 'Get a perfect quiz score' },
+                      { icon: <MdEmojiEvents />, title: 'Golden Antiquarian', hint: 'Earn 500 total points' },
+                      { icon: <MdOutlineAccountBalance />, title: 'Heritage Navigator', hint: 'View 10 exhibits' },
+                      { icon: <MdPsychology />, title: 'Trilingual Learner', hint: 'Read content in 3 languages' },
                     ].filter(b => !badges.some(eb => eb.title === b.title)).map((b, i) => (
                       <div key={i} className="relative flex items-center gap-3 p-4 bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-xl select-none">
                         <span className="text-2xl grayscale opacity-40 flex-shrink-0">{b.icon}</span>
@@ -529,7 +532,7 @@ const Profile = () => {
                     className="flex gap-5 items-start p-6 bg-white dark:bg-stone-800 rounded-2xl border border-stone-200 dark:border-stone-700 hover:border-gold hover:shadow-lg transition-all group">
                     {quiz.coverImage
                       ? <img src={quiz.coverImage} alt={quiz.title} className="w-20 h-20 rounded-xl object-cover flex-shrink-0 border border-stone-100" />
-                      : <div className="w-20 h-20 rounded-xl bg-amber-50 flex items-center justify-center text-4xl flex-shrink-0">🧠</div>
+                      : <div className="w-20 h-20 rounded-xl bg-amber-50 flex items-center justify-center text-4xl flex-shrink-0 text-amber-500"><MdPsychology /></div>
                     }
                     <div className="flex-1 min-w-0 space-y-1.5">
                       <p className="font-heading font-bold text-primary dark:text-parchment text-base group-hover:text-gold transition-colors">{quiz.title}</p>

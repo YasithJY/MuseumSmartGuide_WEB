@@ -25,6 +25,8 @@ import {
   MdPeople,
   MdTrendingUp,
 } from 'react-icons/md';
+import { MdOutlineAccountBalance, MdOutlineCollections, MdExplore, MdOutlineQrCodeScanner, MdPerson, MdAdminPanelSettings, MdUpload, MdPsychology, MdLocationOn, MdBolt } from 'react-icons/md';
+
 
 const API = '/api';
 
@@ -525,7 +527,7 @@ const Dashboard = () => {
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div>
             <h1 className="font-heading font-extrabold text-xl uppercase tracking-widest">
-              🏛️ Admin Control Panel
+              <MdOutlineAccountBalance className="inline-block" /> Admin Control Panel
             </h1>
             <p className="text-xs text-parchment/60 mt-0.5">Museum 150 Smart Guide — Backend Dashboard</p>
           </div>
@@ -567,10 +569,10 @@ const Dashboard = () => {
         {activeTab === 'overview' && (
           <div className="space-y-6">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <StatCard icon="🏛️" label="Museums" value={museums.length} color="bg-primary" />
-              <StatCard icon="🖼️" label="Galleries" value={galleries.length} color="bg-accent" />
-              <StatCard icon="🗿" label="Exhibits" value={exhibits.length} color="bg-gold" />
-              <StatCard icon="📱" label="QR Codes Ready" value={exhibits.filter(e => e.qrCodeUrl).length} color="bg-green-700" />
+              <StatCard icon="<MdOutlineAccountBalance className="inline-block" />" label="Museums" value={museums.length} color="bg-primary" />
+              <StatCard icon="<MdOutlineCollections className="inline-block" />" label="Galleries" value={galleries.length} color="bg-accent" />
+              <StatCard icon="<MdExplore className="inline-block" />" label="Exhibits" value={exhibits.length} color="bg-gold" />
+              <StatCard icon=<MdOutlineQrCodeScanner size={22} /> label="QR Codes Ready" value={exhibits.filter(e => e.qrCodeUrl).length} color="bg-green-700" />
             </div>
 
             <div className="bg-white dark:bg-stone-800 rounded-2xl border border-stone-200 dark:border-stone-700 shadow-sm p-6">
@@ -583,7 +585,7 @@ const Dashboard = () => {
                       <p className="text-xs text-stone-400">{e.galleryId?.name || 'No gallery'} · {e.categoryId?.name || 'No category'}</p>
                     </div>
                     <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${e.qrCodeUrl ? 'bg-green-100 text-green-700' : 'bg-stone-100 text-stone-500'}`}>
-                      {e.qrCodeUrl ? '✓ QR Ready' : 'No QR'}
+                      {e.qrCodeUrl ? 'QR Ready' : 'No QR'}
                     </span>
                   </div>
                 ))}
@@ -623,7 +625,7 @@ const Dashboard = () => {
               </div>
             ) : exhibits.length === 0 ? (
               <div className="bg-white dark:bg-stone-800 rounded-2xl border border-stone-200 dark:border-stone-700 p-16 text-center">
-                <p className="text-4xl mb-3">🗿</p>
+                <p className="text-4xl mb-3"><MdExplore className="inline-block" /></p>
                 <p className="font-heading font-bold text-primary dark:text-parchment text-lg">No Exhibits Found</p>
                 <p className="text-xs text-stone-400 mt-1">Run the seeder or create an exhibit above.</p>
               </div>
@@ -722,7 +724,7 @@ const Dashboard = () => {
                 </div>
               ) : galleries.length === 0 ? (
                 <div className="p-10 text-center">
-                  <p className="text-2xl mb-2">🖼️</p>
+                  <p className="text-2xl mb-2"><MdOutlineCollections className="inline-block" /></p>
                   <p className="text-sm font-semibold text-stone-400">No galleries yet. Create one below.</p>
                 </div>
               ) : (
@@ -734,7 +736,7 @@ const Dashboard = () => {
                         <img src={g.coverImage} alt={g.name}
                           className="w-16 h-16 rounded-xl object-cover flex-shrink-0 border border-stone-200 shadow-sm" />
                       ) : (
-                        <div className="w-16 h-16 rounded-xl bg-stone-100 flex items-center justify-center flex-shrink-0 text-2xl border border-stone-200">🖼️</div>
+                        <div className="w-16 h-16 rounded-xl bg-stone-100 flex items-center justify-center flex-shrink-0 text-2xl border border-stone-200"><MdOutlineCollections className="inline-block" /></div>
                       )}
                       {/* Info */}
                       <div className="flex-1 min-w-0">
@@ -745,7 +747,7 @@ const Dashboard = () => {
                           <span className="text-[10px] font-bold bg-gold/10 text-gold px-2 py-0.5 rounded-full">{g.exhibitsCount || 0} exhibits</span>
                           {g.location?.address && (
                             <span className="text-[10px] font-bold bg-blue-50 text-blue-600 px-2 py-0.5 rounded-full">
-                              📍 {g.location.address}
+                              <MdLocationOn className="inline-block" /> {g.location.address}
                             </span>
                           )}
                           {g.location?.floor && (
@@ -808,7 +810,7 @@ const Dashboard = () => {
                           onChange={e => e.target.files[0] && uploadImage(e.target.files[0], url => setGalleryForm(f => ({ ...f, coverImage: url })))} />
                         {uploadingImage
                           ? <><div className="w-4 h-4 border-2 border-gold/40 border-t-gold rounded-full animate-spin" /><span className="text-xs text-stone-400">Uploading...</span></>
-                          : <><span className="text-lg">📁</span><span className="text-xs font-semibold text-stone-500">Click to upload image</span></>
+                          : <><span className="text-lg"><MdUpload className="inline-block" /></span><span className="text-xs font-semibold text-stone-500">Click to upload image</span></>
                         }
                       </label>
                       {galleryForm.coverImage && (
@@ -868,7 +870,7 @@ const Dashboard = () => {
                 </div>
               ) : quizzes.length === 0 ? (
                 <div className="p-12 text-center space-y-2">
-                  <p className="text-3xl">🧠</p>
+                  <p className="text-3xl"><MdPsychology className="inline-block" /></p>
                   <p className="text-sm font-semibold text-stone-400">No quizzes yet. Create one above.</p>
                 </div>
               ) : (
@@ -880,7 +882,7 @@ const Dashboard = () => {
                         <img src={q.coverImage} alt={q.title}
                           className="w-16 h-16 rounded-xl object-cover flex-shrink-0 border border-stone-200 shadow-sm" />
                       ) : (
-                        <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-amber-100 to-stone-100 flex items-center justify-center text-2xl flex-shrink-0 border border-stone-200">🧠</div>
+                        <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-amber-100 to-stone-100 flex items-center justify-center text-2xl flex-shrink-0 border border-stone-200"><MdPsychology className="inline-block" /></div>
                       )}
                       {/* Info */}
                       <div className="flex-1 min-w-0">
@@ -937,7 +939,7 @@ const Dashboard = () => {
               </div>
             ) : !analyticsData ? (
               <div className="bg-white dark:bg-stone-800 rounded-2xl border border-stone-200 dark:border-stone-700 p-16 text-center">
-                <p className="text-4xl mb-3">📊</p>
+                <p className="text-4xl mb-3"><MdBarChart className="inline-block" /></p>
                 <p className="font-heading font-bold text-primary dark:text-parchment text-lg">Analytics Not Loaded</p>
                 <p className="text-xs text-stone-400 mt-1">Click the Analytics tab or Refresh to load data.</p>
               </div>
@@ -946,8 +948,8 @@ const Dashboard = () => {
                 {/* ── Stat Cards Row ── */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   <StatCard icon={<MdPeople size={22} />} label="Total Users" value={analyticsData.totalUsers} color="bg-primary" />
-                  <StatCard icon="👤" label="Visitors" value={analyticsData.totalVisitors} color="bg-accent" />
-                  <StatCard icon="🛡️" label="Admins" value={analyticsData.totalAdmins} color="bg-gold" />
+                  <StatCard icon=<MdPerson size={22} /> label="Visitors" value={analyticsData.totalVisitors} color="bg-accent" />
+                  <StatCard icon=<MdAdminPanelSettings size={22} /> label="Admins" value={analyticsData.totalAdmins} color="bg-gold" />
                   <StatCard icon={<MdQrCode2 size={22} />} label="Total QR Scans" value={analyticsData.totalScans} color="bg-green-700" />
                 </div>
 
@@ -987,7 +989,7 @@ const Dashboard = () => {
                   </div>
                   {analyticsData.qrScans.length === 0 ? (
                     <div className="py-10 text-center">
-                      <p className="text-2xl mb-2">📱</p>
+                      <p className="text-2xl mb-2"><MdOutlineQrCodeScanner className="inline-block" /></p>
                       <p className="text-sm font-semibold text-stone-400">No scan data yet. Scans are recorded when users visit exhibit pages.</p>
                     </div>
                   ) : (
@@ -1064,13 +1066,13 @@ const Dashboard = () => {
                           {item.image ? (
                             <img src={item.image} alt={item.exhibitTitle} className="w-10 h-10 rounded-lg object-cover border border-stone-200 flex-shrink-0" />
                           ) : (
-                            <div className="w-10 h-10 rounded-lg bg-stone-100 border border-stone-200 flex items-center justify-center text-lg flex-shrink-0">🗿</div>
+                            <div className="w-10 h-10 rounded-lg bg-stone-100 border border-stone-200 flex items-center justify-center text-lg flex-shrink-0"><MdExplore className="inline-block" /></div>
                           )}
                           <div className="flex-1 min-w-0">
                             <p className="text-sm font-semibold text-primary dark:text-parchment truncate">{item.exhibitTitle}</p>
                             <div className="flex items-center gap-2 mt-0.5">
                               <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${item.hasQR ? 'bg-green-100 text-green-700' : 'bg-stone-100 text-stone-500'}`}>
-                                {item.hasQR ? '✓ QR Active' : 'No QR'}
+                                {item.hasQR ? 'QR Active' : 'No QR'}
                               </span>
                             </div>
                           </div>
@@ -1179,7 +1181,7 @@ const Dashboard = () => {
 
             <div className="bg-white dark:bg-stone-800 rounded-2xl border border-stone-200 dark:border-stone-700 shadow-sm p-6 space-y-5">
               <p className="text-xs text-stone-500 bg-amber-50 border border-amber-200 px-4 py-3 rounded-xl">
-                ⚡ Use this form to create new <strong>Admin</strong> or <strong>Visitor</strong> accounts directly in the database.
+                <MdBolt className="inline-block text-amber-500" /> Use this form to create new <strong>Admin</strong> or <strong>Visitor</strong> accounts directly in the database.
               </p>
 
               <form onSubmit={handleAdminSubmit} className="space-y-4">
@@ -1330,7 +1332,7 @@ const Dashboard = () => {
                       }} />
                     {uploadingImage
                       ? <><div className="w-5 h-5 border-2 border-gold/40 border-t-gold rounded-full animate-spin" /><span className="text-xs text-stone-400">Uploading image...</span></>
-                      : <><span className="text-2xl">🖼️</span><span className="text-xs font-semibold text-stone-500">Click to upload image</span><span className="text-[10px] text-stone-400">JPG, PNG, GIF up to 50MB</span></>
+                      : <><span className="text-2xl"><MdOutlineCollections className="inline-block" /></span><span className="text-xs font-semibold text-stone-500">Click to upload image</span><span className="text-[10px] text-stone-400">JPG, PNG, GIF up to 50MB</span></>
                     }
                   </label>
 
@@ -1422,7 +1424,7 @@ const Dashboard = () => {
               <p className="text-xs font-bold text-stone-400 uppercase tracking-widest border-b border-stone-100 pb-1">
                 Translations (Sinhala &amp; Tamil)
               </p>
-              {[{ lang: 'si', label: '🇱🇰 Sinhala' }, { lang: 'ta', label: '🌺 Tamil' }].map(({ lang, label }) => (
+              {[{ lang: 'si', label: 'Sinhala' }, { lang: 'ta', label: 'Tamil' }].map(({ lang, label }) => (
                 <div key={lang} className="p-3 bg-stone-50 rounded-xl border border-stone-100 space-y-2">
                   <p className="text-xs font-bold text-stone-600">{label}</p>
                   <input type="text" placeholder={`Title in ${label}`}
@@ -1445,7 +1447,7 @@ const Dashboard = () => {
                 className="flex-1 bg-primary text-parchment font-bold py-3 rounded-xl hover:bg-stone-800 transition-colors text-xs uppercase shadow-md disabled:opacity-60 flex items-center justify-center gap-2">
                 {formLoading
                   ? <><div className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" /> Saving...</>
-                  : editingExhibit ? '✓ Update Exhibit' : '✓ Create Exhibit + Generate QR'
+                  : editingExhibit ? 'Update Exhibit' : 'Create Exhibit + Generate QR'
                 }
               </button>
             </div>
@@ -1485,7 +1487,7 @@ const Dashboard = () => {
                     <img src={editGalleryForm.coverImage} alt="preview"
                       className="w-20 h-20 rounded-xl object-cover border-2 border-stone-200 shadow-sm" />
                   ) : (
-                    <div className="w-20 h-20 rounded-xl bg-stone-100 border-2 border-dashed border-stone-200 flex items-center justify-center text-3xl">🖼️</div>
+                    <div className="w-20 h-20 rounded-xl bg-stone-100 border-2 border-dashed border-stone-200 flex items-center justify-center text-3xl"><MdOutlineCollections className="inline-block" /></div>
                   )}
                 </div>
                 <div className="flex-1 space-y-2">
@@ -1495,7 +1497,7 @@ const Dashboard = () => {
                       onChange={e => e.target.files[0] && uploadImage(e.target.files[0], url => setEditGalleryForm(f => ({ ...f, coverImage: url })))} />
                     {uploadingImage
                       ? <><div className="w-4 h-4 border-2 border-gold/40 border-t-gold rounded-full animate-spin" /><span className="text-xs text-stone-400">Uploading to server...</span></>
-                      : <><span className="text-base">📁</span><span className="text-xs font-semibold text-stone-500">Upload new image</span></>
+                      : <><span className="text-base"><MdUpload className="inline-block" /></span><span className="text-xs font-semibold text-stone-500">Upload new image</span></>
                     }
                   </label>
                   {/* URL fallback */}
@@ -1527,7 +1529,7 @@ const Dashboard = () => {
                 className="flex-1 bg-primary text-parchment font-bold py-3 rounded-xl hover:bg-stone-800 transition-colors text-xs uppercase shadow-md disabled:opacity-60 flex items-center justify-center gap-2">
                 {editGalleryLoading
                   ? <><div className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" /> Saving...</>
-                  : '✓ Save Changes'
+                  : 'Save Changes'
                 }
               </button>
             </div>
@@ -1584,7 +1586,7 @@ const Dashboard = () => {
                   <img src={quizForm.coverImage} alt="cover"
                     className="w-20 h-20 rounded-xl object-cover border-2 border-stone-200 shadow-sm flex-shrink-0" />
                 ) : (
-                  <div className="w-20 h-20 rounded-xl bg-stone-100 border-2 border-dashed border-stone-200 flex items-center justify-center text-3xl flex-shrink-0">🧠</div>
+                  <div className="w-20 h-20 rounded-xl bg-stone-100 border-2 border-dashed border-stone-200 flex items-center justify-center text-3xl flex-shrink-0"><MdPsychology className="inline-block" /></div>
                 )}
                 <div className="flex-1 space-y-2">
                   <label className={`flex items-center justify-center gap-2 border-2 border-dashed border-stone-200 hover:border-gold rounded-xl py-3 cursor-pointer transition-colors w-full ${uploadingImage ? 'opacity-50 pointer-events-none' : ''}`}>
@@ -1592,7 +1594,7 @@ const Dashboard = () => {
                       onChange={e => e.target.files[0] && uploadImage(e.target.files[0], url => setQuizForm(f => ({ ...f, coverImage: url })))} />
                     {uploadingImage
                       ? <><div className="w-4 h-4 border-2 border-gold/40 border-t-gold rounded-full animate-spin" /><span className="text-xs text-stone-400">Uploading...</span></>
-                      : <><span className="text-base">📁</span><span className="text-xs font-semibold text-stone-500">Upload cover image</span></>
+                      : <><span className="text-base"><MdUpload className="inline-block" /></span><span className="text-xs font-semibold text-stone-500">Upload cover image</span></>
                     }
                   </label>
                   <input type="text" placeholder="Or paste image URL..."
@@ -1656,7 +1658,7 @@ const Dashboard = () => {
                             onChange={e => e.target.files[0] && uploadImage(e.target.files[0], url => updateQuestion(idx, 'imageUrl', url))} />
                           {uploadingImage
                             ? <><div className="w-4 h-4 border-2 border-gold/40 border-t-gold rounded-full animate-spin" /><span className="text-xs text-stone-400">Uploading...</span></>
-                            : <><span>🖼️</span><span className="text-xs font-semibold text-stone-500">Upload question image</span></>
+                            : <><span><MdOutlineCollections className="inline-block" /></span><span className="text-xs font-semibold text-stone-500">Upload question image</span></>
                           }
                         </label>
                         <input type="text" placeholder="Or paste image URL..."
@@ -1730,7 +1732,7 @@ const Dashboard = () => {
                 className="flex-1 bg-primary text-parchment font-bold py-3 rounded-xl hover:bg-stone-800 transition-colors text-xs uppercase shadow-md disabled:opacity-60 flex items-center justify-center gap-2">
                 {(quizFormLoading || editQuizLoading)
                   ? <><div className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" /> Saving...</>
-                  : editingQuiz ? '✓ Update Quiz' : '✓ Create Quiz'
+                  : editingQuiz ? 'Update Quiz' : 'Create Quiz'
                 }
               </button>
             </div>

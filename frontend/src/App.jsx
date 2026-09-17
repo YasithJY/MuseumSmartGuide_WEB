@@ -36,7 +36,7 @@ function App() {
             <Route path="/register" element={<Register />} />
             <Route path="/scan" element={<ScanPage />} />
 
-            {/* 🔒 Hidden admin login — NOT linked anywhere in the UI */}
+            {/* Hidden admin login — NOT linked anywhere in the UI */}
             <Route path="/admin-login" element={<AdminLogin />} />
 
             {/* Protected Visitor Routes */}

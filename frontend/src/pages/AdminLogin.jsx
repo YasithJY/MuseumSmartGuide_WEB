@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
-import { MdEmail, MdLock, MdVisibility, MdVisibilityOff, MdShield } from 'react-icons/md';
+import { MdEmail, MdLock, MdVisibility, MdVisibilityOff, MdShield, MdError } from 'react-icons/md';
 import heroImage from '../assets/Hero.jpeg';
 
 /**
@@ -65,7 +65,7 @@ const AdminLogin = () => {
 
           {error && (
             <div className="bg-red-950/60 border border-red-700/50 text-red-400 text-xs font-semibold px-4 py-3 rounded-xl">
-              🚫 {error}
+              <MdError className="inline w-4 h-4 mr-1" /> {error}
             </div>
           )}
 

@@ -4,7 +4,7 @@ import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
 import AudioPlayer from '../components/common/AudioPlayer';
 import ARViewer from '../components/common/ARViewer';
-import { MdBookmark, MdBookmarkBorder, MdShare, MdArrowBack, MdZoomIn, MdClose, MdViewInAr, MdOutlineQuiz } from 'react-icons/md';
+import { MdBookmark, MdBookmarkBorder, MdShare, MdArrowBack, MdZoomIn, MdClose, MdViewInAr, MdOutlineQuiz, MdOutlineAccountBalance } from 'react-icons/md';
 import ironSmeltingOvenModel from '../assets/3Dmodels/Iron_Smelting_Oven_1.glb?url';
 
 const API = '/api';
@@ -121,7 +121,7 @@ const Exhibit = () => {
   if (error || !exhibit) {
     return (
       <div className="max-w-md mx-auto py-24 text-center space-y-4">
-        <p className="text-5xl">🗿</p>
+        <div className="flex justify-center"><MdOutlineAccountBalance className="text-5xl text-stone-400" /></div>
         <p className="text-sm text-stone-500 dark:text-stone-400 font-semibold">{error || 'Artifact details not found.'}</p>
         <Link to="/museums" className="text-gold hover:underline text-sm">Back to Galleries</Link>
       </div>

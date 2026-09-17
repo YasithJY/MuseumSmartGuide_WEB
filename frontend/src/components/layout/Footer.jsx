@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { LangContext } from '../../context/LangContext';
-import { MdLocationOn, MdPhone, MdPublic } from 'react-icons/md';
+import { MdLocationOn, MdPhone, MdPublic, MdEmail } from 'react-icons/md';
 import { FaFacebook, FaTwitter } from 'react-icons/fa';
 
 const Footer = () => {
@@ -52,7 +52,7 @@ const Footer = () => {
           </h4>
           <p className="text-xs text-stone-300 font-light flex flex-col gap-1">
             <span className="flex items-center"><MdPhone className="mr-1 text-gold" /> Phone: +94 11 269 4767</span>
-            <span>📧 Email: info@museum.gov.lk</span>
+            <span className="flex items-center"><MdEmail className="mr-1 text-gold" /> Email: info@museum.gov.lk</span>
           </p>
           <div className="flex space-x-3 pt-2">
             <MdPublic className="text-xl cursor-pointer hover:text-gold" />

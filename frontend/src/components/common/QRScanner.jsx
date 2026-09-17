@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Html5QrcodeScanner } from 'html5-qrcode';
+import { MdWarning } from 'react-icons/md';
 
 const QRScanner = () => {
   const [error, setError] = useState('');
@@ -76,7 +77,7 @@ const QRScanner = () => {
 
       {error && (
         <div className="w-full bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded mb-4 text-xs font-semibold">
-          ⚠️ {error}
+          <MdWarning className="inline w-4 h-4 mr-1" /> {error}
         </div>
       )}
 

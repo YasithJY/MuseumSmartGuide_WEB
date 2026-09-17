@@ -4,7 +4,7 @@ import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
 import { LangContext } from '../context/LangContext';
 import { mockQuizzes } from '../utils/mockData';
-import { MdOutlineQuiz, MdOutlineNavigateNext, MdOutlineStars, MdArrowBack } from 'react-icons/md';
+import { MdOutlineQuiz, MdOutlineNavigateNext, MdOutlineStars, MdArrowBack, MdExtension, MdEmojiEvents, MdSchool } from 'react-icons/md';
 
 const API = '/api';
 
@@ -120,9 +120,9 @@ const QuizPage = () => {
     addPointsAndBadge(scorePoints, null);
 
     // Award general badges
-    checkAndAwardBadge('first_quiz', 'Quiz Explorer', '🏆');
+    checkAndAwardBadge('first_quiz', 'Quiz Explorer', 'MdEmojiEvents');
     if (correctCount === totalQuestions) {
-      checkAndAwardBadge('perfect_score', 'Colombo Scholar', '🎓');
+      checkAndAwardBadge('perfect_score', 'Colombo Scholar', 'MdSchool');
     }
 
     setQuizResult({
@@ -152,7 +152,7 @@ const QuizPage = () => {
   if (exhibitId && !selectedQuiz && !quizResult) {
     return (
       <div className="max-w-md mx-auto py-24 text-center space-y-4 px-4">
-        <p className="text-5xl">🧩</p>
+        <div className="flex justify-center"><MdExtension className="text-5xl text-stone-400" /></div>
         <p className="text-sm text-stone-500 dark:text-stone-400 font-semibold">
           {exhibitQuizError || 'No quiz is available for this exhibit yet.'}
         </p>
@@ -261,7 +261,7 @@ const QuizPage = () => {
         <div className="bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 shadow-xl rounded-2xl p-6 sm:p-8 space-y-8 text-center">
           <div className="space-y-2">
             <div className="w-16 h-16 rounded-full bg-gold/15 flex items-center justify-center text-3xl mx-auto border border-gold/40">
-              🎖️
+              <MdEmojiEvents className="text-gold" />
             </div>
             <h2 className="font-heading font-extrabold text-2xl text-primary dark:text-parchment uppercase">Quiz Completed!</h2>
             <p className="text-xs text-stone-500">Grading evaluation and reward breakdown</p>
@@ -290,8 +290,8 @@ const QuizPage = () => {
               </span>
               <div className="flex items-center justify-center gap-2">
                 {quizResult.badgesEarned.map((badge, idx) => (
-                  <span key={idx} className="bg-white border border-gold/30 px-3 py-1 rounded-full text-xs font-bold text-primary">
-                    {badge.icon} {badge.title}
+                  <span key={idx} className="bg-white border border-gold/30 px-3 py-1 rounded-full text-xs font-bold text-primary flex items-center gap-1">
+                    {badge.icon === 'MdEmojiEvents' ? <MdEmojiEvents className="text-gold" /> : badge.icon === 'MdSchool' ? <MdSchool className="text-gold" /> : badge.icon} {badge.title}
                   </span>
                 ))}
               </div>

@@ -4,7 +4,7 @@ import axios from 'axios';
 import { LangContext } from '../context/LangContext';
 import { AuthContext } from '../context/AuthContext';
 import ExhibitCard from '../components/cards/ExhibitCard';
-import { MdSearch, MdQrCodeScanner, MdOutlineEventNote } from 'react-icons/md';
+import { MdSearch, MdQrCodeScanner, MdOutlineEventNote, MdOutlineAccountBalance } from 'react-icons/md';
 import heroImage from '../assets/Hero.jpeg';
 
 const API = '/api';
@@ -101,7 +101,7 @@ const Home = () => {
           </div>
         ) : featuredExhibits.length === 0 ? (
           <div className="text-center py-16 space-y-4">
-            <p className="text-5xl">🗿</p>
+            <div className="flex justify-center"><MdOutlineAccountBalance className="text-5xl text-stone-400" /></div>
             <p className="font-heading font-bold text-primary dark:text-parchment text-lg uppercase tracking-wide">No Exhibits Yet</p>
             <p className="text-sm text-stone-400 dark:text-stone-500 max-w-sm mx-auto">
               Exhibits added from the Admin Dashboard will appear here automatically.
