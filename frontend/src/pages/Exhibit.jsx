@@ -3,9 +3,11 @@ import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
 import AudioPlayer from '../components/common/AudioPlayer';
-import { MdBookmark, MdBookmarkBorder, MdShare, MdArrowBack, MdZoomIn, MdClose } from 'react-icons/md';
+import ARViewer from '../components/common/ARViewer';
+import { MdBookmark, MdBookmarkBorder, MdShare, MdArrowBack, MdZoomIn, MdClose, MdViewInAr } from 'react-icons/md';
+import ironSmeltingOvenModel from '../assets/3Dmodels/Iron_Smelting_Oven_1.glb?url';
 
-const API = 'http://localhost:5001/api';
+const API = '/api';
 
 const LANGS = [
   { code: 'en', label: 'EN', full: 'English' },
@@ -31,6 +33,9 @@ const Exhibit = () => {
   // ── Image zoom overlay ──────────────────────────────────────────────────────
   const [zoomOpen, setZoomOpen] = useState(false);
   const [zoomImg, setZoomImg] = useState('');
+
+  // ── AR viewer ─────────────────────────────────────────────────────────────
+  const [arOpen, setArOpen] = useState(false);
 
   useEffect(() => {
     fetchExhibitDetails();
@@ -167,6 +172,13 @@ const Exhibit = () => {
             className="flex items-center gap-1 text-xs border border-stone-300 dark:border-stone-600 bg-white dark:bg-stone-800 px-3 py-1.5 rounded-lg shadow-sm hover:border-gold transition-colors font-bold uppercase">
             <MdShare className="w-4 h-4 text-primary" />
             <span>{shareSuccess ? 'Copied!' : 'Share'}</span>
+          </button>
+
+          {/* AR View */}
+          <button onClick={() => setArOpen(true)}
+            className="flex items-center gap-1 text-xs border border-gold bg-primary text-parchment px-3 py-1.5 rounded-lg shadow-sm hover:bg-primary/90 transition-colors font-bold uppercase">
+            <MdViewInAr className="w-4 h-4 text-gold" />
+            <span>AR View</span>
           </button>
         </div>
       </div>
@@ -323,6 +335,15 @@ const Exhibit = () => {
             onClick={e => e.stopPropagation()}
           />
         </div>
+      )}
+
+      {/* ── AR Viewer ─────────────────────────────────────────────────────────── */}
+      {arOpen && (
+        <ARViewer
+          modelUrl={ironSmeltingOvenModel}
+          title={exhibit.title}
+          onClose={() => setArOpen(false)}
+        />
       )}
     </div>
   );

@@ -9,7 +9,7 @@ import {
   MdMuseum, MdQuiz, MdLogout, MdUpload, MdLockOutline, MdArrowForward
 } from 'react-icons/md';
 
-const API = 'http://localhost:5001/api';
+const API = '/api';
 
 // ── Rank system based on points — one consistent gold accent, tiers told apart
 // by label and a 5-segment progress ladder rather than by color-coding. ────────
@@ -154,7 +154,7 @@ const Profile = () => {
         headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'multipart/form-data' }
       });
       const url = data.url || data.data?.url || '';
-      if (url) setEditImage(`http://localhost:5001${url}`);
+      if (url) setEditImage(url);
     } catch { /* ignore */ }
     setUploadingImg(false);
   };

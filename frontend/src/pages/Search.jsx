@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import axios from 'axios';
 import ExhibitCard from '../components/cards/ExhibitCard';
-import { mockExhibits, mockCategories } from '../utils/mockData';
 import { MdSearch, MdFilterList } from 'react-icons/md';
+
+const API = '/api';
 
 const Search = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -16,39 +18,37 @@ const Search = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    setCategories(mockCategories);
+    const fetchCategories = async () => {
+      try {
+        const { data } = await axios.get(`${API}/categories`);
+        setCategories(data.data || []);
+      } catch {
+        setCategories([]);
+      }
+    };
+    fetchCategories();
   }, []);
 
   useEffect(() => {
     executeSearch();
   }, [searchParams, selectedCategory, selectedPeriod]);
 
-  const executeSearch = () => {
+  const executeSearch = async () => {
     setLoading(true);
-    const q = (searchParams.get('q') || '').toLowerCase();
-    
-    let filtered = mockExhibits.filter(ex => {
-      // Keyword matching
-      const matchesKeyword = !q || 
-        ex.title.toLowerCase().includes(q) || 
-        ex.description.toLowerCase().includes(q) || 
-        ex.historicalInfo.toLowerCase().includes(q);
+    try {
+      const params = {};
+      const q = searchParams.get('q');
+      if (q) params.search = q;
+      if (selectedCategory) params.categoryId = selectedCategory;
+      if (selectedPeriod) params.period = selectedPeriod;
 
-      // Category matching
-      const matchesCategory = !selectedCategory || ex.categoryId?._id === selectedCategory;
-
-      // Era matching
-      const matchesPeriod = !selectedPeriod || 
-        (selectedPeriod === 'Anuradhapura' && ex.title.toLowerCase().includes('anuradhapura') || ex.historicalInfo.toLowerCase().includes('anuradhapura')) ||
-        (selectedPeriod === 'Polonnaruwa' && ex.title.toLowerCase().includes('polonnaruwa') || ex.historicalInfo.toLowerCase().includes('polonnaruwa')) ||
-        (selectedPeriod === 'Kandy' && ex.title.toLowerCase().includes('kandy') || ex.historicalInfo.toLowerCase().includes('kandyan')) ||
-        (selectedPeriod === 'Balangoda' && ex.title.toLowerCase().includes('balangoda') || ex.historicalInfo.toLowerCase().includes('prehistoric'));
-
-      return matchesKeyword && matchesCategory && matchesPeriod;
-    });
-
-    setExhibits(filtered);
-    setLoading(false);
+      const { data } = await axios.get(`${API}/exhibits`, { params });
+      setExhibits(data.data || []);
+    } catch {
+      setExhibits([]);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleSearchSubmit = (e) => {

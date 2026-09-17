@@ -7,7 +7,7 @@ import ExhibitCard from '../components/cards/ExhibitCard';
 import { MdSearch, MdQrCodeScanner, MdOutlineEventNote } from 'react-icons/md';
 import heroImage from '../assets/Hero.jpeg';
 
-const API = 'http://localhost:5001/api';
+const API = '/api';
 
 const Home = () => {
   const { t } = useContext(LangContext);

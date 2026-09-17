@@ -1,4 +1,10 @@
 import mongoose from 'mongoose';
+import dns from 'dns';
+
+// Windows sometimes reports a link-local IPv6 address (fe80::1) as the DNS
+// server, which Node's resolver can't query, breaking mongodb+srv lookups.
+// Force a public resolver so the SRV lookup succeeds.
+dns.setServers(['8.8.8.8', '1.1.1.1']);
 
 const connectDB = async () => {
   try {

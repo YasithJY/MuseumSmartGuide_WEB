@@ -26,7 +26,7 @@ import {
   MdTrendingUp,
 } from 'react-icons/md';
 
-const API = 'http://localhost:5001/api';
+const API = '/api';
 
 // ─── Helper: axios with auth header ───────────────────────────────────────────
 const authHeaders = (token) => ({ headers: { Authorization: `Bearer ${token}` } });
@@ -226,7 +226,7 @@ const Dashboard = () => {
   const downloadQR = async (exhibit) => {
     const qrUrl = exhibit.qrCodeUrl;
     if (!qrUrl) { showToast('No QR code for this exhibit yet.', 'error'); return; }
-    const fullUrl = `http://localhost:5001${qrUrl}`;
+    const fullUrl = qrUrl;
     try {
       const resp = await fetch(fullUrl);
       const blob = await resp.blob();
@@ -351,7 +351,7 @@ const Dashboard = () => {
         }
       });
       if (data.success) {
-        const fullUrl = `http://localhost:5001${data.url}`;
+        const fullUrl = data.url;
         onSuccess(fullUrl);
         showToast('Image uploaded successfully!');
       }
