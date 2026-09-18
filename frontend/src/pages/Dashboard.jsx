@@ -1354,6 +1354,17 @@ const Dashboard = () => {
                   style={{ whiteSpace: 'pre-wrap' }}
                 />
               </Field>
+              <Field label="Historical Background & Significance *">
+                <textarea
+                  required
+                  rows={8}
+                  placeholder="Enter the exhibit's historical background and significance..."
+                  value={exhibitForm.historicalInfo}
+                  onChange={e => setExhibitForm(f => ({ ...f, historicalInfo: e.target.value }))}
+                  className={descriptionCls}
+                  style={{ whiteSpace: 'pre-wrap' }}
+                />
+              </Field>
             </div>
 
             {/* Classification */}
