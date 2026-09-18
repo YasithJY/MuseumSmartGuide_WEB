@@ -5,6 +5,12 @@ import VisitHistory from '../models/VisitHistory.js';
 import QRCode from 'qrcode';
 import fs from 'fs';
 import path from 'path';
+import { r2Enabled, uploadBufferToR2 } from '../config/r2.js';
+
+// The public URL visitors' QR scans should open. Must be overridden via
+// CLIENT_URL once deployed — otherwise every QR code would point at
+// localhost, which only works on the machine that generated it.
+const CLIENT_URL = process.env.CLIENT_URL || 'http://localhost:5173';
 
 /**
  * Apply multilingual translations to an exhibit document.
@@ -105,8 +111,8 @@ export const getExhibitById = async (req, res) => {
 
 export const createExhibit = async (req, res) => {
   try {
-    const { title, description, historicalInfo, timeline, images, audioUrl, videoUrl, categoryId, galleryId, museumId, relatedArtifacts, translations } = req.body;
-    
+    const { title, description, historicalInfo, timeline, images, audioUrl, videoUrl, arModelUrl, categoryId, galleryId, museumId, relatedArtifacts, translations } = req.body;
+
     // Create preliminary document first to obtain ID
     // Strip empty string values for optional ObjectId fields to avoid cast errors
     const exhibit = new Exhibit({
@@ -117,6 +123,7 @@ export const createExhibit = async (req, res) => {
       images,
       audioUrl,
       videoUrl,
+      arModelUrl,
       categoryId: categoryId || null,
       galleryId,
       museumId,
@@ -127,18 +134,23 @@ export const createExhibit = async (req, res) => {
     const savedExhibit = await exhibit.save();
 
     // Generate QR Code containing visitor client url pointing to /exhibit/:id
-    const clientUrl = `http://localhost:5173/exhibit/${savedExhibit._id}`;
+    const clientUrl = `${CLIENT_URL}/exhibit/${savedExhibit._id}`;
     const qrFilename = `qr-${savedExhibit._id}.png`;
-    const qrPath = path.join('uploads', qrFilename);
-
-    await QRCode.toFile(qrPath, clientUrl, {
+    const qrOptions = {
       color: {
         dark: '#4E342E',  // Dark brown
         light: '#F7F2E9' // Parchment background
       }
-    });
+    };
 
-    savedExhibit.qrCodeUrl = `/uploads/${qrFilename}`;
+    if (r2Enabled) {
+      const buffer = await QRCode.toBuffer(clientUrl, qrOptions);
+      savedExhibit.qrCodeUrl = await uploadBufferToR2(buffer, qrFilename, 'image/png');
+    } else {
+      const qrPath = path.join('uploads', qrFilename);
+      await QRCode.toFile(qrPath, clientUrl, qrOptions);
+      savedExhibit.qrCodeUrl = `/uploads/${qrFilename}`;
+    }
     await savedExhibit.save();
 
     // Increment exhibitsCount on Gallery

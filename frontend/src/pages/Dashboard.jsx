@@ -25,7 +25,7 @@ import {
   MdPeople,
   MdTrendingUp,
 } from 'react-icons/md';
-import { MdOutlineAccountBalance, MdOutlineCollections, MdExplore, MdOutlineQrCodeScanner, MdPerson, MdAdminPanelSettings, MdUpload, MdPsychology, MdLocationOn, MdBolt } from 'react-icons/md';
+import { MdOutlineAccountBalance, MdExplore, MdOutlineQrCodeScanner, MdPerson, MdAdminPanelSettings, MdUpload, MdPsychology, MdLocationOn, MdBolt, MdViewInAr, MdAudiotrack } from 'react-icons/md';
 
 
 const API = '/api';
@@ -126,7 +126,7 @@ const Dashboard = () => {
   // Exhibit form
   const blankExhibit = {
     title: '', description: '', historicalInfo: '',
-    audioUrl: '', videoUrl: '',
+    audioUrl: '', videoUrl: '', arModelUrl: '',
     images: [],
     categoryId: '', galleryId: '', museumId: '',
     timeline: [{ year: '', title: '', description: '' }],
@@ -158,6 +158,8 @@ const Dashboard = () => {
 
   // Image upload state (shared)
   const [uploadingImage, setUploadingImage] = useState(false);
+  const [uploadingModel, setUploadingModel] = useState(false);
+  const [uploadingAudio, setUploadingAudio] = useState(false);
 
   const showToast = useCallback((msg, type = 'success') => setToast({ msg, type }), []);
 
@@ -231,6 +233,10 @@ const Dashboard = () => {
     const fullUrl = qrUrl;
     try {
       const resp = await fetch(fullUrl);
+      // A 404/error response still resolves here — without this check its
+      // HTML/JSON error body gets saved as if it were the PNG, producing a
+      // file that looks downloaded but is corrupt/unopenable.
+      if (!resp.ok) throw new Error(`QR file not found (${resp.status})`);
       const blob = await resp.blob();
       const link = document.createElement('a');
       link.href = URL.createObjectURL(blob);
@@ -238,8 +244,8 @@ const Dashboard = () => {
       link.click();
       URL.revokeObjectURL(link.href);
       showToast(`QR for "${exhibit.title}" downloaded!`);
-    } catch {
-      showToast('QR download failed.', 'error');
+    } catch (err) {
+      showToast(err.message || 'QR download failed.', 'error');
     }
   };
 
@@ -258,6 +264,7 @@ const Dashboard = () => {
       historicalInfo: exhibit.historicalInfo || '',
       audioUrl: exhibit.audioUrl || '',
       videoUrl: exhibit.videoUrl || '',
+      arModelUrl: exhibit.arModelUrl || '',
       images: exhibit.images || [],
       categoryId: exhibit.categoryId?._id || exhibit.categoryId || '',
       galleryId: exhibit.galleryId?._id || exhibit.galleryId || '',
@@ -361,6 +368,44 @@ const Dashboard = () => {
       showToast(err.response?.data?.message || 'Image upload failed.', 'error');
     }
     setUploadingImage(false);
+  };
+
+  // ── 3D Model (GLB/glTF) Upload Helper ─────────────────────────────────────
+  const uploadModel = async (file, onSuccess) => {
+    setUploadingModel(true);
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      const { data } = await axios.post(`${API}/media/upload`, formData, {
+        headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'multipart/form-data' }
+      });
+      if (data.success) {
+        onSuccess(data.url);
+        showToast('3D model uploaded successfully!');
+      }
+    } catch (err) {
+      showToast(err.response?.data?.message || '3D model upload failed.', 'error');
+    }
+    setUploadingModel(false);
+  };
+
+  // ── Audio Upload Helper ────────────────────────────────────────────────────
+  const uploadAudio = async (file, onSuccess) => {
+    setUploadingAudio(true);
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      const { data } = await axios.post(`${API}/media/upload`, formData, {
+        headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'multipart/form-data' }
+      });
+      if (data.success) {
+        onSuccess(data.url);
+        showToast('Audio uploaded successfully!');
+      }
+    } catch (err) {
+      showToast(err.response?.data?.message || 'Audio upload failed.', 'error');
+    }
+    setUploadingAudio(false);
   };
 
   // ── Gallery CRUD ──────────────────────────────────────────────────────────
@@ -569,10 +614,10 @@ const Dashboard = () => {
         {activeTab === 'overview' && (
           <div className="space-y-6">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <StatCard icon="<MdOutlineAccountBalance className="inline-block" />" label="Museums" value={museums.length} color="bg-primary" />
-              <StatCard icon="<MdOutlineCollections className="inline-block" />" label="Galleries" value={galleries.length} color="bg-accent" />
-              <StatCard icon="<MdExplore className="inline-block" />" label="Exhibits" value={exhibits.length} color="bg-gold" />
-              <StatCard icon=<MdOutlineQrCodeScanner size={22} /> label="QR Codes Ready" value={exhibits.filter(e => e.qrCodeUrl).length} color="bg-green-700" />
+              <StatCard icon={<MdOutlineAccountBalance className="inline-block" />} label="Museums" value={museums.length} color="bg-primary" />
+              <StatCard icon={<MdOutlineCollections className="inline-block" />} label="Galleries" value={galleries.length} color="bg-accent" />
+              <StatCard icon={<MdExplore className="inline-block" />} label="Exhibits" value={exhibits.length} color="bg-gold" />
+              <StatCard icon={<MdOutlineQrCodeScanner size={22} />} label="QR Codes Ready" value={exhibits.filter(e => e.qrCodeUrl).length} color="bg-green-700" />
             </div>
 
             <div className="bg-white dark:bg-stone-800 rounded-2xl border border-stone-200 dark:border-stone-700 shadow-sm p-6">
@@ -1374,13 +1419,72 @@ const Dashboard = () => {
               <p className="text-xs font-bold text-stone-400 uppercase tracking-widest border-b border-stone-100 pb-1 pt-1">Audio & Video (Optional)</p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <Field label="Audio URL">
-                  <input type="url" placeholder="https://..." value={exhibitForm.audioUrl}
-                    onChange={e => setExhibitForm(f => ({ ...f, audioUrl: e.target.value }))} className={inputCls} />
+                  <div className="flex gap-2">
+                    <input type="url" placeholder="https://..." value={exhibitForm.audioUrl}
+                      onChange={e => setExhibitForm(f => ({ ...f, audioUrl: e.target.value }))} className={inputCls} />
+                    <label className={`flex-shrink-0 flex items-center justify-center w-10 rounded-lg border-2 border-dashed cursor-pointer transition-colors
+                      ${uploadingAudio ? 'border-gold/40 opacity-60 pointer-events-none' : 'border-stone-200 hover:border-gold'}`}
+                      title="Upload audio file">
+                      <input type="file" accept="audio/*" className="hidden"
+                        onChange={e => {
+                          if (e.target.files[0]) {
+                            uploadAudio(e.target.files[0], url => setExhibitForm(f => ({ ...f, audioUrl: url })));
+                          }
+                        }} />
+                      {uploadingAudio
+                        ? <div className="w-4 h-4 border-2 border-gold/40 border-t-gold rounded-full animate-spin" />
+                        : <MdAudiotrack className="w-5 h-5 text-stone-400" />}
+                    </label>
+                  </div>
                 </Field>
                 <Field label="Video URL">
                   <input type="url" placeholder="https://..." value={exhibitForm.videoUrl}
                     onChange={e => setExhibitForm(f => ({ ...f, videoUrl: e.target.value }))} className={inputCls} />
                 </Field>
+              </div>
+
+              {/* 3D Model (AR) */}
+              <p className="text-xs font-bold text-stone-400 uppercase tracking-widest border-b border-stone-100 pb-1 pt-1">3D Model for AR View (Optional)</p>
+              <div className="space-y-2">
+                <div className="flex items-start gap-3">
+                  <label className={`flex-1 flex flex-col items-center justify-center gap-1.5 border-2 border-dashed rounded-xl py-4 cursor-pointer transition-colors
+                    ${uploadingModel ? 'border-gold/40 opacity-60 pointer-events-none' : 'border-stone-200 hover:border-gold'}`}>
+                    <input type="file" accept=".glb,.gltf" className="hidden"
+                      onChange={e => {
+                        if (e.target.files[0]) {
+                          uploadModel(e.target.files[0], url => setExhibitForm(f => ({ ...f, arModelUrl: url })));
+                        }
+                      }} />
+                    {uploadingModel
+                      ? <><div className="w-5 h-5 border-2 border-gold/40 border-t-gold rounded-full animate-spin" /><span className="text-xs text-stone-400">Uploading 3D model...</span></>
+                      : <><span className="text-2xl"><MdViewInAr className="inline-block" /></span><span className="text-xs font-semibold text-stone-500">Click to upload 3D model</span><span className="text-[10px] text-stone-400">GLB or glTF up to 50MB</span></>
+                    }
+                  </label>
+
+                  {exhibitForm.arModelUrl && (
+                    <div className="flex-1 flex items-center justify-between gap-2 bg-stone-50 border border-stone-200 rounded-xl px-3 py-2">
+                      <span className="text-xs text-stone-600 truncate">{exhibitForm.arModelUrl.split('/').pop()}</span>
+                      <button type="button" onClick={() => setExhibitForm(f => ({ ...f, arModelUrl: '' }))}
+                        className="flex-shrink-0 w-5 h-5 bg-red-500 text-white rounded-full text-xs flex items-center justify-center">
+                        ×
+                      </button>
+                    </div>
+                  )}
+                </div>
+
+                {/* URL paste fallback */}
+                <div className="flex gap-2 items-center">
+                  <input type="text" placeholder="Or paste GLB/glTF URL and press Enter..."
+                    className={inputCls}
+                    onKeyDown={e => {
+                      if (e.key === 'Enter' && e.target.value.trim()) {
+                        e.preventDefault();
+                        setExhibitForm(f => ({ ...f, arModelUrl: e.target.value.trim() }));
+                        e.target.value = '';
+                      }
+                    }} />
+                  <span className="text-[10px] text-stone-400 whitespace-nowrap">Press Enter to add</span>
+                </div>
               </div>
             </div>
 

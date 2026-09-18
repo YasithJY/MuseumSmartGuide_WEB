@@ -1,6 +1,7 @@
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
+import { r2Enabled } from '../config/r2.js';
 
 const uploadDir = './uploads';
 
@@ -9,25 +10,37 @@ if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
 }
 
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, uploadDir);
-  },
-  filename: function (req, file, cb) {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
-  }
-});
+// When R2 is configured, buffer the file in memory so the route handler can
+// stream it straight to R2 instead of the local (ephemeral, on most free
+// hosts) disk. Without R2 configured, fall back to local disk so uploads
+// still work in plain local dev.
+const storage = r2Enabled
+  ? multer.memoryStorage()
+  : multer.diskStorage({
+      destination: function (req, file, cb) {
+        cb(null, uploadDir);
+      },
+      filename: function (req, file, cb) {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
+      }
+    });
 
 const fileFilter = (req, file, cb) => {
-  const allowedTypes = /jpeg|jpg|png|gif|mp3|wav|mp4|mpeg|pdf/;
+  const allowedTypes = /jpeg|jpg|png|gif|mp3|wav|mp4|mpeg|pdf|glb|gltf/;
   const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
-  const mimetype = allowedTypes.test(file.mimetype);
+
+  // Browsers report inconsistent/generic mimetypes for .glb and .gltf
+  // (often "application/octet-stream" or blank), so mimetype sniffing isn't
+  // reliable for those — trust the extension check alone for them. Other
+  // types still need both checks to match.
+  const isModelFile = /\.(glb|gltf)$/i.test(file.originalname);
+  const mimetype = isModelFile || allowedTypes.test(file.mimetype);
 
   if (extname && mimetype) {
     return cb(null, true);
   } else {
-    cb(new Error('Format not supported! Supports images, audio, video, and PDFs.'));
+    cb(new Error('Format not supported! Supports images, audio, video, PDFs, and GLB/glTF 3D models.'));
   }
 };
 

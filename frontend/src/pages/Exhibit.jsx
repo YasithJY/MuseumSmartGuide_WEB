@@ -6,8 +6,39 @@ import AudioPlayer from '../components/common/AudioPlayer';
 import ARViewer from '../components/common/ARViewer';
 import { MdBookmark, MdBookmarkBorder, MdShare, MdArrowBack, MdZoomIn, MdClose, MdViewInAr, MdOutlineQuiz, MdOutlineAccountBalance } from 'react-icons/md';
 import ironSmeltingOvenModel from '../assets/3Dmodels/Iron_Smelting_Oven_1.glb?url';
+import jethawanaramayaModel from '../assets/3Dmodels/Jethawanaramaya.glb?url';
+import sigiriyaModel from '../assets/3Dmodels/sigiriya_1.glb?url';
+import tamilAudioSmelting from '../assets/audio/Audio - Tamil/Ancient Wind-Powered Iron Furnaces in Sri Lanka.mp3?url';
+import tamilAudioKulasinghe from '../assets/audio/Audio - Tamil/Arumadura Nandasena de Silva Kulasinghe.mp3?url';
+import tamilAudioBisokotuwa from '../assets/audio/Audio - Tamil/Bisokotuwa.mp3?url';
+import tamilAudioWimalasurendra from '../assets/audio/Audio - Tamil/Devapura Jayasena Wimalasurendra.mp3?url';
+import tamilAudioElephantLamp from '../assets/audio/Audio - Tamil/Elephant Lamp.mp3?url';
+import tamilAudioRampala from '../assets/audio/Audio - Tamil/Eng. Bamunusinghearachchige Don Rampala.mp3?url';
+import tamilAudioJetavana from '../assets/audio/Audio - Tamil/Jetavana Stupa.mp3?url';
+import tamilAudioSigiriya from '../assets/audio/Audio - Tamil/Sigiriya.mp3?url';
 
 const API = '/api';
+
+// Per-exhibit AR model, keyed by exhibit _id. Falls back to the smelting
+// oven model for exhibits without a dedicated one yet.
+const AR_MODEL_BY_EXHIBIT_ID = {
+  '65d75b0a66f50b2984950023': jethawanaramayaModel, // Jetavana Stupa (Jethawanarama)
+  '65d75b0a66f50b2984950024': sigiriyaModel, // Sigiriya
+};
+
+// Tamil audio narration, keyed by exhibit _id. The backend only stores one
+// (English) audioUrl per exhibit, so the Tamil track is swapped in on the
+// frontend when the visitor selects the Tamil language tab.
+const TAMIL_AUDIO_BY_EXHIBIT_ID = {
+  '65d75b0a66f50b2984950021': tamilAudioSmelting, // Wind-Powered Steel Smelting
+  '65d75b0a66f50b2984950022': tamilAudioElephantLamp, // Elephant Lamp (Ath Pahana)
+  '65d75b0a66f50b2984950023': tamilAudioJetavana, // Jetavana Stupa (Jethawanarama)
+  '65d75b0a66f50b2984950024': tamilAudioSigiriya, // Sigiriya
+  '65d75b0a66f50b2984950025': tamilAudioRampala, // Eng. Bamunusinghearachchige Don Rampala
+  '65d75b0a66f50b2984950026': tamilAudioKulasinghe, // Arumadura Nandasena de Silva Kulasinghe
+  '65d75b0a66f50b2984950027': tamilAudioWimalasurendra, // Devapura Jayasena Wimalasurendra
+  '65d75b0a66f50b2984950028': tamilAudioBisokotuwa, // Bisokotuwa
+};
 
 const LANGS = [
   { code: 'en', label: 'EN', full: 'English' },
@@ -244,7 +275,10 @@ const Exhibit = () => {
           <p className="text-base text-stone-500 dark:text-stone-300 leading-relaxed font-light" style={{ whiteSpace: 'pre-wrap' }}>{tx('description')}</p>
 
 
-          {exhibit.audioUrl && <AudioPlayer src={exhibit.audioUrl} title={exhibit.title} />}
+          {(() => {
+            const audioSrc = (displayLang === 'ta' && TAMIL_AUDIO_BY_EXHIBIT_ID[exhibit._id]) || exhibit.audioUrl;
+            return audioSrc && <AudioPlayer src={audioSrc} title={exhibit.title} />;
+          })()}
 
           {exhibit.videoUrl && (
             <div className="space-y-2">
@@ -347,7 +381,7 @@ const Exhibit = () => {
       {/* ── AR Viewer ─────────────────────────────────────────────────────────── */}
       {arOpen && (
         <ARViewer
-          modelUrl={ironSmeltingOvenModel}
+          modelUrl={exhibit.arModelUrl || AR_MODEL_BY_EXHIBIT_ID[exhibit._id] || ironSmeltingOvenModel}
           title={exhibit.title}
           onClose={() => setArOpen(false)}
         />
