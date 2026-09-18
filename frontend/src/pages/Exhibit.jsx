@@ -8,6 +8,9 @@ import { MdBookmark, MdBookmarkBorder, MdShare, MdArrowBack, MdZoomIn, MdClose, 
 import ironSmeltingOvenModel from '../assets/3Dmodels/Iron_Smelting_Oven_1.glb?url';
 import jethawanaramayaModel from '../assets/3Dmodels/Jethawanaramaya.glb?url';
 import sigiriyaModel from '../assets/3Dmodels/sigiriya_1.glb?url';
+import ironSmeltingOvenModelIOS from '../assets/3Dmodels/iOS/Iron_Smelting_Oven_1.usdz?url';
+import jethawanaramayaModelIOS from '../assets/3Dmodels/iOS/Jethawanaramaya.usdz?url';
+import sigiriyaModelIOS from '../assets/3Dmodels/iOS/sigiriya_1.usdz?url';
 import tamilAudioSmelting from '../assets/audio/Audio - Tamil/Ancient Wind-Powered Iron Furnaces in Sri Lanka.mp3?url';
 import tamilAudioKulasinghe from '../assets/audio/Audio - Tamil/Arumadura Nandasena de Silva Kulasinghe.mp3?url';
 import tamilAudioBisokotuwa from '../assets/audio/Audio - Tamil/Bisokotuwa.mp3?url';
@@ -20,11 +23,13 @@ import tamilAudioSigiriya from '../assets/audio/Audio - Tamil/Sigiriya.mp3?url';
 const API = '/api';
 
 // Per-exhibit AR model, keyed by exhibit _id. Falls back to the smelting
-// oven model for exhibits without a dedicated one yet.
+// oven model for exhibits without a dedicated one yet. `usdz` is the iOS
+// Quick Look counterpart of `glb` — Quick Look can't load glb/gltf directly.
 const AR_MODEL_BY_EXHIBIT_ID = {
-  '65d75b0a66f50b2984950023': jethawanaramayaModel, // Jetavana Stupa (Jethawanarama)
-  '65d75b0a66f50b2984950024': sigiriyaModel, // Sigiriya
+  '65d75b0a66f50b2984950023': { glb: jethawanaramayaModel, usdz: jethawanaramayaModelIOS }, // Jetavana Stupa (Jethawanarama)
+  '65d75b0a66f50b2984950024': { glb: sigiriyaModel, usdz: sigiriyaModelIOS }, // Sigiriya
 };
+const DEFAULT_AR_MODEL = { glb: ironSmeltingOvenModel, usdz: ironSmeltingOvenModelIOS };
 
 // Tamil audio narration, keyed by exhibit _id. The backend only stores one
 // (English) audioUrl per exhibit, so the Tamil track is swapped in on the
@@ -379,13 +384,17 @@ const Exhibit = () => {
       )}
 
       {/* ── AR Viewer ─────────────────────────────────────────────────────────── */}
-      {arOpen && (
+      {arOpen && (() => {
+        const arModel = AR_MODEL_BY_EXHIBIT_ID[exhibit._id] || DEFAULT_AR_MODEL;
+        return (
         <ARViewer
-          modelUrl={exhibit.arModelUrl || AR_MODEL_BY_EXHIBIT_ID[exhibit._id] || ironSmeltingOvenModel}
+          modelUrl={exhibit.arModelUrl || arModel.glb}
+          iosModelUrl={exhibit.arModelUrl ? undefined : arModel.usdz}
           title={exhibit.title}
           onClose={() => setArOpen(false)}
         />
-      )}
+        );
+      })()}
     </div>
   );
 };
