@@ -111,7 +111,7 @@ export const getExhibitById = async (req, res) => {
 
 export const createExhibit = async (req, res) => {
   try {
-    const { title, description, historicalInfo, timeline, images, audioUrl, videoUrl, arModelUrl, categoryId, galleryId, museumId, relatedArtifacts, translations } = req.body;
+    const { title, description, historicalInfo, timeline, images, audioUrl, videoUrl, arModelUrl, arModelUrlIOS, categoryId, galleryId, museumId, relatedArtifacts, translations } = req.body;
 
     // Create preliminary document first to obtain ID
     // Strip empty string values for optional ObjectId fields to avoid cast errors
@@ -124,6 +124,7 @@ export const createExhibit = async (req, res) => {
       audioUrl,
       videoUrl,
       arModelUrl,
+      arModelUrlIOS,
       categoryId: categoryId || null,
       galleryId,
       museumId,

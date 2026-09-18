@@ -126,7 +126,7 @@ const Dashboard = () => {
   // Exhibit form
   const blankExhibit = {
     title: '', description: '', historicalInfo: '',
-    audioUrl: '', videoUrl: '', arModelUrl: '',
+    audioUrl: '', videoUrl: '', arModelUrl: '', arModelUrlIOS: '',
     images: [],
     categoryId: '', galleryId: '', museumId: '',
     timeline: [{ year: '', title: '', description: '' }],
@@ -159,6 +159,7 @@ const Dashboard = () => {
   // Image upload state (shared)
   const [uploadingImage, setUploadingImage] = useState(false);
   const [uploadingModel, setUploadingModel] = useState(false);
+  const [uploadingModelIOS, setUploadingModelIOS] = useState(false);
   const [uploadingAudio, setUploadingAudio] = useState(false);
 
   const showToast = useCallback((msg, type = 'success') => setToast({ msg, type }), []);
@@ -265,6 +266,7 @@ const Dashboard = () => {
       audioUrl: exhibit.audioUrl || '',
       videoUrl: exhibit.videoUrl || '',
       arModelUrl: exhibit.arModelUrl || '',
+      arModelUrlIOS: exhibit.arModelUrlIOS || '',
       images: exhibit.images || [],
       categoryId: exhibit.categoryId?._id || exhibit.categoryId || '',
       galleryId: exhibit.galleryId?._id || exhibit.galleryId || '',
@@ -387,6 +389,25 @@ const Dashboard = () => {
       showToast(err.response?.data?.message || '3D model upload failed.', 'error');
     }
     setUploadingModel(false);
+  };
+
+  // ── 3D Model (iOS USDZ) Upload Helper ──────────────────────────────────────
+  const uploadModelIOS = async (file, onSuccess) => {
+    setUploadingModelIOS(true);
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      const { data } = await axios.post(`${API}/media/upload`, formData, {
+        headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'multipart/form-data' }
+      });
+      if (data.success) {
+        onSuccess(data.url);
+        showToast('USDZ model uploaded successfully!');
+      }
+    } catch (err) {
+      showToast(err.response?.data?.message || 'USDZ model upload failed.', 'error');
+    }
+    setUploadingModelIOS(false);
   };
 
   // ── Audio Upload Helper ────────────────────────────────────────────────────
@@ -1484,6 +1505,33 @@ const Dashboard = () => {
                       }
                     }} />
                   <span className="text-[10px] text-stone-400 whitespace-nowrap">Press Enter to add</span>
+                </div>
+
+                {/* iOS USDZ — Quick Look can't load glb/gltf, needs its own export */}
+                <div className="flex items-start gap-3 pt-2">
+                  <label className={`flex-1 flex flex-col items-center justify-center gap-1.5 border-2 border-dashed rounded-xl py-4 cursor-pointer transition-colors
+                    ${uploadingModelIOS ? 'border-gold/40 opacity-60 pointer-events-none' : 'border-stone-200 hover:border-gold'}`}>
+                    <input type="file" accept=".usdz" className="hidden"
+                      onChange={e => {
+                        if (e.target.files[0]) {
+                          uploadModelIOS(e.target.files[0], url => setExhibitForm(f => ({ ...f, arModelUrlIOS: url })));
+                        }
+                      }} />
+                    {uploadingModelIOS
+                      ? <><div className="w-5 h-5 border-2 border-gold/40 border-t-gold rounded-full animate-spin" /><span className="text-xs text-stone-400">Uploading USDZ...</span></>
+                      : <><span className="text-2xl"><MdViewInAr className="inline-block" /></span><span className="text-xs font-semibold text-stone-500">Click to upload iOS USDZ (optional)</span><span className="text-[10px] text-stone-400">Needed for AR Quick Look on iPhone</span></>
+                    }
+                  </label>
+
+                  {exhibitForm.arModelUrlIOS && (
+                    <div className="flex-1 flex items-center justify-between gap-2 bg-stone-50 border border-stone-200 rounded-xl px-3 py-2">
+                      <span className="text-xs text-stone-600 truncate">{exhibitForm.arModelUrlIOS.split('/').pop()}</span>
+                      <button type="button" onClick={() => setExhibitForm(f => ({ ...f, arModelUrlIOS: '' }))}
+                        className="flex-shrink-0 w-5 h-5 bg-red-500 text-white rounded-full text-xs flex items-center justify-center">
+                        ×
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

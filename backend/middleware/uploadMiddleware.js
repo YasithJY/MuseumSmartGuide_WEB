@@ -27,20 +27,20 @@ const storage = r2Enabled
     });
 
 const fileFilter = (req, file, cb) => {
-  const allowedTypes = /jpeg|jpg|png|gif|mp3|wav|mp4|mpeg|pdf|glb|gltf/;
+  const allowedTypes = /jpeg|jpg|png|gif|mp3|wav|mp4|mpeg|pdf|glb|gltf|usdz/;
   const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
 
-  // Browsers report inconsistent/generic mimetypes for .glb and .gltf
+  // Browsers report inconsistent/generic mimetypes for .glb/.gltf/.usdz
   // (often "application/octet-stream" or blank), so mimetype sniffing isn't
   // reliable for those — trust the extension check alone for them. Other
   // types still need both checks to match.
-  const isModelFile = /\.(glb|gltf)$/i.test(file.originalname);
+  const isModelFile = /\.(glb|gltf|usdz)$/i.test(file.originalname);
   const mimetype = isModelFile || allowedTypes.test(file.mimetype);
 
   if (extname && mimetype) {
     return cb(null, true);
   } else {
-    cb(new Error('Format not supported! Supports images, audio, video, PDFs, and GLB/glTF 3D models.'));
+    cb(new Error('Format not supported! Supports images, audio, video, PDFs, GLB/glTF, and USDZ 3D models.'));
   }
 };
 

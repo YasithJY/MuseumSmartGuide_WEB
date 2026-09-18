@@ -386,7 +386,7 @@ const Exhibit = () => {
         return (
         <ARViewer
           modelUrl={exhibit.arModelUrl || arModel.glb}
-          iosModelUrl={exhibit.arModelUrl ? undefined : arModel.usdz}
+          iosModelUrl={exhibit.arModelUrlIOS || (exhibit.arModelUrl ? undefined : arModel.usdz)}
           title={exhibit.title}
           onClose={() => setArOpen(false)}
         />

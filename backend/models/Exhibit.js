@@ -31,6 +31,7 @@ const exhibitSchema = new mongoose.Schema({
   audioUrl: { type: String, default: '' },
   videoUrl: { type: String, default: '' },
   arModelUrl: { type: String, default: '' },
+  arModelUrlIOS: { type: String, default: '' },
   qrCodeUrl: { type: String, default: '' },
   categoryId: { type: mongoose.Schema.Types.ObjectId, ref: 'Category', default: null },
   galleryId: { type: mongoose.Schema.Types.ObjectId, ref: 'Gallery', required: true },

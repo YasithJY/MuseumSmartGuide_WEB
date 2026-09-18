@@ -22,7 +22,7 @@ router.post('/upload', protect, adminOnly, upload.single('file'), async (req, re
       ? await uploadBufferToR2(req.file.buffer, key, req.file.mimetype)
       : `/uploads/${req.file.filename}`;
 
-    const isModelFile = /\.(glb|gltf)$/i.test(req.file.originalname);
+    const isModelFile = /\.(glb|gltf|usdz)$/i.test(req.file.originalname);
     const type = isModelFile
       ? 'model'
       : req.file.mimetype.split('/')[0] === 'application' ? 'pdf' : req.file.mimetype.split('/')[0];
