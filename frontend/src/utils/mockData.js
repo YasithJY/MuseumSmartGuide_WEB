@@ -4,6 +4,8 @@ import athPahanaImage1 from '../assets/athpahana.jpg';
 import athPahanaImage2 from '../assets/athpahana2.jpg';
 import jethawanayaImage1 from '../assets/jethawanaya.jpg';
 import jethawanayaImage2 from '../assets/jethawanaya2.jpg';
+import museumImage from '../assets/National Museum of Colombo-Museum Card.png';
+import galleryImage from '../assets/Ancient Engineering & Technology-Gallery Card.png';
 
 export const mockCategories = [
   { 
@@ -49,7 +51,7 @@ export const mockMuseums = [
     _id: 'mus1',
     name: 'National Museum of Colombo',
     description: 'Established in 1877, the National Museum of Colombo stands as the guardian of Sri Lanka\'s rich historical legacy. Housing thousands of antiquities, it exhibits the cultural, artistic, and social evolution of the island from prehistoric eras up to the Kandyan kingdom.',
-    coverImage: 'https://images.unsplash.com/photo-1544644181-1484b3fdfc62?auto=format&fit=crop&q=80&w=800',
+    coverImage: museumImage,
     openingHours: {
       weekdays: '09:00 AM - 05:00 PM',
       weekends: '09:00 AM - 06:00 PM'
@@ -68,7 +70,7 @@ export const mockGalleries = [
     _id: '65d75a1d66f50b2984950011',
     name: 'Ancient Engineering & Technology',
     description: 'Explore the advanced metallurgical, hydraulic, and structural engineering wonders of ancient Sri Lanka.',
-    coverImage: 'https://images.unsplash.com/photo-1605721911519-3dfeb3be25e7?auto=format&fit=crop&q=80&w=600',
+    coverImage: galleryImage,
     museumId: 'mus1',
     exhibitsCount: 3,
     translations: {
