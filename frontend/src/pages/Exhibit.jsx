@@ -5,12 +5,6 @@ import { AuthContext } from '../context/AuthContext';
 import AudioPlayer from '../components/common/AudioPlayer';
 import ARViewer from '../components/common/ARViewer';
 import { MdBookmark, MdBookmarkBorder, MdShare, MdArrowBack, MdZoomIn, MdClose, MdViewInAr, MdOutlineQuiz, MdOutlineAccountBalance } from 'react-icons/md';
-import ironSmeltingOvenModel from '../assets/3Dmodels/Iron_Smelting_Oven_1.glb?url';
-import jethawanaramayaModel from '../assets/3Dmodels/Jethawanaramaya.glb?url';
-import sigiriyaModel from '../assets/3Dmodels/sigiriya_1.glb?url';
-import ironSmeltingOvenModelIOS from '../assets/3Dmodels/iOS/Iron_Smelting_Oven_1.usdz?url';
-import jethawanaramayaModelIOS from '../assets/3Dmodels/iOS/Jethawanaramaya.usdz?url';
-import sigiriyaModelIOS from '../assets/3Dmodels/iOS/sigiriya_1.usdz?url';
 import tamilAudioSmelting from '../assets/audio/Audio - Tamil/Ancient Wind-Powered Iron Furnaces in Sri Lanka.mp3?url';
 import tamilAudioKulasinghe from '../assets/audio/Audio - Tamil/Arumadura Nandasena de Silva Kulasinghe.mp3?url';
 import tamilAudioBisokotuwa from '../assets/audio/Audio - Tamil/Bisokotuwa.mp3?url';
@@ -25,11 +19,14 @@ const API = '/api';
 // Per-exhibit AR model, keyed by exhibit _id. Falls back to the smelting
 // oven model for exhibits without a dedicated one yet. `usdz` is the iOS
 // Quick Look counterpart of `glb` — Quick Look can't load glb/gltf directly.
+// Hosted on R2 (not bundled into the frontend build) to keep the Vercel
+// deploy size and bandwidth usage down.
+const R2_MODELS_BASE = 'https://pub-02040b12caf642fa90ff1c33f64e3dc1.r2.dev/models';
 const AR_MODEL_BY_EXHIBIT_ID = {
-  '65d75b0a66f50b2984950023': { glb: jethawanaramayaModel, usdz: jethawanaramayaModelIOS }, // Jetavana Stupa (Jethawanarama)
-  '65d75b0a66f50b2984950024': { glb: sigiriyaModel, usdz: sigiriyaModelIOS }, // Sigiriya
+  '65d75b0a66f50b2984950023': { glb: `${R2_MODELS_BASE}/Jethawanaramaya.glb`, usdz: `${R2_MODELS_BASE}/Jethawanaramaya.usdz` }, // Jetavana Stupa (Jethawanarama)
+  '65d75b0a66f50b2984950024': { glb: `${R2_MODELS_BASE}/sigiriya_1.glb`, usdz: `${R2_MODELS_BASE}/sigiriya_1.usdz` }, // Sigiriya
 };
-const DEFAULT_AR_MODEL = { glb: ironSmeltingOvenModel, usdz: ironSmeltingOvenModelIOS };
+const DEFAULT_AR_MODEL = { glb: `${R2_MODELS_BASE}/Iron_Smelting_Oven_1.glb`, usdz: `${R2_MODELS_BASE}/Iron_Smelting_Oven_1.usdz` };
 
 // Tamil audio narration, keyed by exhibit _id. The backend only stores one
 // (English) audioUrl per exhibit, so the Tamil track is swapped in on the
