@@ -5,9 +5,10 @@ import {
   createExhibit, 
   updateExhibit, 
   deleteExhibit, 
-  toggleFavourite, 
+  toggleFavourite,
   getFavourites,
-  getExhibitByQR
+  getExhibitByQR,
+  downloadExhibitQR
 } from '../controllers/exhibitController.js';
 import { protect, optionalProtect, adminOnly } from '../middleware/authMiddleware.js';
 
@@ -24,6 +25,8 @@ router.get('/scan', getExhibitByQR);
 router.route('/')
   .get(getExhibits)
   .post(protect, adminOnly, createExhibit);
+
+router.get('/:id/qr-download', protect, adminOnly, downloadExhibitQR);
 
 router.route('/:id')
   .get(optionalProtect, getExhibitById)

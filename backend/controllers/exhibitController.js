@@ -213,6 +213,41 @@ export const deleteExhibit = async (req, res) => {
   }
 };
 
+// Stream an exhibit's QR code back through our own origin as an attachment.
+// The dashboard used to fetch() the QR straight from its storage URL (R2 or
+// local disk), but the R2 bucket doesn't send CORS headers, so that fetch()
+// failed in the browser with "Failed to fetch". Proxying it here keeps the
+// request same-origin from the frontend's point of view.
+export const downloadExhibitQR = async (req, res) => {
+  try {
+    const exhibit = await Exhibit.findById(req.params.id);
+    if (!exhibit || !exhibit.qrCodeUrl) {
+      return res.status(404).json({ success: false, message: 'QR code not found for this exhibit' });
+    }
+
+    const filename = `QR-${exhibit.title.replace(/\s+/g, '_')}.png`;
+    res.setHeader('Content-Type', 'image/png');
+    res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+
+    if (r2Enabled) {
+      const r2Response = await fetch(exhibit.qrCodeUrl);
+      if (!r2Response.ok) {
+        return res.status(502).json({ success: false, message: 'Could not retrieve QR code from storage' });
+      }
+      const buffer = Buffer.from(await r2Response.arrayBuffer());
+      res.send(buffer);
+    } else {
+      const qrPath = path.join('uploads', path.basename(exhibit.qrCodeUrl));
+      if (!fs.existsSync(qrPath)) {
+        return res.status(404).json({ success: false, message: 'QR code file not found' });
+      }
+      fs.createReadStream(qrPath).pipe(res);
+    }
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
 // QR Code scanning - resolve a QR code value to an exhibit
 export const getExhibitByQR = async (req, res) => {
   const { qrValue } = req.query;

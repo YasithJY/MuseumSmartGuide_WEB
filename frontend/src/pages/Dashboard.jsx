@@ -229,24 +229,32 @@ const Dashboard = () => {
 
   // ── QR Download ────────────────────────────────────────────────────────────
   const downloadQR = async (exhibit) => {
-    const qrUrl = exhibit.qrCodeUrl;
-    if (!qrUrl) { showToast('No QR code for this exhibit yet.', 'error'); return; }
-    const fullUrl = qrUrl;
+    if (!exhibit.qrCodeUrl) { showToast('No QR code for this exhibit yet.', 'error'); return; }
     try {
-      const resp = await fetch(fullUrl);
-      // A 404/error response still resolves here — without this check its
-      // HTML/JSON error body gets saved as if it were the PNG, producing a
-      // file that looks downloaded but is corrupt/unopenable.
-      if (!resp.ok) throw new Error(`QR file not found (${resp.status})`);
-      const blob = await resp.blob();
+      // Goes through our own API (same-origin via the Vercel rewrite) rather than
+      // fetching exhibit.qrCodeUrl (R2) directly — the R2 bucket doesn't send CORS
+      // headers, so that browser fetch() used to fail with "Failed to fetch".
+      const resp = await axios.get(`${API}/exhibits/${exhibit._id}/qr-download`, {
+        ...authHeaders(token),
+        responseType: 'blob',
+      });
       const link = document.createElement('a');
-      link.href = URL.createObjectURL(blob);
+      link.href = URL.createObjectURL(resp.data);
       link.download = `QR-${exhibit.title.replace(/\s+/g, '_')}.png`;
       link.click();
       URL.revokeObjectURL(link.href);
       showToast(`QR for "${exhibit.title}" downloaded!`);
     } catch (err) {
-      showToast(err.message || 'QR download failed.', 'error');
+      // With responseType: 'blob', axios error bodies also arrive as a Blob
+      // rather than parsed JSON, so the server's { message } has to be read out manually.
+      let message = err.message || 'QR download failed.';
+      if (err.response?.data instanceof Blob) {
+        try {
+          const text = await err.response.data.text();
+          message = JSON.parse(text).message || message;
+        } catch { /* keep the fallback message */ }
+      }
+      showToast(message, 'error');
     }
   };
 
