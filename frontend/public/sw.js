@@ -53,6 +53,12 @@ self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
 
   const isNavigation = event.request.mode === 'navigate' || event.request.destination === 'document';
+  const isApiRequest = new URL(event.request.url).pathname.startsWith('/api/');
+
+  // API responses (exhibits, auth, etc.) are dynamic and must never be
+  // served stale — don't intercept these at all, let the browser handle
+  // them exactly as if there were no service worker.
+  if (isApiRequest) return;
 
   if (isNavigation) {
     event.respondWith(
