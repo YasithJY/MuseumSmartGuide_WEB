@@ -13,6 +13,14 @@ import tamilAudioElephantLamp from '../assets/audio/Audio - Tamil/Elephant Lamp.
 import tamilAudioRampala from '../assets/audio/Audio - Tamil/Eng. Bamunusinghearachchige Don Rampala.mp3?url';
 import tamilAudioJetavana from '../assets/audio/Audio - Tamil/Jetavana Stupa.mp3?url';
 import tamilAudioSigiriya from '../assets/audio/Audio - Tamil/Sigiriya.mp3?url';
+import sinhalaAudioSmelting from '../assets/audio/Audio-Sinhala/New Project - Smelting.mp3?url';
+import sinhalaAudioElephantLamp from '../assets/audio/Audio-Sinhala/New Project - Ath pahana.mp3?url';
+import sinhalaAudioJetavana from '../assets/audio/Audio-Sinhala/New Project - Jethwanarama.mp3?url';
+import sinhalaAudioSigiriya from '../assets/audio/Audio-Sinhala/New Project - Sigiriya.mp3?url';
+import sinhalaAudioRampala from '../assets/audio/Audio-Sinhala/New Project - B d rampala.mp3?url';
+import sinhalaAudioKulasinghe from '../assets/audio/Audio-Sinhala/New Project - Kulasinha.mp3?url';
+import sinhalaAudioWimalasurendra from '../assets/audio/Audio-Sinhala/New Project - Wimlsurendr.mp3?url';
+import sinhalaAudioBisokotuwa from '../assets/audio/Audio-Sinhala/New Project - Bisokotuwa.mp3?url';
 
 const API = '/api';
 
@@ -23,14 +31,15 @@ const API = '/api';
 // deploy size and bandwidth usage down.
 const R2_MODELS_BASE = 'https://pub-02040b12caf642fa90ff1c33f64e3dc1.r2.dev/models';
 const AR_MODEL_BY_EXHIBIT_ID = {
+  '65d75b0a66f50b2984950022': { glb: `${R2_MODELS_BASE}/athpahana.glb`, usdz: `${R2_MODELS_BASE}/athpahana.usdz` }, // Elephant Lamp (Ath Pahana)
   '65d75b0a66f50b2984950023': { glb: `${R2_MODELS_BASE}/Jethawanaramaya.glb`, usdz: `${R2_MODELS_BASE}/Jethawanaramaya.usdz` }, // Jetavana Stupa (Jethawanarama)
   '65d75b0a66f50b2984950024': { glb: `${R2_MODELS_BASE}/sigiriya_1.glb`, usdz: `${R2_MODELS_BASE}/sigiriya_1.usdz` }, // Sigiriya
 };
 const DEFAULT_AR_MODEL = { glb: `${R2_MODELS_BASE}/Iron_Smelting_Oven_1.glb`, usdz: `${R2_MODELS_BASE}/Iron_Smelting_Oven_1.usdz` };
 
 // Tamil audio narration, keyed by exhibit _id. The backend only stores one
-// (English) audioUrl per exhibit, so the Tamil track is swapped in on the
-// frontend when the visitor selects the Tamil language tab.
+// (English) audioUrl per exhibit, so the Tamil/Sinhala tracks are swapped in
+// on the frontend when the visitor selects that language tab.
 const TAMIL_AUDIO_BY_EXHIBIT_ID = {
   '65d75b0a66f50b2984950021': tamilAudioSmelting, // Wind-Powered Steel Smelting
   '65d75b0a66f50b2984950022': tamilAudioElephantLamp, // Elephant Lamp (Ath Pahana)
@@ -40,6 +49,19 @@ const TAMIL_AUDIO_BY_EXHIBIT_ID = {
   '65d75b0a66f50b2984950026': tamilAudioKulasinghe, // Arumadura Nandasena de Silva Kulasinghe
   '65d75b0a66f50b2984950027': tamilAudioWimalasurendra, // Devapura Jayasena Wimalasurendra
   '65d75b0a66f50b2984950028': tamilAudioBisokotuwa, // Bisokotuwa
+};
+
+// Sinhala audio narration, keyed by exhibit _id. Swapped in on the frontend
+// when the visitor selects the Sinhala language tab, same as the Tamil track.
+const SINHALA_AUDIO_BY_EXHIBIT_ID = {
+  '65d75b0a66f50b2984950021': sinhalaAudioSmelting, // Wind-Powered Steel Smelting
+  '65d75b0a66f50b2984950022': sinhalaAudioElephantLamp, // Elephant Lamp (Ath Pahana)
+  '65d75b0a66f50b2984950023': sinhalaAudioJetavana, // Jetavana Stupa (Jethawanarama)
+  '65d75b0a66f50b2984950024': sinhalaAudioSigiriya, // Sigiriya
+  '65d75b0a66f50b2984950025': sinhalaAudioRampala, // Eng. Bamunusinghearachchige Don Rampala
+  '65d75b0a66f50b2984950026': sinhalaAudioKulasinghe, // Arumadura Nandasena de Silva Kulasinghe
+  '65d75b0a66f50b2984950027': sinhalaAudioWimalasurendra, // Devapura Jayasena Wimalasurendra
+  '65d75b0a66f50b2984950028': sinhalaAudioBisokotuwa, // Bisokotuwa
 };
 
 const LANGS = [
@@ -278,7 +300,9 @@ const Exhibit = () => {
 
 
           {(() => {
-            const audioSrc = (displayLang === 'ta' && TAMIL_AUDIO_BY_EXHIBIT_ID[exhibit._id]) || exhibit.audioUrl;
+            const audioSrc = (displayLang === 'ta' && TAMIL_AUDIO_BY_EXHIBIT_ID[exhibit._id])
+              || (displayLang === 'si' && SINHALA_AUDIO_BY_EXHIBIT_ID[exhibit._id])
+              || exhibit.audioUrl;
             return audioSrc && <AudioPlayer src={audioSrc} title={exhibit.title} />;
           })()}
 
