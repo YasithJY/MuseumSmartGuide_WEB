@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { mockGalleries, mockExhibits } from '../utils/mockData';
+import axios from 'axios';
 import ExhibitCard from '../components/cards/ExhibitCard';
 import { MdArrowBack } from 'react-icons/md';
+
+const API = '/api';
 
 const Gallery = () => {
   const { id } = useParams();
@@ -11,16 +13,23 @@ const Gallery = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Find mock gallery
-    const foundGallery = mockGalleries.find(g => g._id === id);
-    if (foundGallery) {
-      setGallery(foundGallery);
-      
-      // Find exhibits belonging to gallery
-      const matchedExhibits = mockExhibits.filter(ex => ex.galleryId?._id === id);
-      setExhibits(matchedExhibits);
-    }
-    setLoading(false);
+    const fetchGallery = async () => {
+      setLoading(true);
+      try {
+        const [galleryRes, exhibitsRes] = await Promise.all([
+          axios.get(`${API}/galleries/${id}`),
+          axios.get(`${API}/exhibits`, { params: { galleryId: id } })
+        ]);
+        setGallery(galleryRes.data.data || null);
+        setExhibits(exhibitsRes.data.data || []);
+      } catch {
+        setGallery(null);
+        setExhibits([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchGallery();
   }, [id]);
 
   if (loading) {

@@ -3,7 +3,6 @@ import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
 import { LangContext } from '../context/LangContext';
-import { mockQuizzes } from '../utils/mockData';
 import { MdOutlineQuiz, MdOutlineNavigateNext, MdOutlineStars, MdArrowBack, MdExtension, MdEmojiEvents, MdSchool } from 'react-icons/md';
 
 const API = '/api';
@@ -40,9 +39,12 @@ const QuizPage = () => {
         .catch(() => setExhibitQuizError('Failed to load this exhibit\'s quiz.'))
         .finally(() => setLoading(false));
     } else {
-      // Load local mock quizzes for the general Quiz Arena
-      setQuizzes(mockQuizzes);
-      setLoading(false);
+      // Load all quizzes from the backend for the general Quiz Arena
+      setLoading(true);
+      axios.get(`${API}/quizzes`)
+        .then(({ data }) => setQuizzes(data.data || []))
+        .catch(() => setQuizzes([]))
+        .finally(() => setLoading(false));
     }
   }, [exhibitId]);
 

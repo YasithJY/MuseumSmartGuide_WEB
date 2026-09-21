@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
+import axios from 'axios';
 import MuseumCard from '../components/cards/MuseumCard';
 import GalleryCard from '../components/cards/GalleryCard';
-import { mockMuseums, mockGalleries } from '../utils/mockData';
 import { MdMap, MdOutlineCollections } from 'react-icons/md';
+
+const API = '/api';
 
 // Correct Leaflet default icon issues in React
 delete L.Icon.Default.prototype._getIconUrl;
@@ -25,21 +27,36 @@ const Museums = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Load local mock museums
-    setMuseums(mockMuseums);
-    if (mockMuseums.length > 0) {
-      setSelectedMuseum(mockMuseums[0]);
-      // Filter galleries for this museum
-      const filtered = mockGalleries.filter(g => g.museumId === mockMuseums[0]._id);
-      setGalleries(filtered);
-    }
-    setLoading(false);
+    const fetchMuseums = async () => {
+      setLoading(true);
+      try {
+        const { data } = await axios.get(`${API}/museums`);
+        const fetchedMuseums = data.data || [];
+        setMuseums(fetchedMuseums);
+        if (fetchedMuseums.length > 0) {
+          await selectMuseum(fetchedMuseums[0]);
+        }
+      } catch {
+        setMuseums([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchMuseums();
   }, []);
 
-  const handleMuseumSelect = (museum) => {
+  const selectMuseum = async (museum) => {
     setSelectedMuseum(museum);
-    const filtered = mockGalleries.filter(g => g.museumId === museum._id);
-    setGalleries(filtered);
+    try {
+      const { data } = await axios.get(`${API}/galleries`, { params: { museumId: museum._id } });
+      setGalleries(data.data || []);
+    } catch {
+      setGalleries([]);
+    }
+  };
+
+  const handleMuseumSelect = (museum) => {
+    selectMuseum(museum);
   };
 
   // Mock coordinates for interactive Leaflet Map pins
