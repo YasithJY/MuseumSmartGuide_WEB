@@ -70,6 +70,66 @@ const LANGS = [
   { code: 'ta', label: 'தமி', full: 'Tamil' },
 ];
 
+// Static UI labels for this page, keyed by displayLang. Exhibit content
+// (title/description/historicalInfo/timeline) comes from exhibit.translations
+// instead — see `tx()` and `getTimeline()` below.
+const EXHIBIT_LABELS = {
+  en: {
+    backTo: 'Back to',
+    galleries: 'Galleries',
+    save: 'Save',
+    saved: 'Saved',
+    share: 'Share',
+    copied: 'Copied!',
+    arView: 'AR View',
+    quiz: 'Quiz',
+    clickToEnlarge: 'Click to Enlarge',
+    videoGuide: 'Video Guide',
+    historicalBackground: 'Historical Background & Significance',
+    chronologicalTimeline: 'Chronological Timeline',
+    timelineUnavailable: 'Timeline data unavailable for this exhibit.',
+    relatedArtifacts: 'Related Artifacts',
+    audioGuideNarrator: 'Audio Guide Narrator',
+    overviewGuide: 'Overview Guide',
+  },
+  si: {
+    backTo: 'ආපසු',
+    galleries: 'ගැලරි වෙත',
+    save: 'සුරකින්න',
+    saved: 'සුරැකී ඇත',
+    share: 'බෙදාගන්න',
+    copied: 'පිටපත් කරන ලදී!',
+    arView: 'AR දසුන',
+    quiz: 'ප්‍රශ්නාවලිය',
+    clickToEnlarge: 'විශාල කිරීමට ක්ලික් කරන්න',
+    videoGuide: 'වීඩියෝ මාර්ගෝපදේශය',
+    historicalBackground: 'ඓතිහාසික පසුබිම සහ වැදගත්කම',
+    chronologicalTimeline: 'කාලානුක්‍රමික කාලරේඛාව',
+    timelineUnavailable: 'මෙම ප්‍රදර්ශනය සඳහා කාලරේඛා දත්ත නොමැත.',
+    relatedArtifacts: 'සම්බන්ධිත කෞතුක වස්තු',
+    audioGuideNarrator: 'ශ්‍රව්‍ය මාර්ගෝපදේශක විචාරකයා',
+    overviewGuide: 'සමස්ත මාර්ගෝපදේශය',
+  },
+  ta: {
+    backTo: 'திரும்பிச் செல்க',
+    galleries: 'கேலரிகளுக்கு',
+    save: 'சேமி',
+    saved: 'சேமிக்கப்பட்டது',
+    share: 'பகிர்',
+    copied: 'நகலெடுக்கப்பட்டது!',
+    arView: 'AR காட்சி',
+    quiz: 'வினாடி வினா',
+    clickToEnlarge: 'பெரிதாக்க கிளிக் செய்யவும்',
+    videoGuide: 'வீடியோ வழிகாட்டி',
+    historicalBackground: 'வரலாற்று பின்னணி மற்றும் முக்கியத்துவம்',
+    chronologicalTimeline: 'காலவரிசை',
+    timelineUnavailable: 'இந்த கண்காட்சிக்கு காலவரிசை தரவு இல்லை.',
+    relatedArtifacts: 'தொடர்புடைய கலைப்பொருட்கள்',
+    audioGuideNarrator: 'ஒலி வழிகாட்டி விவரிப்பாளர்',
+    overviewGuide: 'மேலோட்டமான வழிகாட்டி',
+  },
+};
+
 const Exhibit = () => {
   const { id } = useParams();
   const { token } = useContext(AuthContext);
@@ -84,6 +144,7 @@ const Exhibit = () => {
 
   // ── Language switcher (local to this page) ──────────────────────────────────
   const [displayLang, setDisplayLang] = useState('en');
+  const L = EXHIBIT_LABELS[displayLang] || EXHIBIT_LABELS.en;
 
   // ── Image zoom overlay ──────────────────────────────────────────────────────
   const [zoomOpen, setZoomOpen] = useState(false);
@@ -140,6 +201,16 @@ const Exhibit = () => {
     return exhibit.translations[displayLang][field] || exhibit[field] || '';
   };
 
+  // Timeline events are an array, so they need their own fallback (an empty
+  // translated array shouldn't win over the English default).
+  const getTimeline = () => {
+    if (displayLang !== 'en') {
+      const translated = exhibit?.translations?.[displayLang]?.timeline;
+      if (translated?.length > 0) return translated;
+    }
+    return exhibit?.timeline || [];
+  };
+
   const toggleFav = () => {
     if (!token) { alert('Please log in to save exhibits!'); return; }
     const favList = JSON.parse(localStorage.getItem('mockFavs') || '[]');
@@ -193,7 +264,7 @@ const Exhibit = () => {
         <Link to={exhibit.galleryId?._id ? `/gallery/${exhibit.galleryId._id}` : '/museums'}
           className="inline-flex items-center gap-1 text-xs text-primary dark:text-stone-300 hover:text-gold uppercase font-bold">
           <MdArrowBack className="w-4 h-4" />
-          <span>Back to {exhibit.galleryId?.name || 'Galleries'}</span>
+          <span>{L.backTo} {exhibit.galleryId?.name || L.galleries}</span>
         </Link>
 
         <div className="flex items-center gap-2 flex-wrap">
@@ -219,28 +290,28 @@ const Exhibit = () => {
           <button onClick={toggleFav}
             className="flex items-center gap-1 text-xs border border-stone-300 dark:border-stone-600 bg-white dark:bg-stone-800 px-3 py-1.5 rounded-lg shadow-sm hover:border-gold transition-colors font-bold uppercase">
             {isFav ? <MdBookmark className="text-gold w-4 h-4" /> : <MdBookmarkBorder className="w-4 h-4" />}
-            <span>{isFav ? 'Saved' : 'Save'}</span>
+            <span>{isFav ? L.saved : L.save}</span>
           </button>
 
           {/* Share */}
           <button onClick={handleShare}
             className="flex items-center gap-1 text-xs border border-stone-300 dark:border-stone-600 bg-white dark:bg-stone-800 px-3 py-1.5 rounded-lg shadow-sm hover:border-gold transition-colors font-bold uppercase">
             <MdShare className="w-4 h-4 text-primary" />
-            <span>{shareSuccess ? 'Copied!' : 'Share'}</span>
+            <span>{shareSuccess ? L.copied : L.share}</span>
           </button>
 
           {/* AR View */}
           <button onClick={() => setArOpen(true)}
             className="flex items-center gap-1 text-xs border border-gold bg-primary text-parchment px-3 py-1.5 rounded-lg shadow-sm hover:bg-primary/90 transition-colors font-bold uppercase">
             <MdViewInAr className="w-4 h-4 text-gold" />
-            <span>AR View</span>
+            <span>{L.arView}</span>
           </button>
 
           {/* Quiz */}
           <Link to={`/quiz/exhibit/${exhibit._id}`}
             className="flex items-center gap-1 text-xs border border-gold bg-gold text-primary px-3 py-1.5 rounded-lg shadow-sm hover:bg-yellow-600 transition-colors font-bold uppercase">
             <MdOutlineQuiz className="w-4 h-4" />
-            <span>Quiz</span>
+            <span>{L.quiz}</span>
           </Link>
         </div>
       </div>
@@ -264,7 +335,7 @@ const Exhibit = () => {
             <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 flex items-center justify-center">
               <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-white/90 backdrop-blur-sm rounded-full px-4 py-2 flex items-center gap-2 shadow-lg">
                 <MdZoomIn className="w-5 h-5 text-primary" />
-                <span className="text-xs font-bold text-primary uppercase tracking-wide">Click to Enlarge</span>
+                <span className="text-xs font-bold text-primary uppercase tracking-wide">{L.clickToEnlarge}</span>
               </div>
             </div>
           </div>
@@ -303,12 +374,19 @@ const Exhibit = () => {
             const audioSrc = (displayLang === 'ta' && TAMIL_AUDIO_BY_EXHIBIT_ID[exhibit._id])
               || (displayLang === 'si' && SINHALA_AUDIO_BY_EXHIBIT_ID[exhibit._id])
               || exhibit.audioUrl;
-            return audioSrc && <AudioPlayer src={audioSrc} title={exhibit.title} />;
+            return audioSrc && (
+              <AudioPlayer
+                src={audioSrc}
+                title={tx('title')}
+                label={L.audioGuideNarrator}
+                overviewLabel={L.overviewGuide}
+              />
+            );
           })()}
 
           {exhibit.videoUrl && (
             <div className="space-y-2">
-              <h3 className="font-heading font-bold text-sm text-primary uppercase">Video Guide</h3>
+              <h3 className="font-heading font-bold text-sm text-primary uppercase">{L.videoGuide}</h3>
               <div className="aspect-video w-full rounded-xl overflow-hidden border border-stone-200 dark:border-stone-700 shadow">
                 <video src={exhibit.videoUrl} controls className="w-full h-full object-cover" />
               </div>
@@ -321,7 +399,7 @@ const Exhibit = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 pt-8 border-t border-stone-200/60 dark:border-stone-700/60">
         <div className="lg:col-span-2 space-y-4">
           <h3 className="font-heading font-bold text-lg text-primary dark:text-parchment uppercase tracking-wide">
-            Historical Background &amp; Significance
+            {L.historicalBackground}
           </h3>
           <p className="text-sm text-stone-500 dark:text-stone-300 leading-relaxed font-light whitespace-pre-line">
             {tx('historicalInfo')}
@@ -329,10 +407,10 @@ const Exhibit = () => {
         </div>
 
         <div className="lg:col-span-1 space-y-6">
-          <h3 className="font-heading font-bold text-lg text-primary dark:text-parchment uppercase tracking-wide">Chronological Timeline</h3>
+          <h3 className="font-heading font-bold text-lg text-primary dark:text-parchment uppercase tracking-wide">{L.chronologicalTimeline}</h3>
           <div className="relative border-l-2 border-gold/40 pl-6 ml-2 space-y-6">
-            {exhibit.timeline?.length > 0 ? (
-              exhibit.timeline.map((event, idx) => (
+            {getTimeline().length > 0 ? (
+              getTimeline().map((event, idx) => (
                 <div key={idx} className="relative">
                   <span className="absolute -left-[31px] top-1.5 w-4 h-4 rounded-full bg-gold border-2 border-parchment dark:border-stone-900 block"></span>
                   <div className="space-y-1">
@@ -343,7 +421,7 @@ const Exhibit = () => {
                 </div>
               ))
             ) : (
-              <p className="text-xs text-stone-400">Timeline data unavailable for this exhibit.</p>
+              <p className="text-xs text-stone-400">{L.timelineUnavailable}</p>
             )}
           </div>
         </div>
@@ -352,7 +430,7 @@ const Exhibit = () => {
       {/* ── Related Artifacts ─────────────────────────────────────────────────── */}
       {related.length > 0 && (
         <div className="space-y-6 pt-8 border-t border-stone-200/60 dark:border-stone-700/60">
-          <h3 className="font-heading font-bold text-lg text-primary dark:text-parchment uppercase tracking-wide">Related Artifacts</h3>
+          <h3 className="font-heading font-bold text-lg text-primary dark:text-parchment uppercase tracking-wide">{L.relatedArtifacts}</h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {related.map(rel => (
               <Link key={rel._id} to={`/exhibit/${rel._id}`}

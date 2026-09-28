@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { MdPlayArrow, MdPause, MdVolumeUp, MdVolumeMute } from 'react-icons/md';
 
-const AudioPlayer = ({ src, title }) => {
+const AudioPlayer = ({ src, title, label = 'Audio Guide Narrator', overviewLabel = 'Overview Guide' }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
@@ -75,10 +75,10 @@ const AudioPlayer = ({ src, title }) => {
       {/* Title & Speed controls */}
       <div className="flex flex-col items-center md:items-start text-center md:text-left gap-1">
         <span className="text-xs uppercase text-gold tracking-widest font-bold font-heading">
-          Audio Guide Narrator
+          {label}
         </span>
         <span className="text-sm font-semibold text-stone-200 truncate max-w-[200px]">
-          {title || "Overview Guide"}
+          {title || overviewLabel}
         </span>
       </div>
 
