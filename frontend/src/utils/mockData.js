@@ -6,6 +6,8 @@ import jethawanayaImage1 from '../assets/jethawanaya.jpg';
 import jethawanayaImage2 from '../assets/jethawanaya2.jpg';
 import museumImage from '../assets/National Museum of Colombo-Museum Card.png';
 import galleryImage from '../assets/Ancient Engineering & Technology-Gallery Card.png';
+import polonnaruwaMuseumImage from '../assets/PolonnaruwaM.PNG';
+import geologyGalleryImage from '../assets/Geology.PNG';
 
 export const mockCategories = [
   { 
@@ -67,7 +69,7 @@ export const mockMuseums = [
     _id: 'mus2',
     name: 'Polonnaruwa Archaeological Museum',
     description: 'Set within the grounds of Sri Lanka\'s medieval capital, the Polonnaruwa Archaeological Museum houses sculptures, inscriptions, and artifacts excavated from the Polonnaruwa Kingdom (11th-13th century AD), alongside scale models reconstructing the ancient city\'s monasteries and royal palaces.',
-    coverImage: 'https://images.unsplash.com/photo-1605640840605-14ac1855827b?auto=format&fit=crop&q=80&w=800',
+    coverImage: polonnaruwaMuseumImage,
     openingHours: {
       weekdays: '08:00 AM - 05:00 PM',
       weekends: '08:00 AM - 05:00 PM'
@@ -104,7 +106,7 @@ export const mockGalleries = [
     _id: '65d75a1d66f50b2984950013',
     name: 'Geology Gallery',
     description: 'A showcase of Sri Lanka\'s mineral wealth and geological heritage, featuring gem specimens, rock formations, and rare mineral deposits found across the island.',
-    coverImage: 'https://images.unsplash.com/photo-1544644181-1484b3fdfc62?auto=format&fit=crop&q=80&w=600',
+    coverImage: geologyGalleryImage,
     museumId: 'mus1',
     exhibitsCount: 0,
     translations: {

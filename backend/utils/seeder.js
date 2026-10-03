@@ -102,7 +102,7 @@ const seedData = async () => {
     const colomboMuseum = await Museum.create({
       name: 'National Museum of Colombo',
       description: 'Established in 1877, the National Museum of Colombo stands as the guardian of Sri Lanka\'s rich historical legacy. Housing thousands of antiquities, it exhibits the cultural, artistic, and social evolution of the island from prehistoric eras up to the Kandyan kingdom.',
-      coverImage: 'https://images.unsplash.com/photo-1544644181-1484b3fdfc62?auto=format&fit=crop&q=80&w=800',
+      coverImage: 'https://pub-02040b12caf642fa90ff1c33f64e3dc1.r2.dev/file-1791025442214-575624.PNG',
       openingHours: {
         weekdays: '09:00 AM - 05:00 PM',
         weekends: '09:00 AM - 06:00 PM'
@@ -131,7 +131,7 @@ const seedData = async () => {
     const polonnaruwaMuseum = await Museum.create({
       name: 'Polonnaruwa Archaeological Museum',
       description: 'Set within the grounds of Sri Lanka\'s medieval capital, the Polonnaruwa Archaeological Museum houses sculptures, inscriptions, and artifacts excavated from the Polonnaruwa Kingdom (11th-13th century AD), alongside scale models reconstructing the ancient city\'s monasteries and royal palaces.',
-      coverImage: 'https://images.unsplash.com/photo-1605640840605-14ac1855827b?auto=format&fit=crop&q=80&w=800',
+      coverImage: 'https://pub-02040b12caf642fa90ff1c33f64e3dc1.r2.dev/file-1791025459708-872677848.PNG',
       openingHours: {
         weekdays: '08:00 AM - 05:00 PM',
         weekends: '08:00 AM - 05:00 PM'
@@ -162,7 +162,7 @@ const seedData = async () => {
         _id: new mongoose.Types.ObjectId('65d75a1d66f50b2984950011'),
         name: 'Ancient Engineering & Technology',
         description: 'Explore the advanced metallurgical, hydraulic, and structural engineering wonders of ancient Sri Lanka.',
-        coverImage: 'https://images.unsplash.com/photo-1605721911519-3dfeb3be25e7?auto=format&fit=crop&q=80&w=600',
+        coverImage: 'https://pub-02040b12caf642fa90ff1c33f64e3dc1.r2.dev/file-1791025448430-259805285.PNG',
         museumId: colomboMuseum._id,
         exhibitsCount: 8,
         translations: {
@@ -180,7 +180,7 @@ const seedData = async () => {
         _id: new mongoose.Types.ObjectId('65d75a1d66f50b2984950013'),
         name: 'Geology Gallery',
         description: 'A showcase of Sri Lanka\'s mineral wealth and geological heritage, featuring gem specimens, rock formations, and rare mineral deposits found across the island.',
-        coverImage: 'https://images.unsplash.com/photo-1544644181-1484b3fdfc62?auto=format&fit=crop&q=80&w=600',
+        coverImage: 'https://pub-02040b12caf642fa90ff1c33f64e3dc1.r2.dev/file-1791025453896-987930029.PNG',
         museumId: colomboMuseum._id,
         exhibitsCount: 0,
         translations: {
