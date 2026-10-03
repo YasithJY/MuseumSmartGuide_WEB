@@ -127,6 +127,35 @@ const seedData = async () => {
 
     console.log('Colombo Museum seeded.');
 
+    // 3b. Seed second Museum (Polonnaruwa)
+    const polonnaruwaMuseum = await Museum.create({
+      name: 'Polonnaruwa Archaeological Museum',
+      description: 'Set within the grounds of Sri Lanka\'s medieval capital, the Polonnaruwa Archaeological Museum houses sculptures, inscriptions, and artifacts excavated from the Polonnaruwa Kingdom (11th-13th century AD), alongside scale models reconstructing the ancient city\'s monasteries and royal palaces.',
+      coverImage: 'https://images.unsplash.com/photo-1605640840605-14ac1855827b?auto=format&fit=crop&q=80&w=800',
+      openingHours: {
+        weekdays: '08:00 AM - 05:00 PM',
+        weekends: '08:00 AM - 05:00 PM'
+      },
+      location: {
+        address: 'Potgul Vehera Road, Polonnaruwa, Sri Lanka',
+        lat: 7.9336,
+        lng: 81.0170
+      },
+      galleriesCount: 0,
+      translations: {
+        si: {
+          name: 'පොළොන්නරුව පුරාවිද්‍යා කෞතුකාගාරය',
+          description: 'පොළොන්නරු රාජධානියේ (ක්‍රි.ව. 11-13 සියවස්) කැණීම් මගින් හමුවූ මූර්ති, සෙල් ලිපි සහ පුරාවස්තු මෙහි ප්‍රදර්ශනය කෙරේ.'
+        },
+        ta: {
+          name: 'பொலன்னறுவை தொல்பொருள் அருங்காட்சியகம்',
+          description: 'பொலன்னறுவை இராச்சியத்தின் (கி.பி. 11-13 ஆம் நூற்றாண்டு) அகழ்வாராய்ச்சியில் கண்டெடுக்கப்பட்ட சிற்பங்கள், கல்வெட்டுகள் மற்றும் தொல்பொருட்கள் இங்கு காட்சிப்படுத்தப்படுகின்றன.'
+        }
+      }
+    });
+
+    console.log('Polonnaruwa Museum seeded.');
+
     // 4. Seed Galleries (with explicit ObjectIds)
     const galleries = await Gallery.create([
       {
@@ -144,6 +173,24 @@ const seedData = async () => {
           ta: {
             name: 'பண்டைய பொறியியல் மற்றும் தொழில்நுட்பம்',
             description: 'பண்டைய இலங்கையின் மேம்பட்ட உலோகவியல், நீரியல் மற்றும் கட்டமைப்பு பொறியியல் அதிசயங்களை ஆராயுங்கள்.'
+          }
+        }
+      },
+      {
+        _id: new mongoose.Types.ObjectId('65d75a1d66f50b2984950013'),
+        name: 'Geology Gallery',
+        description: 'A showcase of Sri Lanka\'s mineral wealth and geological heritage, featuring gem specimens, rock formations, and rare mineral deposits found across the island.',
+        coverImage: 'https://images.unsplash.com/photo-1544644181-1484b3fdfc62?auto=format&fit=crop&q=80&w=600',
+        museumId: colomboMuseum._id,
+        exhibitsCount: 0,
+        translations: {
+          si: {
+            name: 'භූවිද්‍යා ගැලරිය',
+            description: 'ශ්‍රී ලංකාවේ ඛනිජ සම්පත් සහ භූවිද්‍යාත්මක උරුමය පිළිබඳ මැණික් නිදර්ශක, පාෂාණ හා දුර්ලභ ඛනිජ තැන්පත් ප්‍රදර්ශනය කරන ගැලරියකි.'
+          },
+          ta: {
+            name: 'புவியியல் காட்சியகம்',
+            description: 'இலங்கையின் கனிம வளம் மற்றும் புவியியல் பாரம்பரியத்தை வெளிப்படுத்தும் ரத்தின மாதிரிகள், பாறை அமைப்புகள் மற்றும் அரிய கனிமப் படிவுகளைக் காட்சிப்படுத்தும் காட்சியகம்.'
           }
         }
       }
