@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import axios from 'axios';
 import ExhibitCard from '../components/cards/ExhibitCard';
-import { MdSearch, MdFilterList } from 'react-icons/md';
+import { MdSearch, MdFilterList, MdRefresh } from 'react-icons/md';
 
 const API = '/api';
 
@@ -16,6 +16,7 @@ const Search = () => {
   const [selectedPeriod, setSelectedPeriod] = useState('');
   const [exhibits, setExhibits] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [loadError, setLoadError] = useState(false);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -33,8 +34,9 @@ const Search = () => {
     executeSearch();
   }, [searchParams, selectedCategory, selectedPeriod]);
 
-  const executeSearch = async () => {
+  const executeSearch = async (isRetry = false) => {
     setLoading(true);
+    if (!isRetry) setLoadError(false);
     try {
       const params = {};
       const q = searchParams.get('q');
@@ -42,11 +44,19 @@ const Search = () => {
       if (selectedCategory) params.categoryId = selectedCategory;
       if (selectedPeriod) params.period = selectedPeriod;
 
-      const { data } = await axios.get(`${API}/exhibits`, { params });
+      // The backend can be waking up from a free-tier cold start, which looks
+      // like a failed request — retry once after a short wait before giving up.
+      const { data } = await axios.get(`${API}/exhibits`, { params, timeout: 15000 });
       setExhibits(data.data || []);
+      setLoadError(false);
+      setLoading(false);
     } catch {
+      if (!isRetry) {
+        setTimeout(() => executeSearch(true), 4000);
+        return; // stay in loading state through the retry wait
+      }
       setExhibits([]);
-    } finally {
+      setLoadError(true);
       setLoading(false);
     }
   };
@@ -123,8 +133,17 @@ const Search = () => {
           </form>
 
           {loading ? (
-            <div className="flex justify-center items-center py-12">
+            <div className="flex flex-col justify-center items-center py-12 gap-3">
               <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-gold"></div>
+              <p className="text-xs text-stone-400">Loading exhibits…</p>
+            </div>
+          ) : loadError ? (
+            <div className="text-center py-12 bg-white/40 dark:bg-stone-800/40 border border-dashed border-amber-300 dark:border-amber-700 rounded-xl space-y-3">
+              <p className="text-sm text-stone-600 dark:text-stone-300 font-semibold">Couldn't reach the exhibit database.</p>
+              <p className="text-xs text-stone-500 dark:text-stone-400">The server may still be waking up — give it a moment and try again.</p>
+              <button onClick={() => executeSearch()} className="inline-flex items-center gap-1.5 text-xs font-bold text-gold hover:underline">
+                <MdRefresh className="w-4 h-4" /> Retry
+              </button>
             </div>
           ) : exhibits.length === 0 ? (
             <div className="text-center py-12 bg-white/40 dark:bg-stone-800/40 border border-dashed border-stone-300 dark:border-stone-600 rounded-xl">

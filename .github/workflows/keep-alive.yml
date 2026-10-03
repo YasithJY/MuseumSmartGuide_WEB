@@ -1,0 +1,17 @@
+name: Keep Render backend awake
+
+# Render's free tier spins the backend down after ~15 minutes of no traffic.
+# The first request after that has to "cold start" the server, which can
+# take 30-60s and makes images/audio/API calls fail or time out until it's
+# warm again. Pinging it well under that 15-minute window keeps it awake.
+on:
+  schedule:
+    - cron: '*/10 * * * *'
+  workflow_dispatch: {}
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping backend
+        run: curl -sf --max-time 30 https://museumsmartguide-web.onrender.com/ || true

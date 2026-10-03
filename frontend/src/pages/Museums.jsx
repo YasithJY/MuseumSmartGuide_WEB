@@ -5,7 +5,7 @@ import L from 'leaflet';
 import axios from 'axios';
 import MuseumCard from '../components/cards/MuseumCard';
 import GalleryCard from '../components/cards/GalleryCard';
-import { MdMap, MdOutlineCollections } from 'react-icons/md';
+import { MdMap, MdOutlineCollections, MdRefresh } from 'react-icons/md';
 
 const API = '/api';
 
@@ -22,26 +22,37 @@ const Museums = () => {
   const [galleries, setGalleries] = useState([]);
   const [selectedMuseum, setSelectedMuseum] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
   const [showMap, setShowMap] = useState(false);
-  
+
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchMuseums = async () => {
-      setLoading(true);
-      try {
-        const { data } = await axios.get(`${API}/museums`);
-        const fetchedMuseums = data.data || [];
-        setMuseums(fetchedMuseums);
-        if (fetchedMuseums.length > 0) {
-          await selectMuseum(fetchedMuseums[0]);
-        }
-      } catch {
-        setMuseums([]);
-      } finally {
-        setLoading(false);
+  const fetchMuseums = async (isRetry = false) => {
+    setLoading(true);
+    if (!isRetry) setLoadError(false);
+    try {
+      // The backend can be waking up from a free-tier cold start, which looks
+      // like a failed request — retry once after a short wait before giving up.
+      const { data } = await axios.get(`${API}/museums`, { timeout: 15000 });
+      const fetchedMuseums = data.data || [];
+      setMuseums(fetchedMuseums);
+      setLoadError(false);
+      if (fetchedMuseums.length > 0) {
+        await selectMuseum(fetchedMuseums[0]);
       }
-    };
+      setLoading(false);
+    } catch {
+      if (!isRetry) {
+        setTimeout(() => fetchMuseums(true), 4000);
+        return; // stay in loading state through the retry wait
+      }
+      setMuseums([]);
+      setLoadError(true);
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchMuseums();
   }, []);
 
@@ -69,8 +80,21 @@ const Museums = () => {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center py-24">
+      <div className="flex flex-col justify-center items-center py-24 gap-3">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gold"></div>
+        <p className="text-xs text-stone-400">Loading museums…</p>
+      </div>
+    );
+  }
+
+  if (loadError) {
+    return (
+      <div className="max-w-md mx-auto py-24 text-center space-y-3">
+        <p className="text-sm text-stone-600 dark:text-stone-300 font-semibold">Couldn't reach the museum database.</p>
+        <p className="text-xs text-stone-500 dark:text-stone-400">The server may still be waking up — give it a moment and try again.</p>
+        <button onClick={() => fetchMuseums()} className="inline-flex items-center gap-1.5 text-xs font-bold text-gold hover:underline">
+          <MdRefresh className="w-4 h-4" /> Retry
+        </button>
       </div>
     );
   }
