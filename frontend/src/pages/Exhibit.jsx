@@ -367,7 +367,7 @@ const Exhibit = () => {
             <div className="w-20 h-1 bg-gold"></div>
           </div>
 
-          <p className="text-base text-stone-500 dark:text-stone-300 leading-relaxed font-light" style={{ whiteSpace: 'pre-wrap' }}>{tx('description')}</p>
+          <p className="text-base text-stone-500 dark:text-stone-300 leading-relaxed font-light text-justify" style={{ whiteSpace: 'pre-wrap' }}>{tx('description')}</p>
 
 
           {(() => {
@@ -401,7 +401,7 @@ const Exhibit = () => {
           <h3 className="font-heading font-bold text-lg text-primary dark:text-parchment uppercase tracking-wide">
             {L.historicalBackground}
           </h3>
-          <p className="text-sm text-stone-500 dark:text-stone-300 leading-relaxed font-light whitespace-pre-line">
+          <p className="text-sm text-stone-500 dark:text-stone-300 leading-relaxed font-light whitespace-pre-line text-justify">
             {tx('historicalInfo')}
           </p>
         </div>

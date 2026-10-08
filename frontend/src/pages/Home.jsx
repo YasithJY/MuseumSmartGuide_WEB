@@ -52,7 +52,7 @@ const Home = () => {
           <span className="text-xs sm:text-sm uppercase tracking-widest font-heading font-bold text-gold gold-text-glow">
             National Museum of Sri Lanka
           </span>
-          <h1 className="font-heading font-extrabold text-3xl sm:text-5xl lg:text-6xl text-parchment leading-tight tracking-wider uppercase">
+          <h1 className="font-heading font-semibold text-3xl sm:text-5xl lg:text-6xl text-parchment leading-tight tracking-wider uppercase">
             {t('welcome')}
           </h1>
           <p className="max-w-2xl mx-auto text-xs sm:text-base text-stone-300 font-light leading-relaxed">

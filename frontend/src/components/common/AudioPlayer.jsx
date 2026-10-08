@@ -73,17 +73,17 @@ const AudioPlayer = ({ src, title, label = 'Audio Guide Narrator', overviewLabel
       />
 
       {/* Title & Speed controls */}
-      <div className="flex flex-col items-center md:items-start text-center md:text-left gap-1">
+      <div className="flex-shrink-0 flex flex-col items-center md:items-start text-center md:text-left gap-1">
         <span className="text-xs uppercase text-gold tracking-widest font-bold font-heading">
           {label}
         </span>
-        <span className="text-sm font-semibold text-stone-200 truncate max-w-[200px]">
+        <span className="text-sm font-semibold text-stone-200 whitespace-nowrap">
           {title || overviewLabel}
         </span>
       </div>
 
       {/* Timeline Controls */}
-      <div className="flex-1 flex items-center gap-3 w-full">
+      <div className="flex-1 min-w-0 flex items-center gap-3 w-full">
         <span className="text-xs text-stone-300 font-mono">{formatTime(currentTime)}</span>
         <input
           type="range"
