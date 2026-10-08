@@ -361,7 +361,7 @@ const Exhibit = () => {
                 {exhibit.galleryId.name}
               </span>
             )}
-            <h1 className="font-heading font-extrabold text-2xl sm:text-4xl text-primary dark:text-parchment uppercase leading-tight">
+            <h1 className="font-heading font-extrabold text-xl sm:text-2xl text-primary dark:text-parchment uppercase leading-tight whitespace-nowrap">
               {tx('title')}
             </h1>
             <div className="w-20 h-1 bg-gold"></div>
