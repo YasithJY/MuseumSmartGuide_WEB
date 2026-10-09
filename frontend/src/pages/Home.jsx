@@ -5,7 +5,7 @@ import { LangContext } from '../context/LangContext';
 import { AuthContext } from '../context/AuthContext';
 import ExhibitCard from '../components/cards/ExhibitCard';
 import { MdSearch, MdQrCodeScanner, MdOutlineEventNote, MdOutlineAccountBalance } from 'react-icons/md';
-import heroImage from '../assets/Hero.jpeg';
+import heroVideo from '../assets/HeroAnimate.mp4';
 
 const API = '/api';
 
@@ -45,7 +45,16 @@ const Home = () => {
     <div className="space-y-16">
       {/* Premium Hero Banner */}
       <section className="relative min-h-[calc(100vh-66px)] flex items-center justify-center text-center px-4 bg-primary text-parchment overflow-hidden border-b-4 border-gold">
-        <div className="absolute inset-0 z-0 opacity-90 bg-cover bg-top" style={{ backgroundImage: `url(${heroImage})` }}></div>
+        <video
+          className="absolute inset-0 z-0 w-full h-full object-cover object-top opacity-90"
+          src={heroVideo}
+          autoPlay
+          loop
+          muted
+          playsInline
+          disablePictureInPicture
+          controls={false}
+        ></video>
         <div className="absolute inset-0 bg-gradient-to-t from-primary via-primary/70 to-transparent z-0"></div>
 
         <div className="relative z-10 max-w-4xl mx-auto space-y-6">
