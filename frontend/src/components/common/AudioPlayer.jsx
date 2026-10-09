@@ -63,7 +63,7 @@ const AudioPlayer = ({ src, title, label = 'Audio Guide Narrator', overviewLabel
   };
 
   return (
-    <div className="bg-primary/95 text-parchment p-4 rounded-xl border border-gold/40 shadow-lg flex flex-col md:flex-row items-center justify-between gap-4 w-full">
+    <div className="bg-primary/95 text-parchment p-4 rounded-xl border border-gold/40 shadow-lg flex flex-col gap-3 w-full">
       <audio
         ref={audioRef}
         src={src}
@@ -72,18 +72,38 @@ const AudioPlayer = ({ src, title, label = 'Audio Guide Narrator', overviewLabel
         onEnded={() => setIsPlaying(false)}
       />
 
-      {/* Title & Speed controls */}
-      <div className="flex-shrink-0 flex flex-col items-center md:items-start text-center md:text-left gap-1">
-        <span className="text-xs uppercase text-gold tracking-widest font-bold font-heading">
-          {label}
-        </span>
-        <span className="text-sm font-semibold text-stone-200 whitespace-nowrap">
-          {title || overviewLabel}
-        </span>
+      <div className="flex items-center justify-between gap-3">
+        {/* Title */}
+        <div className="min-w-0 flex flex-col items-start text-left gap-1">
+          <span className="text-xs uppercase text-gold tracking-widest font-bold font-heading">
+            {label}
+          </span>
+          <span className="text-sm font-semibold text-stone-200 truncate">
+            {title || overviewLabel}
+          </span>
+        </div>
+
+        {/* Action Buttons */}
+        <div className="flex-shrink-0 flex items-center gap-3">
+          {/* Speed */}
+          <button onClick={changeSpeed} className="text-xs border border-stone-600 px-2 py-1 rounded font-bold hover:border-gold transition-colors">
+            {playbackRate}x
+          </button>
+
+          {/* Play/Pause */}
+          <button onClick={togglePlay} className="p-3 bg-gold hover:bg-yellow-600 text-primary rounded-full transition-all duration-300 hover:scale-105">
+            {isPlaying ? <MdPause className="w-5 h-5" /> : <MdPlayArrow className="w-5 h-5" />}
+          </button>
+
+          {/* Mute */}
+          <button onClick={toggleMute} className="text-stone-300 hover:text-gold transition-colors">
+            {isMuted ? <MdVolumeMute className="w-5 h-5" /> : <MdVolumeUp className="w-5 h-5" />}
+          </button>
+        </div>
       </div>
 
       {/* Timeline Controls */}
-      <div className="flex-1 min-w-0 flex items-center gap-3 w-full">
+      <div className="flex items-center gap-3 w-full">
         <span className="text-xs text-stone-300 font-mono">{formatTime(currentTime)}</span>
         <input
           type="range"
@@ -91,27 +111,9 @@ const AudioPlayer = ({ src, title, label = 'Audio Guide Narrator', overviewLabel
           max={duration || 0}
           value={currentTime}
           onChange={handleSeek}
-          className="flex-1 accent-gold h-1.5 rounded-lg appearance-none cursor-pointer bg-stone-700"
+          className="flex-1 min-w-0 accent-gold h-1.5 rounded-lg appearance-none cursor-pointer bg-stone-700"
         />
         <span className="text-xs text-stone-300 font-mono">{formatTime(duration)}</span>
-      </div>
-
-      {/* Action Buttons */}
-      <div className="flex items-center gap-4">
-        {/* Speed */}
-        <button onClick={changeSpeed} className="text-xs border border-stone-600 px-2 py-1 rounded font-bold hover:border-gold transition-colors">
-          {playbackRate}x
-        </button>
-
-        {/* Play/Pause */}
-        <button onClick={togglePlay} className="p-3 bg-gold hover:bg-yellow-600 text-primary rounded-full transition-all duration-300 hover:scale-105">
-          {isPlaying ? <MdPause className="w-5 h-5" /> : <MdPlayArrow className="w-5 h-5" />}
-        </button>
-
-        {/* Mute */}
-        <button onClick={toggleMute} className="text-stone-300 hover:text-gold transition-colors">
-          {isMuted ? <MdVolumeMute className="w-5 h-5" /> : <MdVolumeUp className="w-5 h-5" />}
-        </button>
       </div>
     </div>
   );
