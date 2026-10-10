@@ -4,7 +4,7 @@ import { MdGroups, MdSupervisorAccount, MdEmail } from 'react-icons/md';
 
 const CONTACT_EMAIL = 'it22100498@my.sliit.lk';
 
-import uvinduMendis from '../assets/uvindu mendis.jpeg';
+import uvinduMendis from '../assets/Uvindu induwara mendis.png';
 import janithKavinda from '../assets/janith kavinda.jpeg';
 import mithulaIlayperuma from '../assets/mithula ilayperuma.jpeg';
 import yasithJayasundara from '../assets/yasith jayasundara.png';
