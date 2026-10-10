@@ -12,7 +12,7 @@ import arunaIsharaGamage from '../assets/aruna ishara gamage.jpg';
 import nushkanNismi from '../assets/Mr. Nushkan Nismi-W2da3Fhl.png';
 
 const developers = [
-  { name: 'Uvindu Mendis', image: uvinduMendis, inset: true },
+  { name: 'Uvindu Mendis', image: uvinduMendis },
   { name: 'Janith Kavinda', image: janithKavinda },
   { name: 'Mithula Ilayperuma', image: mithulaIlayperuma },
   { name: 'Yasith Jayasundara', image: yasithJayasundara },
@@ -23,14 +23,10 @@ const supervisors = [
   { name: 'Mr. Nushkan Nisme', image: nushkanNismi },
 ];
 
-const PersonCard = ({ name, image, featured = false, inset = false }) => (
+const PersonCard = ({ name, image, featured = false }) => (
   <div className="flex flex-col items-center text-center gap-4 group bg-white dark:bg-stone-800/60 rounded-2xl shadow-md hover:shadow-xl border border-stone-100 dark:border-stone-700 p-6 sm:p-8 transition-all duration-300 hover:-translate-y-1 w-full">
-    <div className={`rounded-full overflow-hidden border-4 border-gold shadow-lg bg-stone-100 dark:bg-stone-700 group-hover:scale-105 transition-transform duration-300 ${inset ? 'p-2' : ''} ${featured ? 'w-40 h-40 sm:w-48 sm:h-48' : 'w-32 h-32 sm:w-36 sm:h-36'}`}>
-      <img
-        src={image}
-        alt={name}
-        className="w-full h-full rounded-full object-cover object-top"
-      />
+    <div className={`rounded-full overflow-hidden border-4 border-gold shadow-lg group-hover:scale-105 transition-transform duration-300 ${featured ? 'w-40 h-40 sm:w-48 sm:h-48' : 'w-32 h-32 sm:w-36 sm:h-36'}`}>
+      <img src={image} alt={name} className="w-full h-full object-cover object-top" />
     </div>
     <span className="font-heading font-bold text-base sm:text-lg text-primary dark:text-parchment uppercase tracking-wide leading-snug">
       {name}
@@ -64,7 +60,7 @@ const About = () => {
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {developers.map((dev) => (
-            <PersonCard key={dev.name} name={dev.name} image={dev.image} inset={dev.inset} />
+            <PersonCard key={dev.name} name={dev.name} image={dev.image} />
           ))}
         </div>
       </section>
