@@ -42,7 +42,7 @@ const translations = {
     developedBy: "Developed By",
     supervisedBy: "Supervised By",
     contactUsTitle: "Contact Us",
-    contactUsSubtitle: "Need something like this built for your own museum or organization? Get in touch with us.",
+    contactUsSubtitle: "Need something like this built for your own organization? Get in touch with us.",
     contactDevelopers: "Contact Developers",
   },
   si: {
@@ -84,7 +84,7 @@ const translations = {
     developedBy: "නිර්මාණය කළේ",
     supervisedBy: "අධීක්ෂණය කළේ",
     contactUsTitle: "අප අමතන්න",
-    contactUsSubtitle: "ඔබේ කෞතුකාගාරය හෝ ආයතනය සඳහා මෙවැනි පද්ධතියක් අවශ්‍යද? අප හා සම්බන්ධ වන්න.",
+    contactUsSubtitle: "ඔබේ ආයතනය සඳහා මෙවැනි පද්ධතියක් අවශ්‍යද? අප හා සම්බන්ධ වන්න.",
     contactDevelopers: "නිර්මාණකරුවන් අමතන්න",
   },
   ta: {
@@ -126,7 +126,7 @@ const translations = {
     developedBy: "உருவாக்கியவர்கள்",
     supervisedBy: "மேற்பார்வையாளர்கள்",
     contactUsTitle: "எங்களை தொடர்பு கொள்ளுங்கள்",
-    contactUsSubtitle: "உங்கள் அருங்காட்சியகம் அல்லது நிறுவனத்திற்கு இதுபோன்ற ஒன்றை உருவாக்க வேண்டுமா? எங்களை தொடர்பு கொள்ளுங்கள்.",
+    contactUsSubtitle: "உங்கள் நிறுவனத்திற்கு இதுபோன்ற ஒன்றை உருவாக்க வேண்டுமா? எங்களை தொடர்பு கொள்ளுங்கள்.",
     contactDevelopers: "உருவாக்குநர்களை தொடர்பு கொள்ளுங்கள்",
   }
 };
