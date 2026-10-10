@@ -43,6 +43,7 @@ const translations = {
     supervisedBy: "Supervised By",
     contactUsTitle: "Contact Us",
     contactUsSubtitle: "Need something like this built for your own museum or organization? Get in touch with us.",
+    contactDevelopers: "Contact Developers",
   },
   si: {
     title: "කෞතුකාගාර 150 ස්මාර්ට් මාර්ගෝපදේශය",
@@ -84,6 +85,7 @@ const translations = {
     supervisedBy: "අධීක්ෂණය කළේ",
     contactUsTitle: "අප අමතන්න",
     contactUsSubtitle: "ඔබේ කෞතුකාගාරය හෝ ආයතනය සඳහා මෙවැනි පද්ධතියක් අවශ්‍යද? අප හා සම්බන්ධ වන්න.",
+    contactDevelopers: "නිර්මාණකරුවන් අමතන්න",
   },
   ta: {
     title: "அருங்காட்சியகம் 150 ஸ்மார்ட் வழிகாட்டி",
@@ -125,6 +127,7 @@ const translations = {
     supervisedBy: "மேற்பார்வையாளர்கள்",
     contactUsTitle: "எங்களை தொடர்பு கொள்ளுங்கள்",
     contactUsSubtitle: "உங்கள் அருங்காட்சியகம் அல்லது நிறுவனத்திற்கு இதுபோன்ற ஒன்றை உருவாக்க வேண்டுமா? எங்களை தொடர்பு கொள்ளுங்கள்.",
+    contactDevelopers: "உருவாக்குநர்களை தொடர்பு கொள்ளுங்கள்",
   }
 };
 
