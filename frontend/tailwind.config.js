@@ -18,6 +18,7 @@ export default {
       },
       fontFamily: {
         heading: ["Cinzel", "serif"],
+        display: ["Playfair Display", "serif"],
         body: ["Poppins", "sans-serif"],
       },
       backgroundImage: {

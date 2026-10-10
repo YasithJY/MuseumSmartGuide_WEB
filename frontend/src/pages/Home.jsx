@@ -58,10 +58,10 @@ const Home = () => {
         <div className="absolute inset-0 bg-gradient-to-t from-primary via-primary/70 to-transparent z-0"></div>
 
         <div className="relative z-10 max-w-4xl mx-auto space-y-6">
-          <span className="text-xs sm:text-sm tracking-widest font-heading font-bold text-gold gold-text-glow">
+          <span className="text-xs sm:text-sm tracking-widest font-display italic font-semibold text-gold gold-text-glow">
             National Museum of Sri Lanka
           </span>
-          <h1 className="font-heading font-semibold text-3xl sm:text-5xl lg:text-6xl text-parchment leading-tight tracking-wider">
+          <h1 className="font-display font-bold text-3xl sm:text-5xl lg:text-6xl text-parchment leading-tight tracking-wide">
             {t('welcome')}
           </h1>
           <p className="max-w-2xl mx-auto text-xs sm:text-base text-stone-300 font-light leading-relaxed">
