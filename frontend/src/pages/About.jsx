@@ -9,7 +9,6 @@ import janithKavinda from '../assets/janith kavinda.jpeg';
 import mithulaIlayperuma from '../assets/mithula ilayperuma.jpeg';
 import yasithJayasundara from '../assets/yasith jayasundara.png';
 import arunaIsharaGamage from '../assets/aruna ishara gamage.jpg';
-import nushkanNismi from '../assets/Mr. Nushkan Nismi-W2da3Fhl.png';
 
 const developers = [
   { name: 'Uvindu Mendis', image: uvinduMendis },
@@ -20,7 +19,6 @@ const developers = [
 
 const supervisors = [
   { name: 'Mr. Aruna Ishara Gamage', image: arunaIsharaGamage },
-  { name: 'Mr. Nushkan Nisme', image: nushkanNismi },
 ];
 
 const PersonCard = ({ name, image, featured = false }) => (
@@ -73,7 +71,7 @@ const About = () => {
             {t('supervisedBy')}
           </h2>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 max-w-3xl mx-auto">
+        <div className="flex justify-center max-w-xs mx-auto">
           {supervisors.map((sup) => (
             <PersonCard key={sup.name} name={sup.name} image={sup.image} featured />
           ))}
