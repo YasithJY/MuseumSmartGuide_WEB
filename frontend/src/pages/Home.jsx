@@ -62,7 +62,8 @@ const Home = () => {
             National Museum of Sri Lanka
           </span>
           <h1 className="font-display font-bold text-3xl sm:text-5xl lg:text-6xl text-parchment leading-tight tracking-wide">
-            {t('welcome')}
+            <span className="block">{t('welcomeLine1')}</span>
+            <span className="block">{t('welcomeLine2')}</span>
           </h1>
           <p className="max-w-2xl mx-auto text-xs sm:text-base text-stone-300 font-light leading-relaxed">
             {t('heroSubtitle')}
