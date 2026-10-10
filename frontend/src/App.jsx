@@ -7,6 +7,7 @@ import Museums from './pages/Museums';
 import Gallery from './pages/Gallery';
 import Exhibit from './pages/Exhibit';
 import Search from './pages/Search';
+import About from './pages/About';
 import Login from './pages/Login';
 import AdminLogin from './pages/AdminLogin';
 import Register from './pages/Register';
@@ -32,6 +33,7 @@ function App() {
             <Route path="/gallery/:id" element={<Gallery />} />
             <Route path="/exhibit/:id" element={<Exhibit />} />
             <Route path="/search" element={<Search />} />
+            <Route path="/about" element={<About />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/scan" element={<ScanPage />} />

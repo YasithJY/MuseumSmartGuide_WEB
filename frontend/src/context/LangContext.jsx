@@ -36,7 +36,11 @@ const translations = {
     myFavourites: "My Saved Favourites",
     visitHistory: "My Visit History",
     highContrast: "High Contrast Mode",
-    largeText: "Large Text Mode"
+    largeText: "Large Text Mode",
+    aboutUs: "About Us",
+    aboutUsSubtitle: "The team behind Museum 150 Smart Guide, built to bring Sri Lanka's national heritage to life through technology.",
+    developedBy: "Developed By",
+    supervisedBy: "Supervised By"
   },
   si: {
     title: "කෞතුකාගාර 150 ස්මාර්ට් මාර්ගෝපදේශය",
@@ -71,7 +75,11 @@ const translations = {
     myFavourites: "මගේ ප්‍රියතම එකතුව",
     visitHistory: "නැරඹුම් ඉතිහාසය",
     highContrast: "ඉහළ ප්‍රතිභේදනය",
-    largeText: "විශාල අකුරු ප්‍රකාරය"
+    largeText: "විශාල අකුරු ප්‍රකාරය",
+    aboutUs: "අප ගැන",
+    aboutUsSubtitle: "තාක්ෂණය තුළින් ශ්‍රී ලංකාවේ ජාතික උරුමය ජීවමාන කිරීම සඳහා නිර්මාණය කළ කෞතුකාගාර 150 ස්මාර්ට් මාර්ගෝපදේශය පිටුපස සිටින කණ්ඩායම.",
+    developedBy: "නිර්මාණය කළේ",
+    supervisedBy: "අධීක්ෂණය කළේ"
   },
   ta: {
     title: "அருங்காட்சியகம் 150 ஸ்மார்ட் வழிகாட்டி",
@@ -106,7 +114,11 @@ const translations = {
     myFavourites: "என் பிடித்தவை",
     visitHistory: "விஜய வரலாறு",
     highContrast: "உயர் மாறுபாடு",
-    largeText: "பெரிய உரை பயன்முறை"
+    largeText: "பெரிய உரை பயன்முறை",
+    aboutUs: "எங்களை பற்றி",
+    aboutUsSubtitle: "தொழில்நுட்பத்தின் மூலம் இலங்கையின் தேசிய பாரம்பரியத்தை உயிர்ப்பிக்க உருவாக்கப்பட்ட அருங்காட்சியகம் 150 ஸ்மார்ட் வழிகாட்டிக்குப் பின்னால் உள்ள குழு.",
+    developedBy: "உருவாக்கியவர்கள்",
+    supervisedBy: "மேற்பார்வையாளர்கள்"
   }
 };
 

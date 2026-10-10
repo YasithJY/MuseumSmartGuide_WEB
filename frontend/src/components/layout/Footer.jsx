@@ -1,4 +1,5 @@
 import React, { useContext } from 'react';
+import { Link } from 'react-router-dom';
 import { LangContext } from '../../context/LangContext';
 import { MdLocationOn, MdPhone, MdPublic, MdEmail } from 'react-icons/md';
 import { FaFacebook, FaTwitter } from 'react-icons/fa';
@@ -22,6 +23,9 @@ const Footer = () => {
           <p className="text-xs text-stone-400 flex items-center">
             <MdLocationOn className="mr-1 text-gold" /> Sir Marcus Fernando Mawatha, Colombo 07
           </p>
+          <Link to="/about" className="inline-block text-xs text-gold font-semibold hover:underline">
+            {t('aboutUs')}
+          </Link>
         </div>
 
         {/* Opening Hours Column */}

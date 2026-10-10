@@ -51,7 +51,8 @@ const Navbar = () => {
             <Link to="/museums" className="hover:text-gold transition-colors font-medium">{t('museums')}</Link>
             <Link to="/search" className="hover:text-gold transition-colors font-medium">{t('search')}</Link>
             <Link to="/quiz" className="hover:text-gold transition-colors font-medium">{t('quiz')}</Link>
-            
+            <Link to="/about" className="hover:text-gold transition-colors font-medium">{t('aboutUs')}</Link>
+
             {(user || guestMode) ? (
               <Link to="/profile" className="hover:text-gold transition-colors font-medium">{t('profile')}</Link>
             ) : (
@@ -121,7 +122,8 @@ const Navbar = () => {
           <Link to="/museums" onClick={() => setMobileMenuOpen(false)} className="py-2 border-b border-stone-800 text-parchment hover:text-gold">{t('museums')}</Link>
           <Link to="/search" onClick={() => setMobileMenuOpen(false)} className="py-2 border-b border-stone-800 text-parchment hover:text-gold">{t('search')}</Link>
           <Link to="/quiz" onClick={() => setMobileMenuOpen(false)} className="py-2 border-b border-stone-800 text-parchment hover:text-gold">{t('quiz')}</Link>
-          
+          <Link to="/about" onClick={() => setMobileMenuOpen(false)} className="py-2 border-b border-stone-800 text-parchment hover:text-gold">{t('aboutUs')}</Link>
+
           {(user || guestMode) ? (
             <Link to="/profile" onClick={() => setMobileMenuOpen(false)} className="py-2 border-b border-stone-800 text-parchment hover:text-gold">{t('profile')}</Link>
           ) : (
