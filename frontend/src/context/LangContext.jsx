@@ -40,7 +40,9 @@ const translations = {
     aboutUs: "About Us",
     aboutUsSubtitle: "The team behind Museum 150 Smart Guide, built to bring Sri Lanka's national heritage to life through technology.",
     developedBy: "Developed By",
-    supervisedBy: "Supervised By"
+    supervisedBy: "Supervised By",
+    contactUsTitle: "Contact Us",
+    contactUsSubtitle: "Need something like this built for your own museum or organization? Get in touch with us.",
   },
   si: {
     title: "කෞතුකාගාර 150 ස්මාර්ට් මාර්ගෝපදේශය",
@@ -79,7 +81,9 @@ const translations = {
     aboutUs: "අප ගැන",
     aboutUsSubtitle: "තාක්ෂණය තුළින් ශ්‍රී ලංකාවේ ජාතික උරුමය ජීවමාන කිරීම සඳහා නිර්මාණය කළ කෞතුකාගාර 150 ස්මාර්ට් මාර්ගෝපදේශය පිටුපස සිටින කණ්ඩායම.",
     developedBy: "නිර්මාණය කළේ",
-    supervisedBy: "අධීක්ෂණය කළේ"
+    supervisedBy: "අධීක්ෂණය කළේ",
+    contactUsTitle: "අප අමතන්න",
+    contactUsSubtitle: "ඔබේ කෞතුකාගාරය හෝ ආයතනය සඳහා මෙවැනි පද්ධතියක් අවශ්‍යද? අප හා සම්බන්ධ වන්න.",
   },
   ta: {
     title: "அருங்காட்சியகம் 150 ஸ்மார்ட் வழிகாட்டி",
@@ -118,7 +122,9 @@ const translations = {
     aboutUs: "எங்களை பற்றி",
     aboutUsSubtitle: "தொழில்நுட்பத்தின் மூலம் இலங்கையின் தேசிய பாரம்பரியத்தை உயிர்ப்பிக்க உருவாக்கப்பட்ட அருங்காட்சியகம் 150 ஸ்மார்ட் வழிகாட்டிக்குப் பின்னால் உள்ள குழு.",
     developedBy: "உருவாக்கியவர்கள்",
-    supervisedBy: "மேற்பார்வையாளர்கள்"
+    supervisedBy: "மேற்பார்வையாளர்கள்",
+    contactUsTitle: "எங்களை தொடர்பு கொள்ளுங்கள்",
+    contactUsSubtitle: "உங்கள் அருங்காட்சியகம் அல்லது நிறுவனத்திற்கு இதுபோன்ற ஒன்றை உருவாக்க வேண்டுமா? எங்களை தொடர்பு கொள்ளுங்கள்.",
   }
 };
 

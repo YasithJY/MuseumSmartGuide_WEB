@@ -1,6 +1,8 @@
 import React, { useContext } from 'react';
 import { LangContext } from '../context/LangContext';
-import { MdGroups, MdSupervisorAccount } from 'react-icons/md';
+import { MdGroups, MdSupervisorAccount, MdEmail } from 'react-icons/md';
+
+const CONTACT_EMAIL = 'it22100498@my.sliit.lk';
 
 import uvinduMendis from '../assets/uvindu mendis.jpeg';
 import janithKavinda from '../assets/janith kavinda.jpeg';
@@ -75,6 +77,23 @@ const About = () => {
             <PersonCard key={sup.name} name={sup.name} image={sup.image} featured />
           ))}
         </div>
+      </section>
+
+      {/* Contact Us */}
+      <section className="text-center space-y-5 bg-primary/5 dark:bg-stone-800/40 border border-gold/30 rounded-xl py-10 px-6">
+        <h2 className="font-heading font-bold text-lg sm:text-xl text-primary dark:text-parchment uppercase tracking-widest">
+          {t('contactUsTitle')}
+        </h2>
+        <p className="max-w-xl mx-auto text-xs sm:text-sm text-stone-500 dark:text-stone-400">
+          {t('contactUsSubtitle')}
+        </p>
+        <a
+          href={`mailto:${CONTACT_EMAIL}`}
+          className="inline-flex items-center gap-2 bg-gold text-primary px-5 py-2.5 rounded-lg font-bold text-xs sm:text-sm uppercase hover:bg-yellow-600 transition-all shadow-md"
+        >
+          <MdEmail className="w-5 h-5" />
+          <span>{CONTACT_EMAIL}</span>
+        </a>
       </section>
     </div>
   );
