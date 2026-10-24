@@ -64,6 +64,8 @@ const SINHALA_AUDIO_BY_EXHIBIT_ID = {
   '65d75b0a66f50b2984950028': sinhalaAudioBisokotuwa, // Bisokotuwa
 };
 
+const NARRATION_BY_LANG = { ta: TAMIL_AUDIO_BY_EXHIBIT_ID, si: SINHALA_AUDIO_BY_EXHIBIT_ID };
+
 const LANGS = [
   { code: 'en', label: 'EN', full: 'English' },
   { code: 'si', label: 'සිං', full: 'Sinhala' },
@@ -256,6 +258,12 @@ const Exhibit = () => {
 
   const fallbackImg = 'https://images.unsplash.com/photo-1544644181-1484b3fdfc62?auto=format&fit=crop&q=80&w=800';
 
+  // Narration per language with no English fallback, so the AR viewer's
+  // language picker only offers languages that actually have a recording.
+  const narrationTracks = LANGS
+    .map(l => ({ ...l, src: l.code === 'en' ? exhibit.audioUrl : NARRATION_BY_LANG[l.code]?.[exhibit._id] }))
+    .filter(t => t.src);
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12">
 
@@ -371,9 +379,7 @@ const Exhibit = () => {
 
 
           {(() => {
-            const audioSrc = (displayLang === 'ta' && TAMIL_AUDIO_BY_EXHIBIT_ID[exhibit._id])
-              || (displayLang === 'si' && SINHALA_AUDIO_BY_EXHIBIT_ID[exhibit._id])
-              || exhibit.audioUrl;
+            const audioSrc = narrationTracks.find(t => t.code === displayLang)?.src || exhibit.audioUrl;
             return audioSrc && (
               <AudioPlayer
                 src={audioSrc}
@@ -490,6 +496,10 @@ const Exhibit = () => {
           modelUrl={exhibit.arModelUrl || arModel.glb}
           iosModelUrl={exhibit.arModelUrlIOS || (exhibit.arModelUrl ? undefined : arModel.usdz)}
           title={exhibit.title}
+          narration={narrationTracks}
+          lang={displayLang}
+          onLangChange={setDisplayLang}
+          narrationLabel={L.audioGuideNarrator}
           onClose={() => setArOpen(false)}
         />
         );

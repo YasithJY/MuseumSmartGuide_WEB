@@ -69,6 +69,8 @@ const AudioPlayer = ({ src, title, label = 'Audio Guide Narrator', overviewLabel
         src={src}
         onTimeUpdate={handleTimeUpdate}
         onLoadedMetadata={handleLoadedMetadata}
+        onPlay={() => setIsPlaying(true)}
+        onPause={() => setIsPlaying(false)}
         onEnded={() => setIsPlaying(false)}
       />
 
