@@ -5,7 +5,7 @@ import { LangContext } from '../context/LangContext';
 import { AuthContext } from '../context/AuthContext';
 import ExhibitCard from '../components/cards/ExhibitCard';
 import { MdSearch, MdQrCodeScanner, MdOutlineEventNote, MdOutlineAccountBalance, MdVolumeUp, MdVolumeOff } from 'react-icons/md';
-import heroVideo from '../assets/HeroAnimate.mp4';
+import heroVideo from '../assets/Heroanimateloop.mp4';
 import natureAudio from '../assets/audio/nature.mp3';
 
 const API = '/api';
