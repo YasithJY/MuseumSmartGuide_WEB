@@ -8,7 +8,7 @@ import uvinduMendis from '../assets/Uvindu induwara mendis.png';
 import janithKavinda from '../assets/janith kavinda.jpeg';
 import mithulaIlayperuma from '../assets/mithula ilayperuma.jpeg';
 import yasithJayasundara from '../assets/yasith jayasundara.png';
-import arunaIsharaGamage from '../assets/PHOTO MR ISHARA.jpg';
+import arunaIsharaGamage from '../assets/Aruna Ishara Gamage New.jpeg';
 
 const developers = [
   { name: 'Uvindu Mendis', image: uvinduMendis },
