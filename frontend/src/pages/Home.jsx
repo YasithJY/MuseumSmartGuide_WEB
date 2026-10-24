@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import { LangContext } from '../context/LangContext';
@@ -6,8 +6,10 @@ import { AuthContext } from '../context/AuthContext';
 import ExhibitCard from '../components/cards/ExhibitCard';
 import { MdSearch, MdQrCodeScanner, MdOutlineEventNote, MdOutlineAccountBalance } from 'react-icons/md';
 import heroVideo from '../assets/HeroAnimate.mp4';
+import natureAudio from '../assets/audio/nature.mp3';
 
 const API = '/api';
+const AMBIENT_VOLUME = 0.35;
 
 const Home = () => {
   const { t } = useContext(LangContext);
@@ -16,6 +18,36 @@ const Home = () => {
   const [featuredExhibits, setFeaturedExhibits] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const ambientRef = useRef(null);
+
+  // Ambient background sound — only on the landing page. The <audio>
+  // element unmounts with this page, which stops playback on navigation.
+  useEffect(() => {
+    const audio = ambientRef.current;
+    if (!audio) return;
+    audio.volume = AMBIENT_VOLUME;
+
+    const tryPlay = () => audio.play().catch(() => {});
+    tryPlay();
+
+    // Browsers block autoplay with sound until the user interacts with the
+    // page — retry once on the first interaction so it still starts softly.
+    const resumeOnInteraction = () => {
+      tryPlay();
+      window.removeEventListener('click', resumeOnInteraction);
+      window.removeEventListener('touchstart', resumeOnInteraction);
+      window.removeEventListener('keydown', resumeOnInteraction);
+    };
+    window.addEventListener('click', resumeOnInteraction);
+    window.addEventListener('touchstart', resumeOnInteraction);
+    window.addEventListener('keydown', resumeOnInteraction);
+
+    return () => {
+      window.removeEventListener('click', resumeOnInteraction);
+      window.removeEventListener('touchstart', resumeOnInteraction);
+      window.removeEventListener('keydown', resumeOnInteraction);
+    };
+  }, []);
 
   useEffect(() => {
     const fetchRecent = async () => {
@@ -43,6 +75,8 @@ const Home = () => {
 
   return (
     <div className="space-y-16">
+      <audio ref={ambientRef} src={natureAudio} loop />
+
       {/* Premium Hero Banner */}
       <section className="relative min-h-[calc(100vh-66px)] flex items-center justify-center text-center px-4 bg-primary text-parchment overflow-hidden border-b-4 border-gold">
         <video
