@@ -74,9 +74,9 @@ const Home = () => {
   };
 
   return (
-    <div className="space-y-16">
+    <>
       <audio ref={ambientRef} src={natureAudio} loop />
-
+    <div className="space-y-16">
       {/* Premium Hero Banner */}
       <section className="relative min-h-[calc(100vh-66px)] flex items-center justify-center text-center px-4 bg-primary text-parchment overflow-hidden border-b-4 border-gold">
         <video
@@ -232,6 +232,7 @@ const Home = () => {
         </div>
       </section>
     </div>
+    </>
   );
 };
 
