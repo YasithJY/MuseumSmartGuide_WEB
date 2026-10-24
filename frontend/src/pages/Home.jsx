@@ -4,7 +4,7 @@ import axios from 'axios';
 import { LangContext } from '../context/LangContext';
 import { AuthContext } from '../context/AuthContext';
 import ExhibitCard from '../components/cards/ExhibitCard';
-import { MdSearch, MdQrCodeScanner, MdOutlineEventNote, MdOutlineAccountBalance } from 'react-icons/md';
+import { MdSearch, MdQrCodeScanner, MdOutlineEventNote, MdOutlineAccountBalance, MdVolumeUp, MdVolumeOff } from 'react-icons/md';
 import heroVideo from '../assets/HeroAnimate.mp4';
 import natureAudio from '../assets/audio/nature.mp3';
 
@@ -19,6 +19,7 @@ const Home = () => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const ambientRef = useRef(null);
+  const [isMuted, setIsMuted] = useState(false);
 
   // Ambient background sound — only on the landing page. The <audio>
   // element unmounts with this page, which stops playback on navigation.
@@ -66,6 +67,15 @@ const Home = () => {
     fetchRecent();
   }, []);
 
+  const toggleSound = () => {
+    const audio = ambientRef.current;
+    if (!audio) return;
+    const nextMuted = !isMuted;
+    audio.muted = nextMuted;
+    setIsMuted(nextMuted);
+    if (!nextMuted) audio.play().catch(() => {});
+  };
+
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     if (searchQuery.trim()) {
@@ -76,6 +86,15 @@ const Home = () => {
   return (
     <>
       <audio ref={ambientRef} src={natureAudio} loop />
+
+      <button
+        onClick={toggleSound}
+        aria-label={isMuted ? 'Unmute background sound' : 'Mute background sound'}
+        title={isMuted ? 'Unmute background sound' : 'Mute background sound'}
+        className="fixed bottom-6 right-6 z-50 w-12 h-12 rounded-full bg-primary text-gold border-2 border-gold shadow-lg flex items-center justify-center hover:bg-stone-800 hover:scale-105 transition-all"
+      >
+        {isMuted ? <MdVolumeOff className="w-6 h-6" /> : <MdVolumeUp className="w-6 h-6" />}
+      </button>
     <div className="space-y-16">
       {/* Premium Hero Banner */}
       <section className="relative min-h-[calc(100vh-66px)] flex items-center justify-center text-center px-4 bg-primary text-parchment overflow-hidden border-b-4 border-gold">
@@ -92,9 +111,6 @@ const Home = () => {
         <div className="absolute inset-0 bg-gradient-to-t from-primary via-primary/70 to-transparent z-0"></div>
 
         <div className="relative z-10 max-w-4xl mx-auto space-y-6">
-          <span className="text-xs sm:text-sm tracking-widest font-display italic font-semibold text-gold gold-text-glow">
-            National Museum of Sri Lanka
-          </span>
           <h1 className="font-display font-bold text-3xl sm:text-5xl lg:text-6xl text-parchment leading-tight tracking-wide">
             <span className="block">{t('welcomeLine1')}</span>
             <span className="block">{t('welcomeLine2')}</span>
