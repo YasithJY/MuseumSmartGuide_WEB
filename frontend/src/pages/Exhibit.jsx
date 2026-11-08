@@ -34,7 +34,7 @@ const AR_MODEL_BY_EXHIBIT_ID = {
   '65d75b0a66f50b2984950022': { glb: `${R2_MODELS_BASE}/athpahana.glb`, usdz: `${R2_MODELS_BASE}/athpahana.usdz` }, // Elephant Lamp (Ath Pahana)
   '65d75b0a66f50b2984950023': { glb: `${R2_MODELS_BASE}/Jethawanaramaya.glb`, usdz: `${R2_MODELS_BASE}/Jethawanaramaya.usdz` }, // Jetavana Stupa (Jethawanarama)
   '65d75b0a66f50b2984950024': { glb: `${R2_MODELS_BASE}/sigiriya_1.glb`, usdz: `${R2_MODELS_BASE}/sigiriya_1.usdz` }, // Sigiriya
-  '65d75b0a66f50b2984950029': { glb: `${R2_MODELS_BASE}/nadungamuwa-raja.glb` }, // Nadungamuwa Raja — animated walk cycle; no USDZ, so iOS Quick Look builds a static one
+  '65d75b0a66f50b2984950029': { glb: `${R2_MODELS_BASE}/nadungamuwa-raja.glb`, usdz: `${R2_MODELS_BASE}/nadungamuwa-raja.usdz` }, // Nadungamuwa Raja (animated walk cycle in both files)
   '65d75b0a66f50b298495002a': { glb: `${R2_MODELS_BASE}/isurumuni.glb`, usdz: `${R2_MODELS_BASE}/isurumuni.usdz` }, // Isurumuniya Lovers
   '65d75b0a66f50b298495002b': { glb: `${R2_MODELS_BASE}/muragala.glb`, usdz: `${R2_MODELS_BASE}/muragala.usdz` }, // Nagaraja Guardstone
   '65d75b0a66f50b298495002c': { glb: `${R2_MODELS_BASE}/Parakramabahu.glb`, usdz: `${R2_MODELS_BASE}/parakramabahu.usdz` }, // Statue of King Parakramabahu

@@ -40,6 +40,7 @@ const MUSEUM_NAMES = { colombo: 'National Museum of Colombo', polonnaruwa: 'Polo
 // frontend's AR_MODEL_BY_EXHIBIT_ID (pages/Exhibit.jsx) expects these names.
 const MODEL_FILES = [
   ['Nadungamuwa Raja/nadungamuwa-raja.glb', 'nadungamuwa-raja.glb'],
+  ['Nadungamuwa Raja/nadungamuwa-raja.usdz', 'nadungamuwa-raja.usdz'],
   ['Isurumuni Pem Yuwala/isurumuni.glb', 'isurumuni.glb'],
   ['Isurumuni Pem Yuwala/isurumuni.usdz', 'isurumuni.usdz'],
   ['Muragala/muragala.glb', 'muragala.glb'],
