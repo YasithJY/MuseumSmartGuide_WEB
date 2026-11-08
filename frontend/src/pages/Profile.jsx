@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState, useCallback } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
+import { uploadMedia } from '../utils/uploadMedia';
 import { LangContext } from '../context/LangContext';
 import {
   MdOutlineCardMembership, MdBookmark, MdHistory, MdEdit,
@@ -149,13 +150,9 @@ const Profile = () => {
 
   // ── Upload avatar ─────────────────────────────────────────────────────────────
   const handleAvatarUpload = async (file) => {
-    const formData = new FormData();
-    formData.append('image', file);
     setUploadingImg(true);
     try {
-      const { data } = await axios.post(`${API}/media/upload`, formData, {
-        headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'multipart/form-data' }
-      });
+      const data = await uploadMedia(file, token);
       const url = data.url || data.data?.url || '';
       if (url) setEditImage(url);
     } catch { /* ignore */ }

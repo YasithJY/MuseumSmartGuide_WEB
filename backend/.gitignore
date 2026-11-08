@@ -12,3 +12,6 @@ node_modules
 !.vscode/extensions.json
 .idea
 .DS_Store
+
+# Vercel build output (copy of uploads/)
+public

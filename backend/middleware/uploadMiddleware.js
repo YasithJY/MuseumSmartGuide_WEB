@@ -5,9 +5,14 @@ import { r2Enabled } from '../config/r2.js';
 
 const uploadDir = './uploads';
 
-// Ensure upload directory exists
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
+// Ensure upload directory exists. Serverless filesystems are read-only, so
+// never let this crash the app — on those hosts uploads go to R2 anyway.
+if (!r2Enabled && !fs.existsSync(uploadDir)) {
+  try {
+    fs.mkdirSync(uploadDir, { recursive: true });
+  } catch (error) {
+    console.warn(`Could not create ${uploadDir}: ${error.message}`);
+  }
 }
 
 // When R2 is configured, buffer the file in memory so the route handler can

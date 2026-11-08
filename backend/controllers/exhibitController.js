@@ -5,7 +5,12 @@ import VisitHistory from '../models/VisitHistory.js';
 import QRCode from 'qrcode';
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
 import { r2Enabled, uploadBufferToR2 } from '../config/r2.js';
+
+// backend/uploads, resolved from this file rather than the working directory,
+// which differs on serverless hosts.
+const UPLOADS_DIR = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'uploads');
 
 // The public URL visitors' QR scans should open. Must be overridden via
 // CLIENT_URL once deployed — otherwise every QR code would point at
@@ -229,7 +234,9 @@ export const downloadExhibitQR = async (req, res) => {
     res.setHeader('Content-Type', 'image/png');
     res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
 
-    if (r2Enabled) {
+    // Decide by the URL, not by whether R2 is configured: exhibits added by
+    // the heritage script keep their QR codes in /uploads even when R2 is on.
+    if (/^https?:\/\//.test(exhibit.qrCodeUrl)) {
       const r2Response = await fetch(exhibit.qrCodeUrl);
       if (!r2Response.ok) {
         return res.status(502).json({ success: false, message: 'Could not retrieve QR code from storage' });
@@ -237,7 +244,7 @@ export const downloadExhibitQR = async (req, res) => {
       const buffer = Buffer.from(await r2Response.arrayBuffer());
       res.send(buffer);
     } else {
-      const qrPath = path.join('uploads', path.basename(exhibit.qrCodeUrl));
+      const qrPath = path.join(UPLOADS_DIR, path.basename(exhibit.qrCodeUrl));
       if (!fs.existsSync(qrPath)) {
         return res.status(404).json({ success: false, message: 'QR code file not found' });
       }

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
+import { uploadMedia } from '../utils/uploadMedia';
 import {
   AreaChart, Area, BarChart, Bar, LineChart, Line,
   XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend, PieChart, Pie, Cell
@@ -361,14 +362,7 @@ const Dashboard = () => {
   const uploadImage = async (file, onSuccess) => {
     setUploadingImage(true);
     try {
-      const formData = new FormData();
-      formData.append('file', file);
-      const { data } = await axios.post(`${API}/media/upload`, formData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'multipart/form-data'
-        }
-      });
+      const data = await uploadMedia(file, token);
       if (data.success) {
         const fullUrl = data.url;
         onSuccess(fullUrl);
@@ -384,11 +378,7 @@ const Dashboard = () => {
   const uploadModel = async (file, onSuccess) => {
     setUploadingModel(true);
     try {
-      const formData = new FormData();
-      formData.append('file', file);
-      const { data } = await axios.post(`${API}/media/upload`, formData, {
-        headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'multipart/form-data' }
-      });
+      const data = await uploadMedia(file, token);
       if (data.success) {
         onSuccess(data.url);
         showToast('3D model uploaded successfully!');
@@ -403,11 +393,7 @@ const Dashboard = () => {
   const uploadModelIOS = async (file, onSuccess) => {
     setUploadingModelIOS(true);
     try {
-      const formData = new FormData();
-      formData.append('file', file);
-      const { data } = await axios.post(`${API}/media/upload`, formData, {
-        headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'multipart/form-data' }
-      });
+      const data = await uploadMedia(file, token);
       if (data.success) {
         onSuccess(data.url);
         showToast('USDZ model uploaded successfully!');
@@ -422,11 +408,7 @@ const Dashboard = () => {
   const uploadAudio = async (file, onSuccess) => {
     setUploadingAudio(true);
     try {
-      const formData = new FormData();
-      formData.append('file', file);
-      const { data } = await axios.post(`${API}/media/upload`, formData, {
-        headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'multipart/form-data' }
-      });
+      const data = await uploadMedia(file, token);
       if (data.success) {
         onSuccess(data.url);
         showToast('Audio uploaded successfully!');
