@@ -1,4 +1,4 @@
-"""Build compact Sri Lanka map data (coastline + hex elevation grid).
+"""Build compact Sri Lanka map data (coastline + smooth elevation heightmap).
 
 Usage: python3 -I build_map.py <download_dir> <out_json>
   download_dir must contain countries-10m.json (world-atlas) and tiles/t_X_Y.png
@@ -106,35 +106,41 @@ def elev(lon, lat):
     r, g, b = t[int(px % 256), int(py % 256)]
     return r * 256 + g + b / 256 - 32768
 
-# ---------- hex grid (pointy-top, axial coords) ----------
-R = 0.2  # hex circumradius in units (2 km)
-W = math.sqrt(3) * R
+# ---------- smooth heightmap (for the stylised, sculpted terrain) ----------
+STEP = 0.4  # grid spacing in units (4 km)
 xs = [p[0] for o in outlines for p in o]; ys = [p[1] for o in outlines for p in o]
-cells = []
-rmin, rmax = int(min(ys) / (1.5 * R)) - 2, int(max(ys) / (1.5 * R)) + 2
-for r in range(rmin, rmax + 1):
-    cy = r * 1.5 * R
-    qmin = int((min(xs) - r * W / 2) / W) - 2
-    qmax = int((max(xs) - r * W / 2) / W) + 2
-    for q in range(qmin, qmax + 1):
-        cx = q * W + r * W / 2
-        if not inside(cx, cy):
-            continue
-        samples = [(cx, cy)] + [(cx + 0.6 * R * math.cos(a), cy + 0.6 * R * math.sin(a))
-                                for a in (k * math.pi / 3 for k in range(6))]
+x0, y1 = min(xs) - STEP, max(ys) + STEP          # top-left corner (north-west)
+cols = int((max(xs) - x0) / STEP) + 2
+rows = int((y1 - min(ys)) / STEP) + 2
+grid = [[0.0] * cols for _ in range(rows)]
+for j in range(rows):
+    for i in range(cols):
+        cx, cy = x0 + i * STEP, y1 - j * STEP
+        samples = [(cx + dx * STEP / 3, cy + dy * STEP / 3) for dx in (-1, 0, 1) for dy in (-1, 0, 1)]
         e = sum(max(0, elev(*unproj(sx, sy))) for sx, sy in samples) / len(samples)
-        cells.extend([q, r, int(round(e))])
+        grid[j][i] = e if inside(cx, cy) else 0.0
+
+# gentle gaussian blur (sigma ~ 1 cell) so hills read as soft, rounded forms
+kernel = [math.exp(-(k * k) / 2.0) for k in range(-2, 3)]
+ks = sum(kernel)
+def blur(g):
+    h = [[sum(kernel[k + 2] * g[j][min(cols - 1, max(0, i + k))] for k in range(-2, 3)) / ks
+          for i in range(cols)] for j in range(rows)]
+    return [[sum(kernel[k + 2] * h[min(rows - 1, max(0, j + k))][i] for k in range(-2, 3)) / ks
+             for i in range(cols)] for j in range(rows)]
+grid = blur(grid)
 
 data = {
     'meta': {
         'unitKm': 10, 'lon0': LON0, 'lat0': LAT0, 'kx': round(KX, 6), 'ky': round(KY, 6),
-        'hexRadius': R,
         'source': 'Coastline: Natural Earth via world-atlas (public domain). '
                   'Elevation: AWS Terrain Tiles (Mapzen terrarium; SRTM et al.).',
     },
     'outlines': [[[round(x, 3), round(y, 3)] for x, y in o] for o in outlines],
-    'hexes': cells,
+    # metres, row-major from the north-west corner; y is north-up
+    'heightmap': {'x0': round(x0, 3), 'y0': round(y1, 3), 'step': STEP, 'cols': cols, 'rows': rows,
+                  'metres': [int(round(v)) for row in grid for v in row]},
 }
 json.dump(data, open(out, 'w'), separators=(',', ':'))
-print('outlines', [len(o) for o in outlines], 'hexes', len(cells) // 3,
-      'max elev', max(cells[2::3]), 'bytes', os.path.getsize(out))
+print('outlines', [len(o) for o in outlines], 'grid', cols, 'x', rows,
+      'max elev', max(data['heightmap']['metres']), 'bytes', os.path.getsize(out))

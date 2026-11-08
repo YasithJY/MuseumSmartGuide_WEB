@@ -16,21 +16,23 @@ import { MdAdd, MdRemove, MdCenterFocusStrong, MdClose, MdLocationOn, MdAccessTi
 import { ThemeContext } from '../../context/ThemeContext';
 import { LangContext } from '../../context/LangContext';
 import {
-  HEX_RADIUS,
-  SLAB_DEPTH,
-  hexes,
+  BEACH_Y,
+  WATER_Y,
+  LANDMARKS,
+  MAHAWELI,
+  buildTerrainGeometry,
   outlines,
-  graticule,
-  legendStops,
-  surfaceHeight,
+  scatterTrees,
+  terrainY,
   toScene,
 } from './islandData';
+import Sigiriya from './Sigiriya';
 
 const GOLD = '#C9A227';
 const DEFAULT_TARGET = new THREE.Vector3(0.7, 0, 3.5);
 const DEFAULT_POLAR = 0.86; // radians from straight-down
 const DEFAULT_AZIMUTH = 0.12;
-const PIN_SCALE = 2.6;
+const PIN_SCALE = 2.4;
 
 const prefersReducedMotion = () =>
   typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
@@ -61,109 +63,515 @@ const clampedLabelPosition = (el, camera, size) => {
 const museumName = (museum, lang) =>
   (lang !== 'en' && museum.translations?.[lang]?.name) || museum.name;
 
+const sceneAt = (lat, lng, lift = 0) => {
+  const { x, z } = toScene(lat, lng);
+  return [x, terrainY(x, z) + lift, z];
+};
+
 /* ------------------------------------------------------------------ */
 /* Scene pieces                                                        */
 /* ------------------------------------------------------------------ */
 
-function Island() {
-  const meshRef = useRef();
-
-  const hexGeometry = useMemo(() => {
-    const g = new THREE.CylinderGeometry(HEX_RADIUS * 0.985, HEX_RADIUS * 0.985, 1, 6);
-    g.translate(0, 0.5, 0); // base at y = 0 so scale.y = column height
-    return g;
-  }, []);
-
+// Sandy base (its sides dip under the sea) with the sculpted, painted land on top.
+function Island({ dark }) {
   const slabGeometry = useMemo(() => {
     const shapes = outlines.map((o) => new THREE.Shape(o.map(([x, y]) => new THREE.Vector2(x, y))));
+    const depth = 0.3;
+    const bevelThickness = 0.06;
     const g = new THREE.ExtrudeGeometry(shapes, {
-      depth: SLAB_DEPTH,
+      depth,
       bevelEnabled: true,
-      bevelThickness: 0.08,
-      bevelSize: 0.1,
-      bevelSegments: 2,
+      bevelThickness,
+      bevelSize: 0.12,
+      bevelSegments: 3,
       curveSegments: 1,
     });
     g.rotateX(-Math.PI / 2); // shape's +y (north) becomes -z, extrusion goes up
+    g.translate(0, BEACH_Y - depth - bevelThickness, 0);
     return g;
   }, []);
-
-  useLayoutEffect(() => {
-    const mesh = meshRef.current;
-    const dummy = new THREE.Object3D();
-    hexes.forEach((h, i) => {
-      dummy.position.set(h.x, SLAB_DEPTH, h.z);
-      dummy.scale.set(1, h.height, 1);
-      dummy.updateMatrix();
-      mesh.setMatrixAt(i, dummy.matrix);
-      mesh.setColorAt(i, h.color);
-    });
-    mesh.instanceMatrix.needsUpdate = true;
-    mesh.instanceColor.needsUpdate = true;
-    mesh.computeBoundingSphere();
-  }, []);
+  const terrainGeometry = useMemo(buildTerrainGeometry, []);
 
   useEffect(() => () => {
-    hexGeometry.dispose();
     slabGeometry.dispose();
-  }, [hexGeometry, slabGeometry]);
+    terrainGeometry.dispose();
+  }, [slabGeometry, terrainGeometry]);
 
   return (
     <group>
-      <mesh geometry={slabGeometry} castShadow receiveShadow>
-        <meshStandardMaterial color="#e6d6b0" roughness={0.95} />
+      <mesh geometry={slabGeometry} receiveShadow>
+        <meshStandardMaterial color={dark ? '#c2ad84' : '#efdcab'} roughness={1} />
       </mesh>
-      <instancedMesh ref={meshRef} args={[hexGeometry, undefined, hexes.length]} castShadow receiveShadow>
-        <meshStandardMaterial roughness={0.8} />
+      <mesh geometry={terrainGeometry} castShadow receiveShadow>
+        <meshStandardMaterial vertexColors roughness={0.95} />
+      </mesh>
+    </group>
+  );
+}
+
+/* ---- sea: lagoon colours, rolling surf lines and shore foam, fading into the page ---- */
+
+const SEA_SIZE = 140;
+const SEA_CENTER_X = 1;
+const SEA_CENTER_Z = 0;
+const SEA_RES = 1024;
+const SEA_RANGE = 16; // units of coast distance stored in the texture
+
+// Rasterises the coast and runs a chamfer distance transform: each texel = distance to land.
+const buildCoastDistanceTexture = () => {
+  const N = SEA_RES;
+  const scale = N / SEA_SIZE;
+  const canvas = document.createElement('canvas');
+  canvas.width = N;
+  canvas.height = N;
+  const ctx = canvas.getContext('2d');
+  // canvas row 0 = south edge, matching the plane's uv.y = 0
+  const px = (x) => (x - SEA_CENTER_X + SEA_SIZE / 2) * scale;
+  const py = (yNorth) => (yNorth + SEA_CENTER_Z + SEA_SIZE / 2) * scale;
+  ctx.fillStyle = '#fff';
+  outlines.forEach((o) => {
+    ctx.beginPath();
+    o.forEach(([x, y], k) => (k ? ctx.lineTo(px(x), py(y)) : ctx.moveTo(px(x), py(y))));
+    ctx.closePath();
+    ctx.fill();
+  });
+  const img = ctx.getImageData(0, 0, N, N).data;
+  const d = new Float32Array(N * N);
+  for (let k = 0; k < N * N; k++) d[k] = img[k * 4 + 3] > 127 ? 0 : 1e9;
+  const D = Math.SQRT2;
+  for (let j = 0; j < N; j++) {
+    for (let i = 0; i < N; i++) {
+      const k = j * N + i;
+      let v = d[k];
+      if (v === 0) continue;
+      if (i > 0) v = Math.min(v, d[k - 1] + 1);
+      if (j > 0) {
+        v = Math.min(v, d[k - N] + 1);
+        if (i > 0) v = Math.min(v, d[k - N - 1] + D);
+        if (i < N - 1) v = Math.min(v, d[k - N + 1] + D);
+      }
+      d[k] = v;
+    }
+  }
+  for (let j = N - 1; j >= 0; j--) {
+    for (let i = N - 1; i >= 0; i--) {
+      const k = j * N + i;
+      let v = d[k];
+      if (v === 0) continue;
+      if (i < N - 1) v = Math.min(v, d[k + 1] + 1);
+      if (j < N - 1) {
+        v = Math.min(v, d[k + N] + 1);
+        if (i < N - 1) v = Math.min(v, d[k + N + 1] + D);
+        if (i > 0) v = Math.min(v, d[k + N - 1] + D);
+      }
+      d[k] = v;
+    }
+  }
+  const out = new Uint8Array(N * N);
+  for (let k = 0; k < N * N; k++) {
+    const units = Math.max(0, d[k] - 0.5) / scale;
+    out[k] = Math.min(255, Math.round((units / SEA_RANGE) * 255));
+  }
+  const tex = new THREE.DataTexture(out, N, N, THREE.RedFormat, THREE.UnsignedByteType);
+  tex.magFilter = THREE.LinearFilter;
+  tex.minFilter = THREE.LinearFilter;
+  tex.generateMipmaps = false;
+  tex.needsUpdate = true;
+  return tex;
+};
+
+const SEA_VERTEX = /* glsl */ `
+  varying vec2 vUv;
+  void main() {
+    vUv = uv;
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+  }
+`;
+
+const SEA_FRAGMENT = /* glsl */ `
+  uniform sampler2D uDist;
+  uniform float uTime;
+  uniform float uRange;
+  uniform vec3 uShallow;
+  uniform vec3 uMid;
+  uniform vec3 uDeep;
+  uniform vec3 uFoam;
+  uniform float uFoamStrength;
+  varying vec2 vUv;
+
+  void main() {
+    float d = texture2D(uDist, vUv).r * uRange;
+
+    vec3 col = mix(uShallow, uMid, smoothstep(0.15, 2.0, d));
+    col = mix(col, uDeep, smoothstep(1.8, 10.0, d));
+
+    // soft surf lines rolling in towards the beach
+    float w = fract(d * 0.85 + uTime * 0.1);
+    float surf = smoothstep(0.0, 0.05, w) * (1.0 - smoothstep(0.05, 0.16, w));
+    surf *= (1.0 - smoothstep(0.3, 2.6, d)) * smoothstep(0.15, 0.35, d);
+    col = mix(col, uFoam, surf * 0.4 * uFoamStrength);
+
+    // lacy foam hugging the shore
+    float wobble = 0.05 * sin(uTime * 1.1 + vUv.x * 420.0) * sin(vUv.y * 380.0 - uTime * 0.7);
+    float shore = 1.0 - smoothstep(0.12, 0.32, d + wobble);
+    col = mix(col, uFoam, shore * 0.85 * uFoamStrength);
+
+    // faint shimmer on open water
+    col += sin(vUv.x * 900.0 + uTime * 0.6) * sin(vUv.y * 820.0 - uTime * 0.5) * 0.012;
+
+    // vignette: the sea melts into the page like an illustrated chart
+    float r = length((vUv - 0.5) * vec2(1.3, 1.0)) * 2.0;
+    float alpha = 1.0 - smoothstep(0.42, 0.9, r);
+
+    gl_FragColor = vec4(col, alpha);
+    #include <tonemapping_fragment>
+    #include <colorspace_fragment>
+  }
+`;
+
+const SEA_COLORS = {
+  light: { shallow: '#9fe0d2', mid: '#5fb8c4', deep: '#3d8fae', foam: '#ffffff', foamStrength: 1 },
+  dark: { shallow: '#2f7d7d', mid: '#1f5a6b', deep: '#173f55', foam: '#cfe6e4', foamStrength: 0.55 },
+};
+
+function Sea({ dark, still }) {
+  const material = useMemo(
+    () =>
+      new THREE.ShaderMaterial({
+        vertexShader: SEA_VERTEX,
+        fragmentShader: SEA_FRAGMENT,
+        transparent: true,
+        depthWrite: false,
+        uniforms: {
+          uDist: { value: buildCoastDistanceTexture() },
+          uTime: { value: 0 },
+          uRange: { value: SEA_RANGE },
+          uShallow: { value: new THREE.Color() },
+          uMid: { value: new THREE.Color() },
+          uDeep: { value: new THREE.Color() },
+          uFoam: { value: new THREE.Color() },
+          uFoamStrength: { value: 1 },
+        },
+      }),
+    []
+  );
+
+  useEffect(() => {
+    const c = SEA_COLORS[dark ? 'dark' : 'light'];
+    const u = material.uniforms;
+    u.uShallow.value.set(c.shallow);
+    u.uMid.value.set(c.mid);
+    u.uDeep.value.set(c.deep);
+    u.uFoam.value.set(c.foam);
+    u.uFoamStrength.value = c.foamStrength;
+  }, [dark, material]);
+
+  useEffect(() => () => {
+    material.uniforms.uDist.value.dispose();
+    material.dispose();
+  }, [material]);
+
+  useFrame(({ clock }) => {
+    if (!still) material.uniforms.uTime.value = clock.getElapsedTime();
+  });
+
+  return (
+    <mesh rotation-x={-Math.PI / 2} position={[SEA_CENTER_X, WATER_Y, SEA_CENTER_Z]} material={material} renderOrder={-1}>
+      <planeGeometry args={[SEA_SIZE, SEA_SIZE]} />
+    </mesh>
+  );
+}
+
+/* ---- low-poly forests ---- */
+
+function Trees({ keepClear }) {
+  const { broadleaf, pines } = useMemo(() => scatterTrees(keepClear), [keepClear]);
+  const canopyRef = useRef();
+  const pineRef = useRef();
+  const trunkRef = useRef();
+
+  const geometries = useMemo(() => {
+    const canopy = new THREE.IcosahedronGeometry(0.22, 0);
+    canopy.translate(0, 0.32, 0);
+    const pine = new THREE.ConeGeometry(0.15, 0.52, 6);
+    pine.translate(0, 0.32, 0);
+    const trunk = new THREE.CylinderGeometry(0.022, 0.032, 0.16, 5);
+    trunk.translate(0, 0.08, 0);
+    return { canopy, pine, trunk };
+  }, []);
+
+  useLayoutEffect(() => {
+    const dummy = new THREE.Object3D();
+    const place = (t) => {
+      dummy.position.set(t.x, t.y - 0.02, t.z);
+      dummy.rotation.set(0, t.rot, 0);
+      dummy.scale.setScalar(t.scale);
+      dummy.updateMatrix();
+    };
+    broadleaf.forEach((t, i) => {
+      place(t);
+      canopyRef.current.setMatrixAt(i, dummy.matrix);
+      canopyRef.current.setColorAt(i, t.color);
+      trunkRef.current.setMatrixAt(i, dummy.matrix);
+    });
+    pines.forEach((t, i) => {
+      place(t);
+      pineRef.current.setMatrixAt(i, dummy.matrix);
+      pineRef.current.setColorAt(i, t.color);
+      trunkRef.current.setMatrixAt(broadleaf.length + i, dummy.matrix);
+    });
+    [canopyRef, pineRef, trunkRef].forEach(({ current }) => {
+      current.instanceMatrix.needsUpdate = true;
+      if (current.instanceColor) current.instanceColor.needsUpdate = true;
+      current.computeBoundingSphere();
+    });
+  }, [broadleaf, pines]);
+
+  useEffect(() => () => Object.values(geometries).forEach((g) => g.dispose()), [geometries]);
+
+  return (
+    <group>
+      <instancedMesh key={`c${broadleaf.length}`} ref={canopyRef} args={[geometries.canopy, undefined, broadleaf.length]} castShadow receiveShadow>
+        <meshStandardMaterial flatShading roughness={0.85} />
+      </instancedMesh>
+      <instancedMesh key={`p${pines.length}`} ref={pineRef} args={[geometries.pine, undefined, pines.length]} castShadow receiveShadow>
+        <meshStandardMaterial flatShading roughness={0.85} />
+      </instancedMesh>
+      <instancedMesh key={`t${broadleaf.length + pines.length}`} ref={trunkRef} args={[geometries.trunk, undefined, broadleaf.length + pines.length]} castShadow>
+        <meshStandardMaterial color="#7a5537" roughness={1} />
       </instancedMesh>
     </group>
   );
 }
 
-function Graticule({ dark, portal }) {
+/* ---- the Mahaweli, draped over the hills ---- */
+
+function River({ dark }) {
   const geometry = useMemo(() => {
-    const { lats, lngs, latRange, lngRange } = graticule;
-    const pts = [];
-    lats.forEach((lat) => {
-      const a = toScene(lat, lngRange[0]);
-      const b = toScene(lat, lngRange[1]);
-      pts.push(a.x, 0.01, a.z, b.x, 0.01, b.z);
+    const points = MAHAWELI.map(([lat, lng]) => {
+      const p = toScene(lat, lng);
+      return new THREE.Vector3(p.x, 0, p.z);
     });
-    lngs.forEach((lng) => {
-      const a = toScene(latRange[0], lng);
-      const b = toScene(latRange[1], lng);
-      pts.push(a.x, 0.01, a.z, b.x, 0.01, b.z);
-    });
+    const curve = new THREE.CatmullRomCurve3(points, false, 'centripetal');
+    const N = 320;
+    const pos = [];
+    const index = [];
+    for (let k = 0; k <= N; k++) {
+      const t = k / N;
+      const p = curve.getPoint(t);
+      const tan = curve.getTangent(t);
+      const len = Math.hypot(tan.x, tan.z) || 1;
+      const nx = -tan.z / len;
+      const nz = tan.x / len;
+      const half = 0.035 + 0.07 * t; // widens towards the sea
+      [-1, 1].forEach((s) => {
+        const x = p.x + nx * half * s;
+        const z = p.z + nz * half * s;
+        pos.push(x, terrainY(x, z) + 0.05, z);
+      });
+      if (k < N) index.push(2 * k, 2 * k + 2, 2 * k + 1, 2 * k + 1, 2 * k + 2, 2 * k + 3);
+    }
     const g = new THREE.BufferGeometry();
-    g.setAttribute('position', new THREE.Float32BufferAttribute(pts, 3));
+    g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+    g.setIndex(index);
+    g.computeVertexNormals();
     return g;
   }, []);
 
-  const labelClass = `text-[10px] font-heading tracking-widest select-none whitespace-nowrap ${
-    dark ? 'text-stone-500' : 'text-accent/70'
-  }`;
+  useEffect(() => () => geometry.dispose(), [geometry]);
 
   return (
-    <group>
-      <lineSegments geometry={geometry}>
-        <lineBasicMaterial color={dark ? '#a8a29e' : '#8d6e63'} transparent opacity={dark ? 0.16 : 0.26} />
-      </lineSegments>
-      {graticule.lats.map((lat) => {
-        const p = toScene(lat, graticule.lngRange[0]);
-        return (
-          <Html key={`lat${lat}`} position={[p.x - 0.8, 0.02, p.z]} center portal={portal} zIndexRange={[5, 0]} style={{ pointerEvents: 'none' }}>
-            <span className={labelClass}>{lat}°N</span>
-          </Html>
-        );
-      })}
-      {graticule.lngs.map((lng) => {
-        const p = toScene(graticule.latRange[0], lng);
-        return (
-          <Html key={`lng${lng}`} position={[p.x, 0.02, p.z + 0.8]} center portal={portal} zIndexRange={[5, 0]} style={{ pointerEvents: 'none' }}>
-            <span className={labelClass}>{lng}°E</span>
-          </Html>
-        );
-      })}
+    <mesh geometry={geometry} receiveShadow>
+      <meshStandardMaterial
+        color={dark ? '#3f8fa6' : '#5bb3cc'}
+        roughness={0.3}
+        side={THREE.DoubleSide}
+        polygonOffset
+        polygonOffsetFactor={-2}
+      />
+    </mesh>
+  );
+}
+
+/* ---- little heritage landmarks ---- */
+
+const STONE = '#efe9dc';
+
+function Stupa() {
+  return (
+    <group scale={2.3}>
+      <mesh position-y={0.03} castShadow receiveShadow>
+        <cylinderGeometry args={[0.34, 0.36, 0.06, 32]} />
+        <meshStandardMaterial color="#d9cfbb" roughness={0.9} />
+      </mesh>
+      <mesh position-y={0.085} castShadow>
+        <cylinderGeometry args={[0.28, 0.29, 0.05, 32]} />
+        <meshStandardMaterial color={STONE} roughness={0.8} />
+      </mesh>
+      <mesh position-y={0.11} scale={[1, 0.95, 1]} castShadow>
+        <sphereGeometry args={[0.26, 32, 16, 0, Math.PI * 2, 0, Math.PI / 2]} />
+        <meshStandardMaterial color={STONE} roughness={0.6} />
+      </mesh>
+      <mesh position-y={0.4} castShadow>
+        <boxGeometry args={[0.09, 0.07, 0.09]} />
+        <meshStandardMaterial color={STONE} roughness={0.7} />
+      </mesh>
+      <mesh position-y={0.55} castShadow>
+        <coneGeometry args={[0.045, 0.26, 12]} />
+        <meshStandardMaterial color={GOLD} metalness={0.4} roughness={0.35} />
+      </mesh>
+    </group>
+  );
+}
+
+function Lighthouse({ dark }) {
+  return (
+    <group scale={2.3}>
+      <mesh position-y={0.25} castShadow>
+        <cylinderGeometry args={[0.055, 0.085, 0.5, 14]} />
+        <meshStandardMaterial color="#fbf8f2" roughness={0.6} />
+      </mesh>
+      {[0.14, 0.34].map((y) => (
+        <mesh key={y} position-y={y}>
+          <cylinderGeometry args={[0.083 - y * 0.06, 0.087 - y * 0.06, 0.06, 14]} />
+          <meshStandardMaterial color="#b9473a" roughness={0.6} />
+        </mesh>
+      ))}
+      <mesh position-y={0.55}>
+        <cylinderGeometry args={[0.05, 0.05, 0.08, 12]} />
+        <meshStandardMaterial color="#ffe7a3" emissive="#ffcf5a" emissiveIntensity={dark ? 2.5 : 0.6} />
+      </mesh>
+      <mesh position-y={0.63} castShadow>
+        <coneGeometry args={[0.075, 0.09, 12]} />
+        <meshStandardMaterial color="#b9473a" roughness={0.6} />
+      </mesh>
+    </group>
+  );
+}
+
+const LANDMARK_MODELS = { stupa: Stupa, sigiriya: Sigiriya, lighthouse: Lighthouse };
+
+const mapLabelClass =
+  'font-display italic whitespace-nowrap select-none text-primary/75 dark:text-parchment/70 [text-shadow:0_1px_2px_rgba(252,250,245,0.9)] dark:[text-shadow:0_1px_2px_rgba(0,0,0,0.8)]';
+
+function Landmarks({ dark, portal }) {
+  return LANDMARKS.map((l) => {
+    const Model = LANDMARK_MODELS[l.id];
+    const position = sceneAt(l.lat, l.lng);
+    return (
+      <group key={l.id} position={position}>
+        <Model dark={dark} origin={position} />
+        <Html position={[0, -0.05, l.labelZ ?? 0.95]} center portal={portal} zIndexRange={[5, 0]} style={{ pointerEvents: 'none' }}>
+          <span className={`${mapLabelClass} text-[11px]`}>{l.name}</span>
+        </Html>
+      </group>
+    );
+  });
+}
+
+const SEA_LABELS = [
+  { text: 'Indian Ocean', lat: 5.35, lng: 81.3 },
+  { text: 'Bay of Bengal', lat: 9.55, lng: 82.05 },
+  { text: 'Gulf of Mannar', lat: 8.55, lng: 79.15 },
+];
+
+function SeaLabels({ portal }) {
+  return SEA_LABELS.map((l) => {
+    const { x, z } = toScene(l.lat, l.lng);
+    return (
+      <Html key={l.text} position={[x, WATER_Y, z]} center portal={portal} zIndexRange={[5, 0]} style={{ pointerEvents: 'none' }}>
+        <span className="hidden sm:inline font-display italic whitespace-nowrap select-none text-[13px] tracking-[0.3em] text-white/85 [text-shadow:0_1px_3px_rgba(20,70,95,0.55)] dark:text-[#9cc9d6]/70">
+          {l.text}
+        </span>
+      </Html>
+    );
+  });
+}
+
+/* ---- drifting clouds and outrigger boats ---- */
+
+const CLOUDS = [
+  { lat: 7.05, lng: 80.42, y: 4.4, s: 1.5, phase: 0 },
+  { lat: 6.45, lng: 81.05, y: 5.0, s: 1.2, phase: 2.1 },
+  { lat: 9.15, lng: 80.25, y: 5.3, s: 1.3, phase: 4.2 },
+  { lat: 5.55, lng: 79.55, y: 4.2, s: 1.4, phase: 1.3 },
+  { lat: 8.75, lng: 81.95, y: 4.8, s: 1.2, phase: 3.4 },
+];
+const PUFFS = [
+  [0, 0, 0, 0.55],
+  [0.6, -0.1, 0.08, 0.42],
+  [-0.58, -0.12, -0.04, 0.4],
+  [0.22, 0.24, -0.12, 0.4],
+  [-0.24, 0.14, 0.22, 0.36],
+];
+
+function Cloud({ lat, lng, y, s, phase, still, dark }) {
+  const ref = useRef();
+  const { x, z } = toScene(lat, lng);
+  useFrame(({ clock }) => {
+    if (still || !ref.current) return;
+    const t = clock.getElapsedTime();
+    ref.current.position.x = x + Math.sin(t * 0.05 + phase) * 1.6;
+    ref.current.position.y = y + Math.sin(t * 0.4 + phase) * 0.08;
+  });
+  return (
+    <group ref={ref} position={[x, y, z]} scale={s}>
+      {PUFFS.map(([px, py, pz, r]) => (
+        <mesh key={`${px}${py}`} position={[px, py, pz]}>
+          <icosahedronGeometry args={[r, 1]} />
+          <meshStandardMaterial color={dark ? '#cdd3df' : '#ffffff'} roughness={1} flatShading />
+        </mesh>
+      ))}
+    </group>
+  );
+}
+
+const BOATS = [
+  { lat: 7.3, lng: 79.6, heading: 0.6, phase: 0 },
+  { lat: 8.72, lng: 81.5, heading: 2.2, phase: 1.7 },
+  { lat: 5.78, lng: 80.55, heading: -0.4, phase: 3.1 },
+];
+
+const sailShape = (() => {
+  const s = new THREE.Shape();
+  s.moveTo(0, 0);
+  s.lineTo(0.22, 0);
+  s.quadraticCurveTo(0.12, 0.2, 0.02, 0.36);
+  s.lineTo(0, 0);
+  return s;
+})();
+
+function Boat({ lat, lng, heading, phase, still }) {
+  const ref = useRef();
+  const { x, z } = toScene(lat, lng);
+  useFrame(({ clock }) => {
+    if (still || !ref.current) return;
+    const t = clock.getElapsedTime();
+    ref.current.position.y = WATER_Y + Math.sin(t * 1.4 + phase) * 0.015;
+    ref.current.rotation.z = Math.sin(t * 1.1 + phase) * 0.06;
+    ref.current.position.x = x + Math.sin(t * 0.04 + phase) * 0.8;
+  });
+  return (
+    <group ref={ref} position={[x, WATER_Y, z]} rotation-y={heading} scale={1.6}>
+      <mesh position-y={0.03} castShadow>
+        <boxGeometry args={[0.42, 0.06, 0.09]} />
+        <meshStandardMaterial color="#8a5a3b" roughness={0.9} />
+      </mesh>
+      {/* outrigger float */}
+      <mesh position={[0, 0.02, 0.2]}>
+        <boxGeometry args={[0.3, 0.03, 0.035]} />
+        <meshStandardMaterial color="#6e4a32" roughness={0.9} />
+      </mesh>
+      {[-0.08, 0.08].map((bx) => (
+        <mesh key={bx} position={[bx, 0.05, 0.1]}>
+          <boxGeometry args={[0.015, 0.015, 0.2]} />
+          <meshStandardMaterial color="#6e4a32" />
+        </mesh>
+      ))}
+      <mesh position={[-0.1, 0.06, 0]} castShadow>
+        <shapeGeometry args={[sailShape]} />
+        <meshStandardMaterial color="#f4ead2" roughness={0.9} side={THREE.DoubleSide} />
+      </mesh>
     </group>
   );
 }
@@ -370,11 +778,23 @@ const SriLankaMap3D = ({ museums = [], onExplore }) => {
         .filter((m) => Number.isFinite(m.location?.lat) && Number.isFinite(m.location?.lng))
         .map((m, i) => {
           const { x, z } = toScene(m.location.lat, m.location.lng);
-          return { museum: m, position: new THREE.Vector3(x, surfaceHeight(x, z), z), phase: i * 0.37 };
+          return { museum: m, position: new THREE.Vector3(x, terrainY(x, z), z), phase: i * 0.37 };
         }),
     [museums]
   );
   const selected = pins.find((p) => p.museum._id === selectedId)?.museum;
+
+  // keep forests away from pins and landmarks so they stay readable
+  const keepClear = useMemo(
+    () => [
+      ...pins.map((p) => ({ x: p.position.x, z: p.position.z, r: 1.1 })),
+      ...LANDMARKS.flatMap((l) => {
+        const p = toScene(l.lat, l.lng);
+        return l.clear.map(([dx, dz, r]) => ({ x: p.x + dx, z: p.z + dz, r }));
+      }),
+    ],
+    [pins]
+  );
 
   // portrait screens need the camera further back to fit the whole island
   const defaultDistance = aspect < 1 ? 92 : aspect < 1.4 ? 80 : 72;
@@ -444,9 +864,10 @@ const SriLankaMap3D = ({ museums = [], onExplore }) => {
     </div>
   );
 
+  // parchment page the illustrated sea fades into
   const seaBackground = darkMode
-    ? 'radial-gradient(ellipse at 50% 45%, #22333a 0%, #1f2a2e 35%, #1c1917 80%)'
-    : 'radial-gradient(ellipse at 50% 45%, #d4e5e1 0%, #e3ece4 40%, #f6f1e2 85%)';
+    ? 'radial-gradient(ellipse at 50% 45%, #1f2a30 0%, #1c1f22 55%, #1a1715 100%)'
+    : 'radial-gradient(ellipse at 50% 45%, #f7f2e4 0%, #f1e9d5 60%, #e9dfc6 100%)';
 
   return (
     <div
@@ -471,11 +892,11 @@ const SriLankaMap3D = ({ museums = [], onExplore }) => {
               if (coarse) requestAnimationFrame(() => { gl.domElement.style.touchAction = 'pan-y'; });
             }}
           >
-            <hemisphereLight args={[darkMode ? '#cfd8e3' : '#fffaf0', '#8d6e63', darkMode ? 0.9 : 1.25]} />
+            <hemisphereLight args={darkMode ? ['#9fb0d0', '#3a4a3a', 0.9] : ['#fff8e8', '#8a9a6a', 1.35]} />
             <directionalLight
               position={[-22, 38, -18]}
-              intensity={darkMode ? 2.0 : 2.4}
-              color="#fff1d6"
+              intensity={darkMode ? 1.5 : 2.6}
+              color={darkMode ? '#c9d6ff' : '#ffe9c2'}
               castShadow
               shadow-mapSize={[2048, 2048]}
               shadow-camera-left={-30}
@@ -488,14 +909,21 @@ const SriLankaMap3D = ({ museums = [], onExplore }) => {
               shadow-normalBias={0.03}
             />
 
-            {/* sea: transparent so the CSS gradient shows, but it still catches the island's shadow */}
-            <mesh rotation-x={-Math.PI / 2} receiveShadow>
-              <planeGeometry args={[200, 200]} />
-              <shadowMaterial transparent opacity={darkMode ? 0.4 : 0.14} />
-            </mesh>
+            {/* soft fill from the south so faces turned towards the viewer aren't murky */}
+            <directionalLight position={[12, 18, 34]} intensity={darkMode ? 0.25 : 0.55} color="#fff2dc" />
 
-            <Graticule dark={darkMode} portal={labelLayerRef} />
-            <Island />
+            <Sea dark={darkMode} still={reduceMotion} />
+            <Island dark={darkMode} />
+            <River dark={darkMode} />
+            <Trees keepClear={keepClear} />
+            <Landmarks dark={darkMode} portal={labelLayerRef} />
+            <SeaLabels portal={labelLayerRef} />
+            {CLOUDS.map((c) => (
+              <Cloud key={c.phase} {...c} still={reduceMotion} dark={darkMode} />
+            ))}
+            {BOATS.map((b) => (
+              <Boat key={b.phase} {...b} still={reduceMotion} />
+            ))}
 
             {pins.map((pin) => (
               <MuseumPin
@@ -536,7 +964,7 @@ const SriLankaMap3D = ({ museums = [], onExplore }) => {
       {/* ---------- overlay UI ---------- */}
       {webgl && (
         <>
-          {/* compass + legend */}
+          {/* compass */}
           <div className="absolute top-3 left-3 flex flex-col gap-2 pointer-events-none">
             <div className="w-11 h-11 rounded-full bg-[#FCFAF5]/90 dark:bg-stone-800/90 border border-stone-200 dark:border-stone-700 shadow flex items-center justify-center">
               <div ref={compassRef} className="flex flex-col items-center leading-none">
@@ -545,17 +973,6 @@ const SriLankaMap3D = ({ museums = [], onExplore }) => {
                   <path d="M5 0 L10 9 L5 7 L0 9 Z" fill="#C9A227" />
                   <path d="M5 18 L10 9 L5 11 L0 9 Z" className="fill-stone-400 dark:fill-stone-500" />
                 </svg>
-              </div>
-            </div>
-            <div className="hidden sm:block rounded-lg bg-[#FCFAF5]/90 dark:bg-stone-800/90 border border-stone-200 dark:border-stone-700 shadow px-2.5 py-2">
-              <p className="text-[9px] uppercase tracking-wider font-bold text-stone-500 dark:text-stone-400 mb-1">Elevation</p>
-              <div
-                className="h-2 w-28 rounded-full"
-                style={{ background: `linear-gradient(to right, ${legendStops.map((s) => s.color).join(', ')})` }}
-              />
-              <div className="flex justify-between text-[9px] text-stone-500 dark:text-stone-400 mt-0.5">
-                <span>Sea level</span>
-                <span>2,500 m</span>
               </div>
             </div>
           </div>
