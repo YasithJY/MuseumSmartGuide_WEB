@@ -11,6 +11,7 @@ import QuizQuestion from '../models/QuizQuestion.js';
 import Favourite from '../models/Favourite.js';
 import VisitHistory from '../models/VisitHistory.js';
 import Notification from '../models/Notification.js';
+import { HERITAGE_CATEGORIES, buildHeritageGallery, buildHeritageExhibits } from './data/heritageExhibits.js';
 
 dotenv.config();
 
@@ -93,7 +94,8 @@ const seedData = async () => {
           si: { name: 'නවීන ඉංජිනේරු පුරෝගාමීන්', description: 'නවීන යටිතල පහසුකම්, දුම්රිය සහ විදුලි පද්ධති නවීකරණය කළ ශ්‍රී ලාංකීය ඉංජිනේරුවන්' },
           ta: { name: 'நவீன பொறியியல் முன்னோடிகள்', description: 'நவீன உள்கட்டமைப்பு, புகையிரதம் மற்றும் மின்சார வலைப்பின்னல்களில் புரட்சியை ஏற்படுத்திய முன்னணி இலங்கை பொறியாளர்கள்' }
         }
-      }
+      },
+      ...HERITAGE_CATEGORIES
     ]);
 
     console.log('Categories seeded.');
@@ -112,7 +114,7 @@ const seedData = async () => {
         lat: 6.9113,
         lng: 79.8654
       },
-      galleriesCount: 2,
+      galleriesCount: 3,
       translations: {
         si: {
           name: 'කොළඹ ජාතික කෞතුකාගාරය',
@@ -195,6 +197,9 @@ const seedData = async () => {
         }
       }
     ]);
+
+    // Art, Sculpture & Cultural Heritage gallery (content in data/heritageExhibits.js)
+    await Gallery.create(buildHeritageGallery(colomboMuseum._id));
 
     console.log('Galleries seeded.');
 
@@ -589,6 +594,9 @@ const seedData = async () => {
     await exhibits[5].save();
     await exhibits[6].save();
     await exhibits[7].save();
+
+    // Nadungamuwa Raja, Isurumuniya Lovers, Nagaraja Guardstone, Statue of King Parakramabahu
+    await Exhibit.create(buildHeritageExhibits(colomboMuseum._id));
 
     console.log('Exhibits seeded.');
 

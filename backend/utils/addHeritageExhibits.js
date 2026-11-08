@@ -1,0 +1,127 @@
+import 'dotenv/config';
+import dns from 'dns';
+import fs from 'fs';
+import os from 'os';
+import path from 'path';
+import mongoose from 'mongoose';
+import QRCode from 'qrcode';
+import Museum from '../models/Museum.js';
+import Gallery from '../models/Gallery.js';
+import Exhibit from '../models/Exhibit.js';
+import Category from '../models/Category.js';
+import { r2Enabled, uploadBufferToR2 } from '../config/r2.js';
+import {
+  HERITAGE_CATEGORIES,
+  buildHeritageGallery,
+  buildHeritageExhibits,
+} from './data/heritageExhibits.js';
+
+// Adds the "Art, Sculpture & Cultural Heritage" gallery and its four exhibits
+// (Nadungamuwa Raja, Isurumuniya Lovers, Nagaraja Guardstone, Statue of King
+// Parakramabahu) to the database in MONGODB_URI. Unlike seeder.js it deletes
+// nothing, and it is safe to re-run: records are upserted by their fixed IDs,
+// and an audio URL already set from the dashboard is left alone.
+//
+//   node utils/addHeritageExhibits.js
+//
+// When the R2_* env vars are set it also uploads the QR codes and the 3D
+// models (from MODELS_DIR, default ~/Downloads/Museum3D) to R2. Without them,
+// QR codes are written to ./uploads and the models must be uploaded by hand.
+
+// Same DNS fix as config/db.js — link-local IPv6 DNS breaks mongodb+srv lookups.
+dns.setServers(['8.8.8.8', '1.1.1.1']);
+
+const CLIENT_URL = process.env.CLIENT_URL || 'https://lkmuseum150.vercel.app';
+const MODELS_DIR = process.env.MODELS_DIR || path.join(os.homedir(), 'Downloads', 'Museum3D');
+const MUSEUM_NAME = 'National Museum of Colombo';
+
+// Source file (relative to MODELS_DIR) -> key under models/ on R2. The
+// frontend's AR_MODEL_BY_EXHIBIT_ID (pages/Exhibit.jsx) expects these names.
+const MODEL_FILES = [
+  ['Isurumuni Pem Yuwala/isurumuni.glb', 'isurumuni.glb'],
+  ['Isurumuni Pem Yuwala/isurumuni.usdz', 'isurumuni.usdz'],
+  ['Muragala/muragala.glb', 'muragala.glb'],
+  ['Muragala/muragala.usdz', 'muragala.usdz'],
+  ['Parakramabahu I/Parakramabahu.glb', 'Parakramabahu.glb'],
+  ['Parakramabahu I/parakramabahu.usdz', 'parakramabahu.usdz'],
+];
+const MODEL_CONTENT_TYPES = { '.glb': 'model/gltf-binary', '.usdz': 'model/vnd.usdz+zip' };
+
+const saveQRCode = async (exhibitId) => {
+  const clientUrl = `${CLIENT_URL}/exhibit/${exhibitId}`;
+  const qrFilename = `qr-${exhibitId}.png`;
+  const qrOptions = { color: { dark: '#4E342E', light: '#F7F2E9' } };
+  if (r2Enabled) {
+    const buffer = await QRCode.toBuffer(clientUrl, qrOptions);
+    return uploadBufferToR2(buffer, qrFilename, 'image/png');
+  }
+  await QRCode.toFile(path.join('uploads', qrFilename), clientUrl, qrOptions);
+  return `/uploads/${qrFilename}`;
+};
+
+const uploadModels = async () => {
+  if (!r2Enabled) {
+    console.log('\nR2 is not configured, so the 3D models were not uploaded.');
+    console.log('Upload these files to the bucket\'s models/ folder:');
+    MODEL_FILES.forEach(([src, key]) => console.log(`  ${path.join(MODELS_DIR, src)}  ->  models/${key}`));
+    return;
+  }
+  for (const [src, key] of MODEL_FILES) {
+    const file = path.join(MODELS_DIR, src);
+    if (!fs.existsSync(file)) {
+      console.warn(`Model not found, skipped: ${file}`);
+      continue;
+    }
+    const contentType = MODEL_CONTENT_TYPES[path.extname(key).toLowerCase()];
+    const url = await uploadBufferToR2(fs.readFileSync(file), `models/${key}`, contentType);
+    console.log(`Uploaded model ${key} -> ${url}`);
+  }
+};
+
+const run = async () => {
+  await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/museum150');
+  console.log(`Connected to MongoDB: ${mongoose.connection.host}/${mongoose.connection.name}`);
+
+  const museum = await Museum.findOne({ name: MUSEUM_NAME });
+  if (!museum) throw new Error(`Museum "${MUSEUM_NAME}" not found — nothing was changed.`);
+
+  // Categories are unique by name, so match on name and keep whatever ID an
+  // existing category already has.
+  const categoryIdMap = {};
+  for (const { _id, name, ...fields } of HERITAGE_CATEGORIES) {
+    await Category.updateOne({ name }, { $set: fields, $setOnInsert: { _id } }, { upsert: true });
+    const saved = await Category.findOne({ name }).select('_id');
+    categoryIdMap[_id.toString()] = saved._id;
+    console.log(`Category: ${name}`);
+  }
+
+  const { _id: galleryId, exhibitsCount, ...galleryFields } = buildHeritageGallery(museum._id);
+  await Gallery.updateOne({ _id: galleryId }, { $set: galleryFields }, { upsert: true });
+  console.log(`Gallery: ${galleryFields.name}`);
+
+  for (const { _id, ...fields } of buildHeritageExhibits(museum._id)) {
+    fields.categoryId = categoryIdMap[fields.categoryId.toString()];
+    fields.qrCodeUrl = await saveQRCode(_id);
+    await Exhibit.updateOne(
+      { _id },
+      { $set: fields, $setOnInsert: { audioUrl: '', arModelUrl: '', arModelUrlIOS: '' } },
+      { upsert: true, runValidators: true }
+    );
+    console.log(`Exhibit: ${fields.title}  (${CLIENT_URL}/exhibit/${_id})`);
+  }
+
+  // Recount rather than increment so re-running never double-counts.
+  await Gallery.updateOne({ _id: galleryId }, { exhibitsCount: await Exhibit.countDocuments({ galleryId }) });
+  await Museum.updateOne({ _id: museum._id }, { galleriesCount: await Gallery.countDocuments({ museumId: museum._id }) });
+
+  await uploadModels();
+
+  console.log('\nDone.');
+  await mongoose.disconnect();
+};
+
+run().catch(async (err) => {
+  console.error(err.message || err);
+  await mongoose.disconnect().catch(() => {});
+  process.exit(1);
+});

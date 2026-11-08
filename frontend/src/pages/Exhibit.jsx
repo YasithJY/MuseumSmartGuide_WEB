@@ -34,8 +34,21 @@ const AR_MODEL_BY_EXHIBIT_ID = {
   '65d75b0a66f50b2984950022': { glb: `${R2_MODELS_BASE}/athpahana.glb`, usdz: `${R2_MODELS_BASE}/athpahana.usdz` }, // Elephant Lamp (Ath Pahana)
   '65d75b0a66f50b2984950023': { glb: `${R2_MODELS_BASE}/Jethawanaramaya.glb`, usdz: `${R2_MODELS_BASE}/Jethawanaramaya.usdz` }, // Jetavana Stupa (Jethawanarama)
   '65d75b0a66f50b2984950024': { glb: `${R2_MODELS_BASE}/sigiriya_1.glb`, usdz: `${R2_MODELS_BASE}/sigiriya_1.usdz` }, // Sigiriya
+  '65d75b0a66f50b2984950029': null, // Nadungamuwa Raja — no 3D model yet, so the AR button is hidden
+  '65d75b0a66f50b298495002a': { glb: `${R2_MODELS_BASE}/isurumuni.glb`, usdz: `${R2_MODELS_BASE}/isurumuni.usdz` }, // Isurumuniya Lovers
+  '65d75b0a66f50b298495002b': { glb: `${R2_MODELS_BASE}/muragala.glb`, usdz: `${R2_MODELS_BASE}/muragala.usdz` }, // Nagaraja Guardstone
+  '65d75b0a66f50b298495002c': { glb: `${R2_MODELS_BASE}/Parakramabahu.glb`, usdz: `${R2_MODELS_BASE}/parakramabahu.usdz` }, // Statue of King Parakramabahu
 };
 const DEFAULT_AR_MODEL = { glb: `${R2_MODELS_BASE}/Iron_Smelting_Oven_1.glb`, usdz: `${R2_MODELS_BASE}/Iron_Smelting_Oven_1.usdz` };
+
+// A `null` entry means "no model" (hide AR); a missing entry falls back to the
+// default model. A model uploaded from the dashboard always wins.
+const getArModel = (exhibit) => {
+  if (exhibit.arModelUrl) return { glb: exhibit.arModelUrl, usdz: exhibit.arModelUrlIOS || undefined };
+  const mapped = exhibit._id in AR_MODEL_BY_EXHIBIT_ID ? AR_MODEL_BY_EXHIBIT_ID[exhibit._id] : DEFAULT_AR_MODEL;
+  if (!mapped) return null;
+  return { glb: mapped.glb, usdz: exhibit.arModelUrlIOS || mapped.usdz };
+};
 
 // Tamil audio narration, keyed by exhibit _id. The backend only stores one
 // (English) audioUrl per exhibit, so the Tamil/Sinhala tracks are swapped in
@@ -309,11 +322,13 @@ const Exhibit = () => {
           </button>
 
           {/* AR View */}
-          <button onClick={() => setArOpen(true)}
-            className="flex items-center gap-1 text-xs border border-gold bg-primary text-parchment px-3 py-1.5 rounded-lg shadow-sm hover:bg-primary/90 transition-colors font-bold uppercase">
-            <MdViewInAr className="w-4 h-4 text-gold" />
-            <span>{L.arView}</span>
-          </button>
+          {getArModel(exhibit) && (
+            <button onClick={() => setArOpen(true)}
+              className="flex items-center gap-1 text-xs border border-gold bg-primary text-parchment px-3 py-1.5 rounded-lg shadow-sm hover:bg-primary/90 transition-colors font-bold uppercase">
+              <MdViewInAr className="w-4 h-4 text-gold" />
+              <span>{L.arView}</span>
+            </button>
+          )}
 
           {/* Quiz */}
           <Link to={`/quiz/exhibit/${exhibit._id}`}
@@ -489,12 +504,12 @@ const Exhibit = () => {
       )}
 
       {/* ── AR Viewer ─────────────────────────────────────────────────────────── */}
-      {arOpen && (() => {
-        const arModel = AR_MODEL_BY_EXHIBIT_ID[exhibit._id] || DEFAULT_AR_MODEL;
+      {arOpen && getArModel(exhibit) && (() => {
+        const arModel = getArModel(exhibit);
         return (
         <ARViewer
-          modelUrl={exhibit.arModelUrl || arModel.glb}
-          iosModelUrl={exhibit.arModelUrlIOS || (exhibit.arModelUrl ? undefined : arModel.usdz)}
+          modelUrl={arModel.glb}
+          iosModelUrl={arModel.usdz}
           title={exhibit.title}
           narration={narrationTracks}
           lang={displayLang}
