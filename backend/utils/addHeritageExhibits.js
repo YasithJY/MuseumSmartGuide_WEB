@@ -12,13 +12,14 @@ import Category from '../models/Category.js';
 import { r2Enabled, uploadBufferToR2 } from '../config/r2.js';
 import {
   HERITAGE_CATEGORIES,
-  buildHeritageGallery,
+  buildHeritageGalleries,
   buildHeritageExhibits,
 } from './data/heritageExhibits.js';
 
-// Adds the "Art, Sculpture & Cultural Heritage" gallery and its four exhibits
-// (Nadungamuwa Raja, Isurumuniya Lovers, Nagaraja Guardstone, Statue of King
-// Parakramabahu) to the database in MONGODB_URI. Unlike seeder.js it deletes
+// Adds two galleries and their four exhibits to the database in MONGODB_URI:
+// Nadungamuwa Raja (National Museum of Colombo), and Isurumuniya Lovers,
+// Nagaraja Guardstone and Statue of King Parakramabahu (Polonnaruwa
+// Archaeological Museum). Unlike seeder.js it deletes
 // nothing, and it is safe to re-run: records are upserted by their fixed IDs,
 // and an audio URL already set from the dashboard is left alone.
 //
@@ -33,11 +34,12 @@ dns.setServers(['8.8.8.8', '1.1.1.1']);
 
 const CLIENT_URL = process.env.CLIENT_URL || 'https://lkmuseum150.vercel.app';
 const MODELS_DIR = process.env.MODELS_DIR || path.join(os.homedir(), 'Downloads', 'Museum3D');
-const MUSEUM_NAME = 'National Museum of Colombo';
+const MUSEUM_NAMES = { colombo: 'National Museum of Colombo', polonnaruwa: 'Polonnaruwa Archaeological Museum' };
 
 // Source file (relative to MODELS_DIR) -> key under models/ on R2. The
 // frontend's AR_MODEL_BY_EXHIBIT_ID (pages/Exhibit.jsx) expects these names.
 const MODEL_FILES = [
+  ['Nadungamuwa Raja/nadungamuwa-raja.glb', 'nadungamuwa-raja.glb'],
   ['Isurumuni Pem Yuwala/isurumuni.glb', 'isurumuni.glb'],
   ['Isurumuni Pem Yuwala/isurumuni.usdz', 'isurumuni.usdz'],
   ['Muragala/muragala.glb', 'muragala.glb'],
@@ -82,8 +84,12 @@ const run = async () => {
   await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/museum150');
   console.log(`Connected to MongoDB: ${mongoose.connection.host}/${mongoose.connection.name}`);
 
-  const museum = await Museum.findOne({ name: MUSEUM_NAME });
-  if (!museum) throw new Error(`Museum "${MUSEUM_NAME}" not found — nothing was changed.`);
+  const museumIds = {};
+  for (const [key, name] of Object.entries(MUSEUM_NAMES)) {
+    const museum = await Museum.findOne({ name }).select('_id');
+    if (!museum) throw new Error(`Museum "${name}" not found — nothing was changed.`);
+    museumIds[key] = museum._id;
+  }
 
   // Categories are unique by name, so match on name and keep whatever ID an
   // existing category already has.
@@ -95,11 +101,13 @@ const run = async () => {
     console.log(`Category: ${name}`);
   }
 
-  const { _id: galleryId, exhibitsCount, ...galleryFields } = buildHeritageGallery(museum._id);
-  await Gallery.updateOne({ _id: galleryId }, { $set: galleryFields }, { upsert: true });
-  console.log(`Gallery: ${galleryFields.name}`);
+  const galleries = buildHeritageGalleries(museumIds);
+  for (const { _id, exhibitsCount, ...galleryFields } of galleries) {
+    await Gallery.updateOne({ _id }, { $set: galleryFields }, { upsert: true });
+    console.log(`Gallery: ${galleryFields.name}`);
+  }
 
-  for (const { _id, ...fields } of buildHeritageExhibits(museum._id)) {
+  for (const { _id, ...fields } of buildHeritageExhibits(museumIds)) {
     fields.categoryId = categoryIdMap[fields.categoryId.toString()];
     fields.qrCodeUrl = await saveQRCode(_id);
     await Exhibit.updateOne(
@@ -111,8 +119,12 @@ const run = async () => {
   }
 
   // Recount rather than increment so re-running never double-counts.
-  await Gallery.updateOne({ _id: galleryId }, { exhibitsCount: await Exhibit.countDocuments({ galleryId }) });
-  await Museum.updateOne({ _id: museum._id }, { galleriesCount: await Gallery.countDocuments({ museumId: museum._id }) });
+  for (const { _id: galleryId } of galleries) {
+    await Gallery.updateOne({ _id: galleryId }, { exhibitsCount: await Exhibit.countDocuments({ galleryId }) });
+  }
+  for (const museumId of Object.values(museumIds)) {
+    await Museum.updateOne({ _id: museumId }, { galleriesCount: await Gallery.countDocuments({ museumId }) });
+  }
 
   await uploadModels();
 

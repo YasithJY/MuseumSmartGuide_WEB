@@ -15,6 +15,9 @@ import { MdClose, MdViewInAr, MdPlayArrow, MdPause } from 'react-icons/md';
 // falls back to the in-page 3D preview below (drag to orbit, pinch to zoom)
 // without a native AR handoff — pass `iosModelUrl` once USDZ versions exist.
 //
+// `autoplay` loops the model's first animation (e.g. Nadungamuwa Raja's walk
+// cycle) and does nothing for static models.
+//
 // `narration` is a list of { code, label, full, src } tracks; the bar it
 // drives lives outside <model-viewer>, so it shows on this 3D preview but not
 // inside native AR (Quick Look / Scene Viewer) or WebXR.
@@ -92,6 +95,7 @@ const ARViewer = ({ modelUrl, iosModelUrl, title, narration = [], lang, onLangCh
         ar-modes="webxr scene-viewer quick-look"
         camera-controls
         auto-rotate
+        autoplay
         shadow-intensity="1"
         exposure="1"
         className="w-full h-full"

@@ -1,8 +1,12 @@
 import mongoose from 'mongoose';
 
-// Content for the "Art, Sculpture & Cultural Heritage" gallery, shared by
-// utils/seeder.js (fresh database) and utils/addHeritageExhibits.js (adds
-// these records to an existing database without touching anything else).
+// Content for two galleries, shared by utils/seeder.js (fresh database) and
+// utils/addHeritageExhibits.js (adds these records to an existing database
+// without touching anything else):
+//   - National Museum of Colombo: "Cultural & Religious Heritage"
+//     (Nadungamuwa Raja)
+//   - Polonnaruwa Archaeological Museum: "Ancient Sculpture & Stone Carving"
+//     (Isurumuniya Lovers, Nagaraja Guardstone, Statue of King Parakramabahu)
 // IDs are fixed so the frontend's per-exhibit maps (3D models, narration)
 // and printed QR codes keep pointing at the same records.
 
@@ -14,7 +18,10 @@ export const HERITAGE_IDS = {
     sculpture: oid('65d7593c66f50b2984950005'),
     culture: oid('65d7593c66f50b2984950006'),
   },
-  gallery: oid('65d75a1d66f50b2984950014'),
+  galleries: {
+    colombo: oid('65d75a1d66f50b2984950014'),
+    polonnaruwa: oid('65d75a1d66f50b2984950015'),
+  },
   exhibits: {
     nadungamuwaRaja: oid('65d75b0a66f50b2984950029'),
     isurumuniyaLovers: oid('65d75b0a66f50b298495002a'),
@@ -44,29 +51,51 @@ export const HERITAGE_CATEGORIES = [
   }
 ];
 
-export const buildHeritageGallery = (museumId) => ({
-  _id: HERITAGE_IDS.gallery,
-  name: 'Art, Sculpture & Cultural Heritage',
-  description: 'Masterpieces of ancient Sri Lankan stone sculpture alongside icons of the island\'s living Buddhist and cultural heritage.',
-  coverImage: '/uploads/isurumuniya-temple.jpg',
-  museumId,
-  exhibitsCount: 4,
-  translations: {
-    si: {
-      name: 'කලාව, මූර්ති සහ සංස්කෘතික උරුමය',
-      description: 'පුරාණ ශ්‍රී ලාංකික ශිලා මූර්ති කලාවේ විශිෂ්ට නිර්මාණ සහ දිවයිනේ බෞද්ධ හා සංස්කෘතික උරුමයේ සංකේත ගවේෂණය කරන්න.'
-    },
-    ta: {
-      name: 'கலை, சிற்பம் மற்றும் கலாசார பாரம்பரியம்',
-      description: 'பண்டைய இலங்கையின் கற்சிற்பக் கலையின் தலைசிறந்த படைப்புகளையும் தீவின் பௌத்த மற்றும் கலாசார பாரம்பரியத்தின் அடையாளங்களையும் ஆராயுங்கள்.'
+// `museumIds` is { colombo, polonnaruwa }.
+export const buildHeritageGalleries = (museumIds) => [
+  {
+    _id: HERITAGE_IDS.galleries.colombo,
+    name: 'Cultural & Religious Heritage',
+    description: 'Icons of Sri Lanka\'s living Buddhist and cultural heritage, including national treasures of the sacred Esala Perahera.',
+    coverImage: '/uploads/nadungamuwa-raja-1.jpg',
+    museumId: museumIds.colombo,
+    exhibitsCount: 1,
+    translations: {
+      si: {
+        name: 'සංස්කෘතික සහ ආගමික උරුමය',
+        description: 'ශ්‍රී දළදා ඇසළ පෙරහරේ ජාතික වස්තු ඇතුළු ශ්‍රී ලංකාවේ ජීවමාන බෞද්ධ හා සංස්කෘතික උරුමයේ සංකේත ගවේෂණය කරන්න.'
+      },
+      ta: {
+        name: 'கலாசார மற்றும் சமய பாரம்பரியம்',
+        description: 'புனித எசல பெரஹராவின் தேசிய பொக்கிஷங்கள் உட்பட இலங்கையின் வாழும் பௌத்த மற்றும் கலாசார பாரம்பரியத்தின் அடையாளங்களை ஆராயுங்கள்.'
+      }
+    }
+  },
+  {
+    _id: HERITAGE_IDS.galleries.polonnaruwa,
+    name: 'Ancient Sculpture & Stone Carving',
+    description: 'Masterpieces of ancient Sri Lankan stone sculpture, from the rock reliefs of Isurumuniya to the guardstones of Anuradhapura and the great statue of Polonnaruwa.',
+    coverImage: '/uploads/isurumuniya-temple.jpg',
+    museumId: museumIds.polonnaruwa,
+    exhibitsCount: 3,
+    translations: {
+      si: {
+        name: 'පුරාණ මූර්ති සහ ශිලා කැටයම්',
+        description: 'ඉසුරුමුණි ශිලා කැටයම්, අනුරාධපුර මුරගල් සහ පොළොන්නරුවේ මහා ප්‍රතිමාව ඇතුළු පුරාණ ශ්‍රී ලාංකික ශිලා මූර්ති කලාවේ විශිෂ්ට නිර්මාණ ගවේෂණය කරන්න.'
+      },
+      ta: {
+        name: 'பண்டைய சிற்பங்கள் மற்றும் கற்செதுக்கல்கள்',
+        description: 'இஸுருமுனிய பாறைச் சிற்பங்கள், அநுராதபுர காவல் கற்கள் மற்றும் பொலன்னறுவையின் பெரும் சிலை உள்ளிட்ட பண்டைய இலங்கைக் கற்சிற்பக் கலையின் தலைசிறந்த படைப்புகளை ஆராயுங்கள்.'
+      }
     }
   }
-});
+];
 
 // ─── Nadungamuwa Raja ────────────────────────────────────────────────────────
 const nadungamuwaRaja = {
   _id: HERITAGE_IDS.exhibits.nadungamuwaRaja,
   categoryKey: 'culture',
+  museumKey: 'colombo',
   title: 'Nadungamuwa Raja',
   description: 'Nadungamuwa Raja (c. 1953 – 7 March 2022) was one of Sri Lanka\'s most famous and revered ceremonial tuskers. Widely considered the largest tamed tusker in Asia during his lifetime, he held immense cultural and religious significance in the country, most notably serving as the main casket bearer for the Sacred Tooth Relic at the historic Kandy Esala Perahera.',
   historicalInfo: paras(
@@ -168,6 +197,7 @@ const nadungamuwaRaja = {
 const isurumuniyaLovers = {
   _id: HERITAGE_IDS.exhibits.isurumuniyaLovers,
   categoryKey: 'sculpture',
+  museumKey: 'polonnaruwa',
   title: 'Isurumuniya Lovers',
   description: 'The Isurumuni Pem Yuwala (commonly known as the Isurumuniya Lovers) is one of ancient Sri Lanka\'s most celebrated and enigmatic stone carvings. Located at the historic Isurumuniya Temple in Anuradhapura, this low-relief sculpture dates back to the Anuradhapura Kingdom (circa 5th or 6th century AD) and is admired for its artistic mastery and expressive emotion.',
   historicalInfo: paras(
@@ -235,6 +265,7 @@ const isurumuniyaLovers = {
 const nagarajaGuardstone = {
   _id: HERITAGE_IDS.exhibits.nagarajaGuardstone,
   categoryKey: 'sculpture',
+  museumKey: 'polonnaruwa',
   title: 'Nagaraja Guardstone',
   description: 'The Nagaraja Guardstone (often referred to as the guardstone or mura gala with a cobra king figure) found at the ruins of Ratna Prasada in Anuradhapura is widely considered the finest and most well-preserved specimen of ancient Sri Lankan sculptural art.',
   historicalInfo: paras(
@@ -309,6 +340,7 @@ const nagarajaGuardstone = {
 const parakramabahuStatue = {
   _id: HERITAGE_IDS.exhibits.parakramabahuStatue,
   categoryKey: 'sculpture',
+  museumKey: 'polonnaruwa',
   title: 'Statue of King Parakramabahu',
   description: 'The Statue of King Parakramabahu is an 11.5-foot (3.5-metre) tall stone sculpture carved directly into a large granite boulder near the Potgul Vehera in Polonnaruwa, Sri Lanka. Dating back to the 12th century, it remains one of the most iconic and debated works of ancient Sri Lankan art.',
   historicalInfo: paras(
@@ -378,16 +410,17 @@ const parakramabahuStatue = {
 
 const HERITAGE_EXHIBIT_CONTENT = [nadungamuwaRaja, isurumuniyaLovers, nagarajaGuardstone, parakramabahuStatue];
 
-// Returns plain exhibit documents ready for Exhibit.create / upsert. Each
-// exhibit lists the other three as related artifacts.
-export const buildHeritageExhibits = (museumId) => {
+// Returns plain exhibit documents ready for Exhibit.create / upsert.
+// `museumIds` is { colombo, polonnaruwa }. Each exhibit lists the other three
+// as related artifacts.
+export const buildHeritageExhibits = (museumIds) => {
   const allIds = HERITAGE_EXHIBIT_CONTENT.map(e => e._id);
-  return HERITAGE_EXHIBIT_CONTENT.map(({ categoryKey, ...exhibit }) => ({
+  return HERITAGE_EXHIBIT_CONTENT.map(({ categoryKey, museumKey, ...exhibit }) => ({
     ...exhibit,
     videoUrl: '',
     categoryId: HERITAGE_IDS.categories[categoryKey],
-    galleryId: HERITAGE_IDS.gallery,
-    museumId,
+    galleryId: HERITAGE_IDS.galleries[museumKey],
+    museumId: museumIds[museumKey],
     qrCodeUrl: `/uploads/qr-${exhibit._id}.png`,
     relatedArtifacts: allIds.filter(id => !id.equals(exhibit._id)),
   }));

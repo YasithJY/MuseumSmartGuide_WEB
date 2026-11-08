@@ -11,7 +11,7 @@ import QuizQuestion from '../models/QuizQuestion.js';
 import Favourite from '../models/Favourite.js';
 import VisitHistory from '../models/VisitHistory.js';
 import Notification from '../models/Notification.js';
-import { HERITAGE_CATEGORIES, buildHeritageGallery, buildHeritageExhibits } from './data/heritageExhibits.js';
+import { HERITAGE_CATEGORIES, buildHeritageGalleries, buildHeritageExhibits } from './data/heritageExhibits.js';
 
 dotenv.config();
 
@@ -143,7 +143,7 @@ const seedData = async () => {
         lat: 7.9336,
         lng: 81.0170
       },
-      galleriesCount: 0,
+      galleriesCount: 1,
       translations: {
         si: {
           name: 'පොළොන්නරුව පුරාවිද්‍යා කෞතුකාගාරය',
@@ -198,8 +198,10 @@ const seedData = async () => {
       }
     ]);
 
-    // Art, Sculpture & Cultural Heritage gallery (content in data/heritageExhibits.js)
-    await Gallery.create(buildHeritageGallery(colomboMuseum._id));
+    // Cultural & Religious Heritage (Colombo) and Ancient Sculpture & Stone
+    // Carving (Polonnaruwa) galleries — content in data/heritageExhibits.js
+    const heritageMuseumIds = { colombo: colomboMuseum._id, polonnaruwa: polonnaruwaMuseum._id };
+    await Gallery.create(buildHeritageGalleries(heritageMuseumIds));
 
     console.log('Galleries seeded.');
 
@@ -596,7 +598,7 @@ const seedData = async () => {
     await exhibits[7].save();
 
     // Nadungamuwa Raja, Isurumuniya Lovers, Nagaraja Guardstone, Statue of King Parakramabahu
-    await Exhibit.create(buildHeritageExhibits(colomboMuseum._id));
+    await Exhibit.create(buildHeritageExhibits(heritageMuseumIds));
 
     console.log('Exhibits seeded.');
 
