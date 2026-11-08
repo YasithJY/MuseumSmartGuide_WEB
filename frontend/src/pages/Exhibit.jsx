@@ -21,6 +21,18 @@ import sinhalaAudioRampala from '../assets/audio/Audio-Sinhala/New Project - B d
 import sinhalaAudioKulasinghe from '../assets/audio/Audio-Sinhala/New Project - Kulasinha.mp3?url';
 import sinhalaAudioWimalasurendra from '../assets/audio/Audio-Sinhala/New Project - Wimlsurendr.mp3?url';
 import sinhalaAudioBisokotuwa from '../assets/audio/Audio-Sinhala/New Project - Bisokotuwa.mp3?url';
+import englishAudioNadungamuwa from '../assets/audio/Audio-English/Nadungamuwa Raja.mp3?url';
+import englishAudioIsurumuniya from '../assets/audio/Audio-English/Isurumuniya Lovers.mp3?url';
+import englishAudioNagaraja from '../assets/audio/Audio-English/Nagaraja Guardstone.mp3?url';
+import englishAudioParakramabahu from '../assets/audio/Audio-English/King Parakramabahu.mp3?url';
+import tamilAudioNadungamuwa from '../assets/audio/Audio - Tamil/Nadungamuwa Raja.mp3?url';
+import tamilAudioIsurumuniya from '../assets/audio/Audio - Tamil/Isurumuniya Lovers.mp3?url';
+import tamilAudioNagaraja from '../assets/audio/Audio - Tamil/Nagaraja Guardstone.mp3?url';
+import tamilAudioParakramabahu from '../assets/audio/Audio - Tamil/King Parakramabahu.mp3?url';
+import sinhalaAudioNadungamuwa from '../assets/audio/Audio-Sinhala/Nadungamuwa Raja.mp3?url';
+import sinhalaAudioIsurumuniya from '../assets/audio/Audio-Sinhala/Isurumuniya Lovers.mp3?url';
+import sinhalaAudioNagaraja from '../assets/audio/Audio-Sinhala/Nagaraja Guardstone.mp3?url';
+import sinhalaAudioParakramabahu from '../assets/audio/Audio-Sinhala/King Parakramabahu.mp3?url';
 
 const API = '/api';
 
@@ -62,6 +74,10 @@ const TAMIL_AUDIO_BY_EXHIBIT_ID = {
   '65d75b0a66f50b2984950026': tamilAudioKulasinghe, // Arumadura Nandasena de Silva Kulasinghe
   '65d75b0a66f50b2984950027': tamilAudioWimalasurendra, // Devapura Jayasena Wimalasurendra
   '65d75b0a66f50b2984950028': tamilAudioBisokotuwa, // Bisokotuwa
+  '65d75b0a66f50b2984950029': tamilAudioNadungamuwa, // Nadungamuwa Raja
+  '65d75b0a66f50b298495002a': tamilAudioIsurumuniya, // Isurumuniya Lovers
+  '65d75b0a66f50b298495002b': tamilAudioNagaraja, // Nagaraja Guardstone
+  '65d75b0a66f50b298495002c': tamilAudioParakramabahu, // Statue of King Parakramabahu
 };
 
 // Sinhala audio narration, keyed by exhibit _id. Swapped in on the frontend
@@ -75,7 +91,23 @@ const SINHALA_AUDIO_BY_EXHIBIT_ID = {
   '65d75b0a66f50b2984950026': sinhalaAudioKulasinghe, // Arumadura Nandasena de Silva Kulasinghe
   '65d75b0a66f50b2984950027': sinhalaAudioWimalasurendra, // Devapura Jayasena Wimalasurendra
   '65d75b0a66f50b2984950028': sinhalaAudioBisokotuwa, // Bisokotuwa
+  '65d75b0a66f50b2984950029': sinhalaAudioNadungamuwa, // Nadungamuwa Raja
+  '65d75b0a66f50b298495002a': sinhalaAudioIsurumuniya, // Isurumuniya Lovers
+  '65d75b0a66f50b298495002b': sinhalaAudioNagaraja, // Nagaraja Guardstone
+  '65d75b0a66f50b298495002c': sinhalaAudioParakramabahu, // Statue of King Parakramabahu
 };
+
+// English narration for exhibits whose database record has no audioUrl (the
+// heritage exhibits added by addHeritageExhibits.js). An audioUrl set from
+// the dashboard still takes priority.
+const ENGLISH_AUDIO_BY_EXHIBIT_ID = {
+  '65d75b0a66f50b2984950029': englishAudioNadungamuwa, // Nadungamuwa Raja
+  '65d75b0a66f50b298495002a': englishAudioIsurumuniya, // Isurumuniya Lovers
+  '65d75b0a66f50b298495002b': englishAudioNagaraja, // Nagaraja Guardstone
+  '65d75b0a66f50b298495002c': englishAudioParakramabahu, // Statue of King Parakramabahu
+};
+
+const getEnglishAudio = (exhibit) => exhibit.audioUrl || ENGLISH_AUDIO_BY_EXHIBIT_ID[exhibit._id];
 
 const NARRATION_BY_LANG = { ta: TAMIL_AUDIO_BY_EXHIBIT_ID, si: SINHALA_AUDIO_BY_EXHIBIT_ID };
 
@@ -274,7 +306,7 @@ const Exhibit = () => {
   // Narration per language with no English fallback, so the AR viewer's
   // language picker only offers languages that actually have a recording.
   const narrationTracks = LANGS
-    .map(l => ({ ...l, src: l.code === 'en' ? exhibit.audioUrl : NARRATION_BY_LANG[l.code]?.[exhibit._id] }))
+    .map(l => ({ ...l, src: l.code === 'en' ? getEnglishAudio(exhibit) : NARRATION_BY_LANG[l.code]?.[exhibit._id] }))
     .filter(t => t.src);
 
   return (
@@ -394,7 +426,7 @@ const Exhibit = () => {
 
 
           {(() => {
-            const audioSrc = narrationTracks.find(t => t.code === displayLang)?.src || exhibit.audioUrl;
+            const audioSrc = narrationTracks.find(t => t.code === displayLang)?.src || getEnglishAudio(exhibit);
             return audioSrc && (
               <AudioPlayer
                 src={audioSrc}
