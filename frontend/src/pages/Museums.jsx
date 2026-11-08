@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, lazy, Suspense } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
@@ -6,6 +6,9 @@ import axios from 'axios';
 import MuseumCard from '../components/cards/MuseumCard';
 import GalleryCard from '../components/cards/GalleryCard';
 import { MdMap, MdOutlineCollections, MdRefresh } from 'react-icons/md';
+
+// Three.js is heavy, so the 3D island map is loaded in its own chunk.
+const SriLankaMap3D = lazy(() => import('../components/map/SriLankaMap3D'));
 
 const API = '/api';
 
@@ -26,6 +29,7 @@ const Museums = () => {
   const [showMap, setShowMap] = useState(false);
 
   const navigate = useNavigate();
+  const galleriesRef = useRef(null);
 
   const fetchMuseums = async (isRetry = false) => {
     setLoading(true);
@@ -68,6 +72,12 @@ const Museums = () => {
 
   const handleMuseumSelect = (museum) => {
     selectMuseum(museum);
+  };
+
+  // "Explore galleries" from a map pin: load that museum's galleries and scroll to them
+  const handleExploreFromMap = (museum) => {
+    selectMuseum(museum);
+    galleriesRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
   // Mock coordinates for interactive Leaflet Map pins
@@ -116,7 +126,7 @@ const Museums = () => {
           className="flex items-center gap-1.5 bg-primary text-parchment px-4 py-2 rounded-lg hover:bg-stone-800 transition-all font-bold text-xs uppercase"
         >
           <MdMap className="w-5 h-5 text-gold" />
-          <span>{showMap ? "Show Galleries" : "View Museum Map"}</span>
+          <span>{showMap ? "Show Galleries" : "Colombo Grounds Map"}</span>
         </button>
       </div>
 
@@ -148,7 +158,29 @@ const Museums = () => {
           </div>
         </div>
       ) : (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+        <>
+        {/* 3D island map of every museum */}
+        <section className="space-y-4">
+          <div className="text-center space-y-1">
+            <h2 className="font-heading font-bold text-lg sm:text-xl text-primary dark:text-parchment uppercase">
+              Museums Across Sri Lanka
+            </h2>
+            <p className="text-xs text-stone-500 dark:text-stone-400">
+              Drag to rotate the island · tap a gold pin to see a museum
+            </p>
+          </div>
+          <Suspense
+            fallback={
+              <div className="w-full h-[560px] sm:h-[620px] rounded-xl border-2 border-gold/40 bg-stone-100 dark:bg-dark-card flex items-center justify-center">
+                <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-gold"></div>
+              </div>
+            }
+          >
+            <SriLankaMap3D museums={museums} onExplore={handleExploreFromMap} />
+          </Suspense>
+        </section>
+
+        <div ref={galleriesRef} className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start scroll-mt-24">
           
           {/* Museums Directory list */}
           <div className="lg:col-span-1 space-y-4">
@@ -187,6 +219,7 @@ const Museums = () => {
           </div>
 
         </div>
+        </>
       )}
     </div>
   );
