@@ -48,8 +48,9 @@ const AR_MODEL_BY_EXHIBIT_ID = {
   '65d75b0a66f50b2984950024': { glb: `${R2_MODELS_BASE}/sigiriya_1.glb`, usdz: `${R2_MODELS_BASE}/sigiriya_1.usdz` }, // Sigiriya
   '65d75b0a66f50b2984950029': { // Nadungamuwa Raja (animated walk cycle in both files)
     glb: `${R2_MODELS_BASE}/nadungamuwa-raja.glb`, usdz: `${R2_MODELS_BASE}/nadungamuwa-raja.usdz`,
-    // Static, in Perahera attire with the casket; elephant 3.2 m, 4.6 m with the casket
-    decorated: { glb: `${R2_MODELS_BASE}/nadungamuwa-raja-deco.glb`, usdz: `${R2_MODELS_BASE}/nadungamuwa-raja-deco.usdz` },
+    // In Perahera attire with the casket, rigged to the same walk cycle;
+    // elephant 3.2 m, 4.6 m with the casket
+    decorated: { glb: `${R2_MODELS_BASE}/nadungamuwa-raja-deco-walk.glb`, usdz: `${R2_MODELS_BASE}/nadungamuwa-raja-deco-walk.usdz` },
   },
   '65d75b0a66f50b298495002a': { glb: `${R2_MODELS_BASE}/isurumuni.glb`, usdz: `${R2_MODELS_BASE}/isurumuni.usdz` }, // Isurumuniya Lovers
   '65d75b0a66f50b298495002b': { glb: `${R2_MODELS_BASE}/muragala.glb`, usdz: `${R2_MODELS_BASE}/muragala.usdz` }, // Nagaraja Guardstone

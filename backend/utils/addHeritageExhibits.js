@@ -41,8 +41,8 @@ const MUSEUM_NAMES = { colombo: 'National Museum of Colombo', polonnaruwa: 'Polo
 const MODEL_FILES = [
   ['Nadungamuwa Raja/nadungamuwa-raja.glb', 'nadungamuwa-raja.glb'],
   ['Nadungamuwa Raja/nadungamuwa-raja.usdz', 'nadungamuwa-raja.usdz'],
-  ['Nadungamuwa Raja/nadungamuwa-raja-deco.glb', 'nadungamuwa-raja-deco.glb'],
-  ['Nadungamuwa Raja/nadungamuwa-raja-deco.usdz', 'nadungamuwa-raja-deco.usdz'],
+  ['Nadungamuwa Raja/nadungamuwa-raja-deco-walk.glb', 'nadungamuwa-raja-deco-walk.glb'],
+  ['Nadungamuwa Raja/nadungamuwa-raja-deco-walk.usdz', 'nadungamuwa-raja-deco-walk.usdz'],
   ['Isurumuni Pem Yuwala/isurumuni.glb', 'isurumuni.glb'],
   ['Isurumuni Pem Yuwala/isurumuni.usdz', 'isurumuni.usdz'],
   ['Muragala/muragala.glb', 'muragala.glb'],
