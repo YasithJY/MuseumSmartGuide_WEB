@@ -7,9 +7,19 @@ import { MdOutlineQuiz, MdOutlineNavigateNext, MdOutlineStars, MdArrowBack, MdEx
 
 const API = '/api';
 
+// Sinhala/Tamil wording when the quiz or question has it, else the English.
+// Options are matched by position: the English option is still what gets
+// selected and scored, only the label shown changes.
+const localQuiz = (quiz, lang, field) => quiz?.translations?.[lang]?.[field] || quiz?.[field];
+const localText = (question, lang) => question?.translations?.[lang]?.text || question?.text;
+const localOption = (question, lang, option) => {
+  const i = question?.options?.indexOf(option) ?? -1;
+  return (i >= 0 && question.translations?.[lang]?.options?.[i]) || option;
+};
+
 const QuizPage = () => {
   const { token, user, addPointsAndBadge } = useContext(AuthContext);
-  const { t } = useContext(LangContext);
+  const { t, lang } = useContext(LangContext);
   const { exhibitId } = useParams();
 
   const [quizzes, setQuizzes] = useState([]);
@@ -97,9 +107,9 @@ const QuizPage = () => {
 
       results.push({
         questionId: question._id,
-        text: question.text,
-        userAnswer: userAnswer ? userAnswer.selectedAnswer : '',
-        correctAnswer: question.correctAnswer,
+        text: localText(question, lang),
+        userAnswer: userAnswer ? localOption(question, lang, userAnswer.selectedAnswer) : '',
+        correctAnswer: localOption(question, lang, question.correctAnswer),
         isCorrect
       });
     });
@@ -197,10 +207,10 @@ const QuizPage = () => {
                     <span className="text-xs text-stone-400 font-semibold">{quiz.questions?.length || 0} Questions</span>
                   </div>
                   <h4 className="font-heading font-bold text-base text-primary dark:text-parchment leading-tight">
-                    {quiz.title}
+                    {localQuiz(quiz, lang, 'title')}
                   </h4>
                   <p className="text-xs text-stone-500 leading-relaxed line-clamp-2">
-                    {quiz.description}
+                    {localQuiz(quiz, lang, 'description')}
                   </p>
                 </div>
 
@@ -226,12 +236,12 @@ const QuizPage = () => {
               Question {currentQuestionIdx + 1} of {selectedQuiz.questions.length}
             </span>
             <span className="text-xs uppercase text-gold font-bold font-heading">
-              {selectedQuiz.title}
+              {localQuiz(selectedQuiz, lang, 'title')}
             </span>
           </div>
 
           <h3 className="font-heading font-bold text-lg text-primary dark:text-parchment leading-snug">
-            {selectedQuiz.questions[currentQuestionIdx]?.text}
+            {localText(selectedQuiz.questions[currentQuestionIdx], lang)}
           </h3>
 
           <div className="grid grid-cols-1 gap-3">
@@ -241,7 +251,7 @@ const QuizPage = () => {
                 onClick={() => handleOptionSelect(opt)}
                 className={`w-full text-left p-4 rounded-xl border text-xs font-semibold transition-all ${selectedOpt === opt ? 'border-gold bg-gold/10 text-primary dark:text-parchment' : 'border-stone-200 dark:border-stone-700 hover:bg-stone-50 dark:hover:bg-stone-700 text-stone-700 dark:text-stone-300'}`}
               >
-                {opt}
+                {localOption(selectedQuiz.questions[currentQuestionIdx], lang, opt)}
               </button>
             ))}
           </div>

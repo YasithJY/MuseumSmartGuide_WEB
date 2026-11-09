@@ -12,6 +12,7 @@ import Favourite from '../models/Favourite.js';
 import VisitHistory from '../models/VisitHistory.js';
 import Notification from '../models/Notification.js';
 import { HERITAGE_CATEGORIES, buildHeritageGalleries, buildHeritageExhibits } from './data/heritageExhibits.js';
+import { buildHeritageQuizzes } from './data/heritageQuizzes.js';
 
 dotenv.config();
 
@@ -866,6 +867,12 @@ const seedData = async () => {
       exhibitId: exhibits[5]._id,
       questions: [kulasingheQ1._id]
     });
+
+    // Quizzes for the heritage exhibits — content in data/heritageQuizzes.js
+    for (const { quiz, questions } of buildHeritageQuizzes(heritageMuseumIds)) {
+      await QuizQuestion.create(questions);
+      await Quiz.create(quiz);
+    }
 
     console.log('Exhibit-specific quizzes seeded.');
 

@@ -499,7 +499,9 @@ const Dashboard = () => {
             imageUrl: q.imageUrl || '',
             options: q.options?.length ? [...q.options] : ['', '', '', ''],
             correctAnswer: q.correctAnswer || '',
-            points: q.points || 10
+            points: q.points || 10,
+            // Not editable here; passed through so saving keeps them.
+            ...(q.translations && { translations: q.translations })
           }))
         : [{ ...blankQuestion }]
     });

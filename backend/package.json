@@ -9,7 +9,8 @@
     "dev": "nodemon server.js",
     "seed": "node utils/seeder.js",
     "fix-galleries": "node utils/fix-galleries.js",
-    "add-heritage": "node utils/addHeritageExhibits.js"
+    "add-heritage": "node utils/addHeritageExhibits.js",
+    "add-heritage-quizzes": "node utils/addHeritageQuizzes.js"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1135.0",

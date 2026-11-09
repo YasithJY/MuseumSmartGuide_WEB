@@ -9,7 +9,12 @@ const quizSchema = new mongoose.Schema({
   museumId: { type: mongoose.Schema.Types.ObjectId, ref: 'Museum' },
   galleryId: { type: mongoose.Schema.Types.ObjectId, ref: 'Gallery' },
   exhibitId: { type: mongoose.Schema.Types.ObjectId, ref: 'Exhibit', default: null },
-  questions: [{ type: mongoose.Schema.Types.ObjectId, ref: 'QuizQuestion' }]
+  questions: [{ type: mongoose.Schema.Types.ObjectId, ref: 'QuizQuestion' }],
+  // Sinhala (si) and Tamil (ta) title and description
+  translations: {
+    si: { title: String, description: String },
+    ta: { title: String, description: String }
+  }
 }, { timestamps: true });
 
 const Quiz = mongoose.model('Quiz', quizSchema);
