@@ -46,7 +46,11 @@ const AR_MODEL_BY_EXHIBIT_ID = {
   '65d75b0a66f50b2984950022': { glb: `${R2_MODELS_BASE}/athpahana.glb`, usdz: `${R2_MODELS_BASE}/athpahana.usdz` }, // Elephant Lamp (Ath Pahana)
   '65d75b0a66f50b2984950023': { glb: `${R2_MODELS_BASE}/Jethawanaramaya.glb`, usdz: `${R2_MODELS_BASE}/Jethawanaramaya.usdz` }, // Jetavana Stupa (Jethawanarama)
   '65d75b0a66f50b2984950024': { glb: `${R2_MODELS_BASE}/sigiriya_1.glb`, usdz: `${R2_MODELS_BASE}/sigiriya_1.usdz` }, // Sigiriya
-  '65d75b0a66f50b2984950029': { glb: `${R2_MODELS_BASE}/nadungamuwa-raja.glb`, usdz: `${R2_MODELS_BASE}/nadungamuwa-raja.usdz` }, // Nadungamuwa Raja (animated walk cycle in both files)
+  '65d75b0a66f50b2984950029': { // Nadungamuwa Raja (animated walk cycle in both files)
+    glb: `${R2_MODELS_BASE}/nadungamuwa-raja.glb`, usdz: `${R2_MODELS_BASE}/nadungamuwa-raja.usdz`,
+    // Static, in Perahera attire with the casket; elephant 3.2 m, 4.6 m with the casket
+    decorated: { glb: `${R2_MODELS_BASE}/nadungamuwa-raja-deco.glb`, usdz: `${R2_MODELS_BASE}/nadungamuwa-raja-deco.usdz` },
+  },
   '65d75b0a66f50b298495002a': { glb: `${R2_MODELS_BASE}/isurumuni.glb`, usdz: `${R2_MODELS_BASE}/isurumuni.usdz` }, // Isurumuniya Lovers
   '65d75b0a66f50b298495002b': { glb: `${R2_MODELS_BASE}/muragala.glb`, usdz: `${R2_MODELS_BASE}/muragala.usdz` }, // Nagaraja Guardstone
   '65d75b0a66f50b298495002c': { glb: `${R2_MODELS_BASE}/Parakramabahu.glb`, usdz: `${R2_MODELS_BASE}/parakramabahu.usdz` }, // Statue of King Parakramabahu
@@ -54,12 +58,13 @@ const AR_MODEL_BY_EXHIBIT_ID = {
 const DEFAULT_AR_MODEL = { glb: `${R2_MODELS_BASE}/Iron_Smelting_Oven_1.glb`, usdz: `${R2_MODELS_BASE}/Iron_Smelting_Oven_1.usdz` };
 
 // A `null` entry means "no model" (hide AR); a missing entry falls back to the
-// default model. A model uploaded from the dashboard always wins.
+// default model. A model uploaded from the dashboard always wins. An entry's
+// `decorated` model is offered as a second version in the AR viewer.
 const getArModel = (exhibit) => {
   if (exhibit.arModelUrl) return { glb: exhibit.arModelUrl, usdz: exhibit.arModelUrlIOS || undefined };
   const mapped = exhibit._id in AR_MODEL_BY_EXHIBIT_ID ? AR_MODEL_BY_EXHIBIT_ID[exhibit._id] : DEFAULT_AR_MODEL;
   if (!mapped) return null;
-  return { glb: mapped.glb, usdz: exhibit.arModelUrlIOS || mapped.usdz };
+  return { glb: mapped.glb, usdz: exhibit.arModelUrlIOS || mapped.usdz, decorated: mapped.decorated };
 };
 
 // Tamil audio narration, keyed by exhibit _id. The backend only stores one
@@ -138,6 +143,8 @@ const EXHIBIT_LABELS = {
     relatedArtifacts: 'Related Artifacts',
     audioGuideNarrator: 'Audio Guide Narrator',
     overviewGuide: 'Overview Guide',
+    modelPlain: 'Plain',
+    modelDecorated: 'Decorated',
   },
   si: {
     backTo: 'ආපසු',
@@ -156,6 +163,8 @@ const EXHIBIT_LABELS = {
     relatedArtifacts: 'සම්බන්ධිත කෞතුක වස්තු',
     audioGuideNarrator: 'ශ්‍රව්‍ය මාර්ගෝපදේශක විචාරකයා',
     overviewGuide: 'සමස්ත මාර්ගෝපදේශය',
+    modelPlain: 'සාමාන්‍ය',
+    modelDecorated: 'සැරසූ',
   },
   ta: {
     backTo: 'திரும்பிச் செல்க',
@@ -174,6 +183,8 @@ const EXHIBIT_LABELS = {
     relatedArtifacts: 'தொடர்புடைய கலைப்பொருட்கள்',
     audioGuideNarrator: 'ஒலி வழிகாட்டி விவரிப்பாளர்',
     overviewGuide: 'மேலோட்டமான வழிகாட்டி',
+    modelPlain: 'சாதாரண',
+    modelDecorated: 'அலங்கரிக்கப்பட்ட',
   },
 };
 
@@ -540,8 +551,10 @@ const Exhibit = () => {
         const arModel = getArModel(exhibit);
         return (
         <ARViewer
-          modelUrl={arModel.glb}
-          iosModelUrl={arModel.usdz}
+          models={[
+            { key: 'plain', label: L.modelPlain, glb: arModel.glb, usdz: arModel.usdz },
+            ...(arModel.decorated ? [{ key: 'decorated', label: L.modelDecorated, ...arModel.decorated }] : []),
+          ]}
           title={exhibit.title}
           narration={narrationTracks}
           lang={displayLang}

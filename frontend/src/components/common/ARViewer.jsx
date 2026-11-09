@@ -18,16 +18,29 @@ import { MdClose, MdViewInAr, MdPlayArrow, MdPause } from 'react-icons/md';
 // `autoplay` loops the model's first animation (e.g. Nadungamuwa Raja's walk
 // cycle) and does nothing for static models.
 //
+// `models` is a list of { key, label, glb, usdz } versions of the exhibit
+// (e.g. Nadungamuwa Raja plain and in Perahera attire). With more than one,
+// a switch at the top picks which one is previewed and opened in AR.
+//
 // `narration` is a list of { code, label, full, src } tracks; the bar it
 // drives lives outside <model-viewer>, so it shows on this 3D preview but not
 // inside native AR (Quick Look / Scene Viewer) or WebXR.
-const ARViewer = ({ modelUrl, iosModelUrl, title, narration = [], lang, onLangChange, narrationLabel = 'Audio Guide Narrator', onClose }) => {
+const ARViewer = ({ models, title, narration = [], lang, onLangChange, narrationLabel = 'Audio Guide Narrator', onClose }) => {
   const viewerRef = useRef(null);
   const audioRef = useRef(null);
   const [loaded, setLoaded] = useState(false);
   const [loadError, setLoadError] = useState('');
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [modelIdx, setModelIdx] = useState(0);
+  const model = models[modelIdx] || models[0];
+
+  const selectModel = (idx) => {
+    if (idx === modelIdx) return;
+    setModelIdx(idx);
+    setLoaded(false);
+    setLoadError('');
+  };
 
   const track = narration.find(t => t.code === lang) || narration[0];
   const trackSrc = track?.src;
@@ -86,10 +99,25 @@ const ARViewer = ({ modelUrl, iosModelUrl, title, narration = [], lang, onLangCh
         <MdClose className="w-7 h-7" />
       </button>
 
+      {models.length > 1 && (
+        <div className="absolute top-4 left-4 z-20 flex border border-gold/60 bg-primary/90 backdrop-blur-sm rounded-lg overflow-hidden shadow-lg">
+          {models.map((m, i) => (
+            <button
+              key={m.key}
+              onClick={() => selectModel(i)}
+              className={`px-3 py-2 text-xs font-bold uppercase tracking-wide transition-colors
+                ${i === modelIdx ? 'bg-gold text-primary' : 'text-parchment hover:bg-white/10'}`}
+            >
+              {m.label}
+            </button>
+          ))}
+        </div>
+      )}
+
       <model-viewer
         ref={viewerRef}
-        src={modelUrl}
-        ios-src={iosModelUrl || undefined}
+        src={model.glb}
+        ios-src={model.usdz || undefined}
         alt={title}
         ar
         ar-modes="webxr scene-viewer quick-look"
