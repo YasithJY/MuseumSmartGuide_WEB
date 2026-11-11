@@ -10,7 +10,7 @@ import React, {
   useState,
 } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { OrbitControls, Html, useCursor } from '@react-three/drei';
+import { Billboard, OrbitControls, Html, useCursor } from '@react-three/drei';
 import * as THREE from 'three';
 import { MdAdd, MdRemove, MdCenterFocusStrong, MdClose, MdLocationOn, MdAccessTime, MdChevronRight, MdDirections } from 'react-icons/md';
 import { ThemeContext } from '../../context/ThemeContext';
@@ -576,20 +576,50 @@ function Boat({ lat, lng, heading, phase, still }) {
   );
 }
 
+// Classic teardrop location marker: a circle of radius R centred at height C,
+// with straight sides running down to the tip at the local origin.
+const MARKER_R = 0.32;
+const MARKER_C = 0.78;
+const MARKER_DEPTH = 0.1;
+const markerGeometry = (() => {
+  const phi = Math.acos(MARKER_R / MARKER_C); // tangent angle, measured from straight down
+  const shape = new THREE.Shape();
+  shape.moveTo(0, 0);
+  shape.lineTo(MARKER_R * Math.sin(phi), MARKER_C - MARKER_R * Math.cos(phi));
+  shape.absarc(0, MARKER_C, MARKER_R, -Math.PI / 2 + phi, (3 * Math.PI) / 2 - phi, false);
+  shape.lineTo(0, 0);
+  const geo = new THREE.ExtrudeGeometry(shape, {
+    depth: MARKER_DEPTH,
+    bevelEnabled: true,
+    bevelThickness: 0.03,
+    bevelSize: 0.025,
+    bevelSegments: 3,
+    curveSegments: 36,
+  });
+  geo.translate(0, 0, -MARKER_DEPTH / 2);
+  return geo;
+})();
+const MARKER_FACE_Z = MARKER_DEPTH / 2 + 0.035; // just in front of the bevelled face
+
 function MuseumPin({ label, position, selected, showLabel, onSelect, phase, portal, still }) {
-  const bob = useRef();
+  const marker = useRef();
   const ring = useRef();
   const [hovered, setHovered] = useState(false);
   useCursor(hovered);
+  const active = selected || hovered;
 
-  useFrame(({ clock }) => {
+  useFrame(({ clock }, delta) => {
+    // grow a little when hovered/selected; the tip stays planted on the spot
+    if (marker.current) {
+      const goal = active ? 1.15 : 1;
+      const s = still ? goal : THREE.MathUtils.lerp(marker.current.scale.x, goal, Math.min(1, delta * 10));
+      marker.current.scale.setScalar(s);
+    }
     if (still) {
-      if (bob.current) bob.current.position.y = 0.15;
       if (ring.current) ring.current.material.opacity = 0;
       return;
     }
     const t = clock.getElapsedTime();
-    if (bob.current) bob.current.position.y = 0.15 + Math.sin(t * 2 + phase) * 0.06;
     if (ring.current) {
       const p = (t * 0.7 + phase) % 1;
       const s = 0.6 + p * 1.6;
@@ -598,7 +628,6 @@ function MuseumPin({ label, position, selected, showLabel, onSelect, phase, port
     }
   });
 
-  const active = selected || hovered;
   const handleClick = (e) => {
     e.stopPropagation();
     onSelect();
@@ -612,30 +641,34 @@ function MuseumPin({ label, position, selected, showLabel, onSelect, phase, port
         <meshBasicMaterial color={GOLD} transparent depthWrite={false} />
       </mesh>
 
+      {/* small dark dot marking the exact spot under the tip */}
+      <mesh rotation-x={-Math.PI / 2} position-y={0.015}>
+        <circleGeometry args={[0.07, 24]} />
+        <meshBasicMaterial color="#2C1A14" transparent opacity={0.55} depthWrite={false} />
+      </mesh>
+
       <group
-        ref={bob}
         onClick={handleClick}
         onPointerOver={(e) => { e.stopPropagation(); setHovered(true); }}
         onPointerOut={() => setHovered(false)}
       >
-        {/* map-pin: inverted cone with a sphere head, tip at local origin */}
-        <mesh position-y={0.4} rotation-x={Math.PI} castShadow>
-          <coneGeometry args={[0.24, 0.8, 32]} />
-          <meshStandardMaterial color={GOLD} metalness={0.2} roughness={0.35} emissive={GOLD} emissiveIntensity={active ? 0.5 : 0.18} />
-        </mesh>
-        <mesh position-y={0.85} castShadow>
-          <sphereGeometry args={[0.3, 32, 24]} />
-          <meshStandardMaterial color={GOLD} metalness={0.2} roughness={0.3} emissive={GOLD} emissiveIntensity={active ? 0.5 : 0.18} />
-        </mesh>
-        <mesh position={[0, 0.85, 0]}>
-          <sphereGeometry args={[0.12, 20, 16]} />
-          <meshStandardMaterial color="#2C1A14" roughness={0.6} />
-        </mesh>
-        {/* generous invisible hit area for fingers */}
-        <mesh position-y={0.6}>
-          <sphereGeometry args={[0.6, 12, 8]} />
-          <meshBasicMaterial transparent opacity={0} depthWrite={false} />
-        </mesh>
+        {/* location marker, tip at the local origin, always turned to face the camera */}
+        <Billboard>
+          <group ref={marker}>
+            <mesh geometry={markerGeometry} castShadow>
+              <meshStandardMaterial color={GOLD} metalness={0.2} roughness={0.35} emissive={GOLD} emissiveIntensity={active ? 0.5 : 0.18} />
+            </mesh>
+            <mesh position={[0, MARKER_C, MARKER_FACE_Z]}>
+              <circleGeometry args={[MARKER_R * 0.45, 32]} />
+              <meshStandardMaterial color={active ? '#2C1A14' : '#FCFAF5'} roughness={0.6} />
+            </mesh>
+            {/* generous invisible hit area for fingers */}
+            <mesh position-y={0.6}>
+              <sphereGeometry args={[0.6, 12, 8]} />
+              <meshBasicMaterial transparent opacity={0} depthWrite={false} />
+            </mesh>
+          </group>
+        </Billboard>
 
         {(showLabel || active) && (
           // Anchored at the top of the pin head and lifted above it in screen space,
@@ -643,7 +676,7 @@ function MuseumPin({ label, position, selected, showLabel, onSelect, phase, port
           // sit on drei's wrapper div (via `style`), otherwise the wrapper's
           // un-transformed box would swallow clicks meant for the pin.
           <Html
-            position={[0, 1.15, 0]}
+            position={[0, 1.3, 0]}
             portal={portal}
             zIndexRange={[20, 10]}
             calculatePosition={clampedLabelPosition}

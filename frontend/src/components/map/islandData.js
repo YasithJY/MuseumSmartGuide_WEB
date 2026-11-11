@@ -316,10 +316,10 @@ export const MAHAWELI = [
 // Hand-placed heritage landmarks (purely decorative). `clear` lists circles
 // [dx, dz, radius] around each one that the forest leaves open.
 export const LANDMARKS = [
-  { id: 'stupa', name: 'Anuradhapura', lat: 8.35, lng: 80.4, clear: [[0, 0, 0.8]] },
+  { id: 'stupa', name: 'Anuradhapura', lat: 8.35, lng: 80.3964, clear: [[0, 0, 0.8]] },
   {
     id: 'sigiriya', name: 'Sigiriya', lat: 7.957, lng: 80.76, labelZ: 1.0,
     clear: [[0, 0, 0.9]], // forest grows right up to the foot of the rock
   },
-  { id: 'lighthouse', name: 'Galle', lat: 6.03, lng: 80.24, clear: [[0, 0, 0.8]] },
+  { id: 'lighthouse', name: 'Galle', lat: 6.0245, lng: 80.2192, clear: [[0, 0, 0.8]] },
 ];

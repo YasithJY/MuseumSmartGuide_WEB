@@ -60,8 +60,8 @@ export const mockMuseums = [
     },
     location: {
       address: 'Sir Marcus Fernando Mawatha, Colombo 00700, Sri Lanka',
-      lat: 6.9113,
-      lng: 79.8654
+      lat: 6.91,
+      lng: 79.8608
     },
     galleriesCount: 2
   },
@@ -76,8 +76,8 @@ export const mockMuseums = [
     },
     location: {
       address: 'Potgul Vehera Road, Polonnaruwa, Sri Lanka',
-      lat: 7.9336,
-      lng: 81.0170
+      lat: 7.9403,
+      lng: 81.0002
     },
     galleriesCount: 0
   }

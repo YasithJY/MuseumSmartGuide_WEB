@@ -16,8 +16,8 @@ const museumSchema = new mongoose.Schema({
   },
   location: {
     address: { type: String, default: 'Sir Marcus Fernando Mawatha, Colombo 00700, Sri Lanka' },
-    lat: { type: Number, default: 6.9113 },
-    lng: { type: Number, default: 79.8654 }
+    lat: { type: Number, default: 6.91 },
+    lng: { type: Number, default: 79.8608 }
   },
   galleriesCount: { type: Number, default: 0 },
   // Multilingual translations: Sinhala (si) and Tamil (ta)

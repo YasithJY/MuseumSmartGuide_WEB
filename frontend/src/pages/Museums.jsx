@@ -82,10 +82,10 @@ const Museums = () => {
 
   // Mock coordinates for interactive Leaflet Map pins
   const galleryPins = [
-    { name: "Stone Antiquities Gallery", lat: 6.9115, lng: 79.8652, desc: "Anuradhapura & Polonnaruwa carvings" },
-    { name: "Kandyan Kingdom Gallery", lat: 6.9112, lng: 79.8656, desc: "Royal crown and golden throne" },
-    { name: "Prehistoric Gallery", lat: 6.9110, lng: 79.8654, desc: "Early human settlements" },
-    { name: "Bronzes and Art Gallery", lat: 6.9116, lng: 79.8655, desc: "Medieval metal art & statues" }
+    { name: "Stone Antiquities Gallery", lat: 6.9102, lng: 79.8606, desc: "Anuradhapura & Polonnaruwa carvings" },
+    { name: "Kandyan Kingdom Gallery", lat: 6.9099, lng: 79.861, desc: "Royal crown and golden throne" },
+    { name: "Prehistoric Gallery", lat: 6.9097, lng: 79.8608, desc: "Early human settlements" },
+    { name: "Bronzes and Art Gallery", lat: 6.9103, lng: 79.8609, desc: "Medieval metal art & statues" }
   ];
 
   if (loading) {
@@ -139,7 +139,7 @@ const Museums = () => {
           </div>
           
           <div className="h-[450px] w-full rounded-xl overflow-hidden border-2 border-gold shadow-md">
-            <MapContainer center={[6.9113, 79.8654]} zoom={18} scrollWheelZoom={false}>
+            <MapContainer center={[6.91, 79.8608]} zoom={18} scrollWheelZoom={false}>
               <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
