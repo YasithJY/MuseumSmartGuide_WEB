@@ -91,7 +91,7 @@ const Home = () => {
         onClick={toggleSound}
         aria-label={isMuted ? 'Unmute background sound' : 'Mute background sound'}
         title={isMuted ? 'Unmute background sound' : 'Mute background sound'}
-        className="fixed bottom-6 right-6 z-50 w-12 h-12 rounded-full bg-primary text-gold border-2 border-gold shadow-lg flex items-center justify-center hover:bg-stone-800 hover:scale-105 transition-all"
+        className="fixed bottom-6 left-6 z-50 w-12 h-12 rounded-full bg-primary text-gold border-2 border-gold shadow-lg flex items-center justify-center hover:bg-stone-800 hover:scale-105 transition-all"
       >
         {isMuted ? <MdVolumeOff className="w-6 h-6" /> : <MdVolumeUp className="w-6 h-6" />}
       </button>

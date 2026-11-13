@@ -15,6 +15,7 @@ import Profile from './pages/Profile';
 import Dashboard from './pages/Dashboard';
 import QuizPage from './pages/QuizPage';
 import ScanPage from './pages/ScanPage';
+import ChatGuide from './components/chat/ChatGuide';
 import { ProtectedRoute, AdminRoute } from './routes/ProtectedRoutes';
 
 function App() {
@@ -57,6 +58,9 @@ function App() {
 
         {/* Footer */}
         <Footer />
+
+        {/* Floating chat guide, on every visitor page */}
+        <ChatGuide />
       </div>
     </Router>
   );
